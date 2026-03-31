@@ -4,42 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiago Sillos | Galeria de Arte</title>
+    <meta name="description" content="Galeria de arte de Tiago Sillos Padovani, com obras autorais, pinturas e esculturas. Solicite o catálogo pelo WhatsApp.">
     <style>
-        /* Estilo Minimalista */
-        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; background-color: #f9f9f9; color: #333; line-height: 1.6; }
-        header { padding: 50px 20px; text-align: center; background: #fff; border-bottom: 1px solid #eee; }
-        h1 { font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
-        p.subtitle { color: #888; font-style: italic; margin-top: 5px; }
-        
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        
-        /* Grade da Galeria */
-        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .art-card { background: #fff; padding: 15px; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.3s ease; }
-        .art-card:hover { transform: translateY(-5px); }
-        .art-card img { width: 100%; height: auto; display: block; border-radius: 2px; }
-        .art-info { padding: 15px 0 5px; text-align: center; }
-        .art-title { font-weight: bold; display: block; }
-        .art-tech { font-size: 0.9em; color: #666; }
-        
-        /* Rodapé e Contato */
-        footer { text-align: center; padding: 60px 20px; background: #fff; margin-top: 50px; border-top: 1px solid #eee; }
-        .btn-contato { display: inline-block; padding: 12px 25px; background: #333; color: #fff; text-decoration: none; border-radius: 30px; margin-top: 20px; transition: background 0.3s; }
-        .btn-contato:hover { background: #555; }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            padding: 50px 20px;
+            text-align: center;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        h1 {
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        p.subtitle {
+            color: #888;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .art-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .art-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .art-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 2px;
+        }
+
+        .art-info {
+            padding: 15px 0 5px;
+            text-align: center;
+        }
+
+        .art-title {
+            font-weight: bold;
+            display: block;
+        }
+
+        .art-tech {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            background: #fff;
+            margin-top: 50px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-contato {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .btn-contato:hover {
+            background: #555;
+        }
     </style>
 </head>
 <body>
 
 <header>
     <h1>Tiago Sillos Padovani</h1>
-    <p class="subtitle">Arquiteto & Artista Plástico</p>
+    <p class="subtitle">Arquiteto &amp; Artista Plástico</p>
 </header>
 
 <div class="container">
     <div class="gallery">
-        
+
         <div class="art-card">
-            <img src="obra1.jpg" alt="Pintura Óleo Tiago Sillos">
+            <img src="obra1.jpg" alt="Pintura óleo de Tiago Sillos">
             <div class="art-info">
                 <span class="art-title">Título da Obra 01</span>
                 <span class="art-tech">Óleo e Giz Pastel sobre tela</span>
@@ -47,7 +123,7 @@
         </div>
 
         <div class="art-card">
-            <img src="obra2.jpg" alt="Escultura Tiago Sillos">
+            <img src="obra2.jpg" alt="Escultura de Tiago Sillos">
             <div class="art-info">
                 <span class="art-title">Título da Obra 02</span>
                 <span class="art-tech">Escultura Metálica / Técnica Mista</span>
@@ -66,8 +142,16 @@
 </div>
 
 <footer>
-    <p>Interessado em adquirir uma obra ou e-book?</p>
-    <a href="mailto:seu-email@dominio.com" class="btn-contato">Entrar em Contato</a>
+    <p>Interessado em adquirir uma obra? Solicite o catálogo pelo WhatsApp.</p>
+    <a
+        href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo."
+        class="btn-contato"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Solicitar catálogo pelo WhatsApp"
+    >
+        Solicitar catálogo
+    </a>
     <p style="margin-top: 30px; font-size: 0.8em; color: #aaa;">&copy; 2026 tiagosillos.art.br</p>
 </footer>
 
