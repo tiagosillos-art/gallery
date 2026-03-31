@@ -1,165 +1,787 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiago Sillos | Galeria de Arte</title>
     <meta name="description" content="Galeria de arte de Tiago Sillos Padovani, com obras autorais, pinturas e esculturas. Solicite o catálogo pelo WhatsApp.">
+    <meta name="theme-color" content="#0b0b0b">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="canonical" href="https://tiagosillos.art.br/">
 
-    <link rel="icon" href="favicon_logo.ico" sizes="any">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon_logo_32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon_logo_16x16.png">
-    <link rel="apple-touch-icon" href="favicon_logo_180x180.png">
-    <link rel="apple-touch-icon" href="favicon-512.png">
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon-512x512.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Tiago Sillos | Galeria de Arte">
+    <meta property="og:description" content="Obras autorais, pinturas e esculturas de Tiago Sillos Padovani. Solicite o catálogo pelo WhatsApp.">
+    <meta property="og:url" content="https://tiagosillos.art.br/">
+    <meta property="og:image" content="https://tiagosillos.art.br/obra3.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tiago Sillos | Galeria de Arte">
+    <meta name="twitter:description" content="Obras autorais, pinturas e esculturas de Tiago Sillos Padovani.">
+
     <style>
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            margin: 0;
-            background-color: #f9f9f9;
-            color: #333;
-            line-height: 1.6;
+        :root {
+            --bg: #070707;
+            --bg-soft: #101010;
+            --card: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 220, 146, 0.16);
+            --text: #f6f1e8;
+            --muted: #b9ac96;
+            --gold: #f1c267;
+            --gold-strong: #ffd98b;
+            --line: rgba(255, 214, 143, 0.12);
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 18px;
+            --max: 1180px;
         }
 
-        header {
-            padding: 50px 20px;
-            text-align: center;
-            background: #fff;
-            border-bottom: 1px solid #eee;
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(241, 194, 103, 0.18), transparent 30%),
+                radial-gradient(circle at 85% 18%, rgba(241, 194, 103, 0.10), transparent 22%),
+                linear-gradient(180deg, #050505 0%, #090909 45%, #0d0d0d 100%);
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(transparent 0%, rgba(255,255,255,0.02) 49%, transparent 100%),
+                linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.02) 49%, transparent 100%);
+            background-size: 100% 3px, 3px 100%;
+            opacity: 0.06;
+            mix-blend-mode: screen;
+        }
+
+        img { max-width: 100%; display: block; }
+        a { color: inherit; text-decoration: none; }
+        .wrap { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(18px);
+            background: rgba(7, 7, 7, 0.68);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 18px 0;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.98rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .brand-mark {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, var(--gold-strong), #c98d2d 75%, #8b5a15 100%);
+            box-shadow: 0 0 24px rgba(241, 194, 103, 0.35);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover { color: var(--text); }
+
+        .nav-cta,
+        .btn-primary,
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 999px;
+            padding: 13px 22px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-cta,
+        .btn-primary {
+            color: #101010;
+            background: linear-gradient(135deg, #ffe3a6 0%, #f1c267 52%, #d38d2e 100%);
+            box-shadow: 0 16px 34px rgba(241, 194, 103, 0.22);
+        }
+
+        .nav-cta:hover,
+        .btn-primary:hover,
+        .btn-secondary:hover { transform: translateY(-2px); }
+
+        .btn-secondary {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+        }
+
+        .hero { position: relative; padding: 92px 0 56px; }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+            gap: 44px;
+            align-items: center;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gold-strong);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 42px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold));
         }
 
         h1 {
-            font-weight: 300;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            margin: 18px 0 18px;
+            font-size: clamp(2.8rem, 6vw, 5.6rem);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+        }
+
+        .hero p.lead {
+            max-width: 680px;
+            margin: 0 0 28px;
+            color: #d8cbb7;
+            font-size: clamp(1.05rem, 2vw, 1.22rem);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 0;
             margin: 0;
+            list-style: none;
         }
 
-        p.subtitle {
-            color: #888;
-            font-style: italic;
-            margin-top: 5px;
+        .hero-meta li {
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--muted);
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-size: 0.92rem;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
+        .hero-panel { position: relative; }
+
+        .hero-panel::before {
+            content: "";
+            position: absolute;
+            inset: 8% 12% auto auto;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(241, 194, 103, 0.28), transparent 70%);
+            filter: blur(10px);
         }
+
+        .hero-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            padding: 26px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)),
+                linear-gradient(135deg, rgba(241, 194, 103, 0.08), rgba(255, 255, 255, 0.02));
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow);
+            min-height: 470px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 78% 16%, rgba(255, 217, 139, 0.22), transparent 18%),
+                linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.36));
+            pointer-events: none;
+        }
+
+        .hero-kicker,
+        .section-kicker {
+            color: var(--gold-strong);
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-size: 0.82rem;
+        }
+
+        .hero-card h2 {
+            margin: 12px 0 10px;
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            line-height: 1.04;
+            max-width: 9ch;
+        }
+
+        .hero-card p {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            color: #decfb8;
+            max-width: 28ch;
+        }
+
+        .stats { padding: 16px 0 28px; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .stat {
+            padding: 22px;
+            border-radius: var(--radius-lg);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--line);
+        }
+
+        .stat strong { display: block; font-size: 1.4rem; margin-bottom: 8px; }
+        .stat span { color: var(--muted); font-size: 0.95rem; }
+        .section { padding: 68px 0; }
+
+        .section-head {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 24px;
+            align-items: end;
+            margin-bottom: 28px;
+        }
+
+        .section-head h2 {
+            margin: 10px 0 0;
+            font-size: clamp(2rem, 4vw, 3.3rem);
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+
+        .section-head p { margin: 0; max-width: 520px; color: var(--muted); }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+            gap: 20px;
+        }
+
+        .panel {
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+
+        .panel p { margin: 0; color: #d8cbb7; }
+        .manifesto { display: grid; gap: 16px; }
+
+        .manifesto-item {
+            padding: 18px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .manifesto-item:first-child { border-top: 0; padding-top: 0; }
+        .manifesto-item strong { display: block; margin-bottom: 6px; font-size: 1.05rem; }
+        .manifesto-item span { color: var(--muted); }
 
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
         }
 
         .art-card {
-            background: #fff;
-            padding: 15px;
-            border-radius: 4px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: var(--shadow);
+            transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
         }
 
         .art-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            border-color: rgba(255, 220, 146, 0.28);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.46);
         }
 
         .art-card img {
+            aspect-ratio: 4 / 4.8;
+            object-fit: cover;
             width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 2px;
+            background: #0f0f0f;
         }
 
-        .art-info {
-            padding: 15px 0 5px;
-            text-align: center;
+        .art-info { padding: 20px 20px 22px; }
+
+        .art-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(241, 194, 103, 0.10);
+            border: 1px solid rgba(241, 194, 103, 0.18);
+            color: var(--gold-strong);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
         }
 
         .art-title {
-            font-weight: bold;
             display: block;
+            margin: 14px 0 8px;
+            font-size: 1.35rem;
+            font-weight: 700;
         }
 
-        .art-tech {
-            font-size: 0.9em;
-            color: #666;
+        .art-tech,
+        .art-note { color: var(--muted); }
+
+        .art-note { margin-top: 14px; font-size: 0.94rem; }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+            gap: 24px;
+            align-items: stretch;
         }
 
-        footer {
-            text-align: center;
-            padding: 60px 20px;
-            background: #fff;
-            margin-top: 50px;
-            border-top: 1px solid #eee;
+        .contact-card { min-height: 100%; }
+        .contact-list { display: grid; gap: 14px; margin-top: 22px; }
+
+        .contact-item {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            padding: 14px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
         }
 
-        .btn-contato {
-            display: inline-block;
-            padding: 12px 25px;
-            background: #333;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 30px;
-            margin-top: 20px;
-            transition: background 0.3s;
+        .contact-item:first-child { padding-top: 0; border-top: 0; }
+
+        .contact-bullet {
+            width: 11px;
+            height: 11px;
+            margin-top: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-strong), #cf8b2b);
+            box-shadow: 0 0 20px rgba(241, 194, 103, 0.42);
+            flex: none;
         }
 
-        .btn-contato:hover {
-            background: #555;
+        .contact-item strong { display: block; margin-bottom: 4px; }
+        .contact-item span { color: var(--muted); }
+
+        .contact-box {
+            display: grid;
+            align-content: space-between;
+            gap: 18px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04)),
+                linear-gradient(135deg, rgba(241, 194, 103, 0.12), rgba(255,255,255,0.02));
+        }
+
+        .contact-box h3 { margin: 12px 0 8px; font-size: 1.8rem; line-height: 1.05; }
+        .contact-box p { margin: 0; color: #decfb8; }
+        .contact-box small { color: var(--muted); display: block; }
+        footer { padding: 18px 0 44px; }
+
+        .footer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 980px) {
+            .hero-grid,
+            .about-grid,
+            .contact-grid,
+            .section-head { grid-template-columns: 1fr; }
+            .gallery,
+            .stats-grid { grid-template-columns: 1fr; }
+            .hero { padding-top: 70px; }
+            .hero-card { min-height: 340px; }
+        }
+
+        @media (max-width: 760px) {
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                gap: 16px;
+                font-size: 0.92rem;
+            }
+
+            .brand,
+            .nav-cta { justify-content: center; }
+            .wrap { width: min(var(--max), calc(100% - 24px)); }
+
+            .panel,
+            .hero-card,
+            .art-info {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .btn-primary,
+            .btn-secondary,
+            .nav-cta { width: 100%; }
+            .hero-actions { display: grid; grid-template-columns: 1fr; }
+            .footer-bar { flex-direction: column; text-align: center; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .reveal,
+            .art-card,
+            .nav-cta,
+            .btn-primary,
+            .btn-secondary { transition: none; }
         }
     </style>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Tiago Sillos Padovani",
+      "jobTitle": "Arquiteto e Artista Plástico",
+      "url": "https://tiagosillos.art.br/",
+      "sameAs": [
+        "https://tiagosillos.art.br/"
+      ]
+    }
+    </script>
 </head>
 <body>
+    <header class="site-header">
+        <div class="wrap nav">
+            <a class="brand" href="#topo" aria-label="Página inicial Tiago Sillos">
+                <span class="brand-mark" aria-hidden="true"></span>
+                <span>Tiago Sillos</span>
+            </a>
 
-<header>
-    <h1>Tiago Sillos Padovani</h1>
-    <p class="subtitle">Arquiteto &amp; Artista Plástico</p>
-</header>
+            <nav class="nav-links" aria-label="Navegação principal">
+                <a href="#sobre">Sobre</a>
+                <a href="#obras">Obras</a>
+                <a href="#contato">Contato</a>
+            </nav>
 
-<div class="container">
-    <div class="gallery">
-
-        <div class="art-card">
-            <img src="obra1.jpg" alt="Pintura óleo de Tiago Sillos">
-            <div class="art-info">
-                <span class="art-title">Título da Obra 01</span>
-                <span class="art-tech">Óleo e Giz Pastel sobre tela</span>
-            </div>
+            <a class="nav-cta" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
+                Solicitar catálogo
+            </a>
         </div>
+    </header>
 
-        <div class="art-card">
-            <img src="obra2.jpg" alt="Escultura de Tiago Sillos">
-            <div class="art-info">
-                <span class="art-title">Título da Obra 02</span>
-                <span class="art-tech">Escultura Metálica / Técnica Mista</span>
+    <main id="topo">
+        <section class="hero">
+            <div class="wrap hero-grid">
+                <div class="reveal is-visible">
+                    <span class="eyebrow">Galeria de Arte</span>
+                    <h1>Arte autoral com presença, matéria e gesto.</h1>
+                    <p class="lead">
+                        O trabalho de Tiago Sillos Padovani transita entre pintura, superfície, estrutura e sensibilidade plástica.
+                        Uma linguagem visual pensada para quem busca obras com identidade, força estética e permanência.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a class="btn-primary" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
+                            Solicitar catálogo
+                        </a>
+                        <a class="btn-secondary" href="#obras">
+                            Ver obras em destaque
+                        </a>
+                    </div>
+
+                    <ul class="hero-meta" aria-label="Destaques da galeria">
+                        <li>Obras autorais</li>
+                        <li>Pintura e técnica mista</li>
+                        <li>Atendimento por WhatsApp</li>
+                    </ul>
+                </div>
+
+                <div class="hero-panel reveal">
+                    <article class="hero-card" aria-label="Obra em destaque">
+                        <span class="hero-kicker">Em destaque</span>
+                        <h2>Fluxos Orgânicos Primordiais</h2>
+                        <p>
+                            Uma composição que traduz movimento, densidade e expansão visual em linguagem contemporânea.
+                        </p>
+                    </article>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="art-card">
-            <img src="obra3.jpg" alt="Fluxos Orgânicos Primordiais">
-            <div class="art-info">
-                <span class="art-title">Fluxos Orgânicos Primordiais</span>
-                <span class="art-tech">Técnica Mista sobre Tela</span>
+        <section class="stats">
+            <div class="wrap stats-grid">
+                <article class="stat reveal">
+                    <strong>Curadoria visual</strong>
+                    <span>Apresentação elegante e direta para valorizar a obra e facilitar a decisão de compra.</span>
+                </article>
+
+                <article class="stat reveal">
+                    <strong>Catálogo sob consulta</strong>
+                    <span>Contato rápido pelo WhatsApp para disponibilidade, detalhes técnicos e negociação.</span>
+                </article>
+
+                <article class="stat reveal">
+                    <strong>Identidade autoral</strong>
+                    <span>Site com linguagem sofisticada, foco no artista e atmosfera condizente com a proposta da galeria.</span>
+                </article>
             </div>
+        </section>
+
+        <section class="section" id="sobre">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <div>
+                        <span class="section-kicker">Sobre</span>
+                        <h2>Arquitetura, arte e linguagem própria.</h2>
+                    </div>
+                    <p>
+                        Uma presença digital pensada para comunicar refinamento, autoria e consistência visual sem ruído.
+                    </p>
+                </div>
+
+                <div class="about-grid">
+                    <article class="panel reveal">
+                        <p>
+                            Tiago Sillos Padovani apresenta uma produção que articula gesto, composição e matéria em uma estética
+                            contemporânea. O site foi desenhado para criar impacto visual, valorizar cada peça e conduzir o visitante
+                            para uma ação clara: solicitar o catálogo e iniciar contato.
+                        </p>
+                    </article>
+
+                    <aside class="panel manifesto reveal" aria-label="Princípios da galeria">
+                        <div class="manifesto-item">
+                            <strong>Presença visual</strong>
+                            <span>Direção de arte sóbria, elegante e com atmosfera premium.</span>
+                        </div>
+                        <div class="manifesto-item">
+                            <strong>Leitura objetiva</strong>
+                            <span>Informação essencial, sem excesso, com foco total na percepção da obra.</span>
+                        </div>
+                        <div class="manifesto-item">
+                            <strong>Conversão discreta</strong>
+                            <span>Contato estratégico por WhatsApp, sem quebrar a experiência estética.</span>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="obras">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <div>
+                        <span class="section-kicker">Obras</span>
+                        <h2>Seleção em destaque.</h2>
+                    </div>
+                    <p>
+                        Substitua estas imagens pelos arquivos finais da galeria para manter o visual já pronto com seus conteúdos definitivos.
+                    </p>
+                </div>
+
+                <div class="gallery">
+                    <article class="art-card reveal">
+                        <img src="obra1.jpg" alt="Obra 01 de Tiago Sillos" loading="lazy">
+                        <div class="art-info">
+                            <span class="art-chip">Pintura</span>
+                            <span class="art-title">Obra 01</span>
+                            <span class="art-tech">Óleo e giz pastel sobre tela</span>
+                            <p class="art-note">Peça apresentada em layout editorial para valorizar textura, forma e presença visual.</p>
+                        </div>
+                    </article>
+
+                    <article class="art-card reveal">
+                        <img src="obra2.jpg" alt="Obra 02 de Tiago Sillos" loading="lazy">
+                        <div class="art-info">
+                            <span class="art-chip">Escultura</span>
+                            <span class="art-title">Obra 02</span>
+                            <span class="art-tech">Escultura metálica / técnica mista</span>
+                            <p class="art-note">Composição destacada em card premium com leitura limpa e foco na materialidade.</p>
+                        </div>
+                    </article>
+
+                    <article class="art-card reveal">
+                        <img src="obra3.jpg" alt="Fluxos Orgânicos Primordiais" loading="lazy">
+                        <div class="art-info">
+                            <span class="art-chip">Técnica mista</span>
+                            <span class="art-title">Fluxos Orgânicos Primordiais</span>
+                            <span class="art-tech">Técnica mista sobre tela</span>
+                            <p class="art-note">Obra em evidência para reforçar a assinatura visual da galeria e o tom contemporâneo do site.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="contato">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <div>
+                        <span class="section-kicker">Contato</span>
+                        <h2>Solicite o catálogo e converse direto.</h2>
+                    </div>
+                    <p>
+                        Um caminho simples e elegante para iniciar atendimento, consultar disponibilidade e avançar na aquisição das obras.
+                    </p>
+                </div>
+
+                <div class="contact-grid">
+                    <article class="panel contact-card reveal">
+                        <p>
+                            O site já está configurado para direcionar o visitante ao WhatsApp com mensagem pronta.
+                            Isso reduz atrito, aumenta resposta e deixa a conversão natural.
+                        </p>
+
+                        <div class="contact-list">
+                            <div class="contact-item">
+                                <span class="contact-bullet" aria-hidden="true"></span>
+                                <div>
+                                    <strong>Catálogo</strong>
+                                    <span>Entrega imediata do primeiro contato com texto pré-preenchido.</span>
+                                </div>
+                            </div>
+
+                            <div class="contact-item">
+                                <span class="contact-bullet" aria-hidden="true"></span>
+                                <div>
+                                    <strong>Disponibilidade</strong>
+                                    <span>Espaço ideal para informar medidas, técnica, valores e negociação.</span>
+                                </div>
+                            </div>
+
+                            <div class="contact-item">
+                                <span class="contact-bullet" aria-hidden="true"></span>
+                                <div>
+                                    <strong>Atendimento direto</strong>
+                                    <span>Conversa sem intermediários, coerente com uma experiência mais pessoal e autoral.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <aside class="panel contact-box reveal">
+                        <div>
+                            <span class="section-kicker">WhatsApp</span>
+                            <h3>+55 61 99571-3322</h3>
+                            <p>Pronto para receber solicitações de catálogo, consultas e interesse em obras.</p>
+                        </div>
+
+                        <div>
+                            <a class="btn-primary" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
+                                Solicitar catálogo agora
+                            </a>
+                            <small>Mensagem automática já configurada.</small>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="wrap footer-bar">
+            <span>© <span id="ano"></span> Tiago Sillos. Todos os direitos reservados.</span>
+            <span>tiagosillos.art.br</span>
         </div>
+    </footer>
 
-    </div>
-</div>
+    <script>
+        document.getElementById("ano").textContent = new Date().getFullYear();
 
-<footer>
-    <p>Interessado em adquirir uma obra? Solicite o catálogo pelo WhatsApp.</p>
-    <a
-        href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo."
-        class="btn-contato"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Solicitar catálogo pelo WhatsApp"
-    >
-        Solicitar catálogo
-    </a>
-    <p style="margin-top: 30px; font-size: 0.8em; color: #aaa;">&copy; 2026 tiagosillos.art.br</p>
-</footer>
+        const elements = document.querySelectorAll(".reveal");
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("is-visible");
+                }
+            });
+        }, { threshold: 0.16 });
 
+        elements.forEach((el) => observer.observe(el));
+    </script>
 </body>
 </html>
