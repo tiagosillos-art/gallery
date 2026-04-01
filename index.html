@@ -933,11 +933,11 @@
                         <canvas id="metaverse-canvas" aria-label="Galeria 3D de obras"></canvas>
 
                         <div class="metaverse-ui">
-                            <div class="meta-badge">Arraste para olhar • WASD para caminhar • toque/clique nas obras</div>
+                            <div class="meta-badge">Arraste para olhar • toque/clique nas obras</div>
                             <div class="meta-card">
                                 <strong>Galeria imersiva</strong>
                                 <p>
-                                    Um espaço expositivo centrado no observador: as obras passam a orbitar o visitante, criando uma experiência mais imersiva e contemplativa.
+                                    Um centro cósmico esférico com constelações e obras distribuídas ao redor do observador, criando uma experiência mais contemplativa e imersiva.
                                 </p>
                                 <small>Arquivos esperados na pasta do site: obra1.jpg, obra2.jpg, obra3.jpg</small>
                             </div>
@@ -954,7 +954,7 @@
                 <div class="metaverse-notes reveal">
                     <div class="metaverse-note">
                         <strong>Imersão sem sair da home</strong>
-                        <span>O visitante ocupa o centro do espaço enquanto as obras se distribuem ao redor em quatro lados do metaverso.</span>
+                        <span>O visitante permanece no centro da experiência, enquanto as obras e as constelações organizam o espaço ao redor.</span>
                     </div>
                     <div class="metaverse-note">
                         <strong>Pronto para GitHub Pages</strong>
@@ -962,7 +962,7 @@
                     </div>
                     <div class="metaverse-note">
                         <strong>Escalável</strong>
-                        <span>Depois dá para evoluir para áudio ambiente, constelações mais complexas, hotspots curatoriais e novas salas.</span>
+                        <span>Depois dá para evoluir para partículas, áudio ambiente, hotspots curatoriais e novas salas.</span>
                     </div>
                 </div>
             </div>
@@ -1063,118 +1063,214 @@
 
         if (canvas) {
             const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x050505);
-            scene.fog = new THREE.Fog(0x050505, 8, 30);
+            scene.background = new THREE.Color(0x040404);
 
             const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-            const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+            const camera = new THREE.PerspectiveCamera(62, 1, 0.1, 200);
             camera.position.set(0, 1.7, 0);
 
-            const room = new THREE.Group();
-            scene.add(room);
+            const root = new THREE.Group();
+            scene.add(root);
 
-            const ambient = new THREE.AmbientLight(0xf2d39a, 0.55);
+            const ambient = new THREE.AmbientLight(0xf1d7ab, 0.95);
             scene.add(ambient);
 
-            const spot = new THREE.SpotLight(0xffd189, 26, 40, Math.PI / 5, 0.45, 1.2);
-            spot.position.set(0, 6.8, 3.6);
-            spot.target.position.set(0, 0, 0);
-            scene.add(spot);
-            scene.add(spot.target);
+            const hemi = new THREE.HemisphereLight(0xffe2b3, 0x190d05, 0.85);
+            scene.add(hemi);
 
-            const goldLightLeft = new THREE.PointLight(0xf2b35d, 2.8, 10);
-            goldLightLeft.position.set(-4, 2.4, -3);
-            scene.add(goldLightLeft);
+            const coreLight = new THREE.PointLight(0xf5c16e, 7, 35);
+            coreLight.position.set(0, 2, 0);
+            scene.add(coreLight);
 
-            const goldLightRight = new THREE.PointLight(0xf2b35d, 2.8, 10);
-            goldLightRight.position.set(4, 2.4, -3);
-            scene.add(goldLightRight);
+            const rimLightA = new THREE.PointLight(0xb76b1d, 4, 45);
+            rimLightA.position.set(8, 8, 2);
+            scene.add(rimLightA);
 
-            const floor = new THREE.Mesh(
-                new THREE.PlaneGeometry(18, 18),
-                new THREE.MeshStandardMaterial({
-                    color: 0x121212,
-                    roughness: 0.92,
-                    metalness: 0.08
+            const rimLightB = new THREE.PointLight(0xb76b1d, 4, 45);
+            rimLightB.position.set(-8, 8, -2);
+            scene.add(rimLightB);
+
+            // Cosmic geodesic shell around the observer
+            const shellGeometry = new THREE.IcosahedronGeometry(9.8, 2);
+
+            const shellMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x9b6326,
+                emissive: 0x4a2000,
+                emissiveIntensity: 0.22,
+                transparent: true,
+                opacity: 0.12,
+                roughness: 0.26,
+                metalness: 0.68,
+                transmission: 0.08,
+                side: THREE.BackSide
+            });
+
+            const shell = new THREE.Mesh(shellGeometry, shellMaterial);
+            shell.position.y = 2.1;
+            root.add(shell);
+
+            const shellLines = new THREE.LineSegments(
+                new THREE.WireframeGeometry(shellGeometry),
+                new THREE.LineBasicMaterial({
+                    color: 0xe0b36b,
+                    transparent: true,
+                    opacity: 0.28
                 })
             );
-            floor.rotation.x = -Math.PI / 2;
-            room.add(floor);
+            shellLines.position.y = 2.1;
+            root.add(shellLines);
 
-            const wallMaterial = new THREE.MeshStandardMaterial({
-                color: 0x101010,
-                roughness: 0.98,
-                metalness: 0.04,
-                side: THREE.DoubleSide
+            // Luminous rings that surround the observer
+            const ringMaterial = new THREE.MeshStandardMaterial({
+                color: 0xe3b86d,
+                emissive: 0x7e3f00,
+                emissiveIntensity: 0.55,
+                roughness: 0.25,
+                metalness: 0.92,
+                transparent: true,
+                opacity: 0.7
             });
 
-            const backWall = new THREE.Mesh(new THREE.PlaneGeometry(18, 8), wallMaterial);
-            backWall.position.set(0, 4, -9);
-            room.add(backWall);
+            const ringA = new THREE.Mesh(new THREE.TorusGeometry(7.2, 0.045, 24, 180), ringMaterial);
+            ringA.position.set(0, 2.1, 0);
+            ringA.rotation.set(Math.PI / 2, 0, 0);
+            root.add(ringA);
 
+            const ringB = new THREE.Mesh(new THREE.TorusGeometry(6.4, 0.04, 24, 180), ringMaterial.clone());
+            ringB.material.opacity = 0.46;
+            ringB.position.set(0, 2.1, 0);
+            ringB.rotation.set(Math.PI / 2.8, 0.7, 0);
+            root.add(ringB);
 
-            const frontWall = new THREE.Mesh(new THREE.PlaneGeometry(18, 8), wallMaterial);
-            frontWall.rotation.y = Math.PI;
-            frontWall.position.set(0, 4, 9);
-            room.add(frontWall);
+            const ringC = new THREE.Mesh(new THREE.TorusGeometry(5.7, 0.03, 24, 180), ringMaterial.clone());
+            ringC.material.opacity = 0.28;
+            ringC.position.set(0, 2.1, 0);
+            ringC.rotation.set(Math.PI / 2.15, -0.65, 0.3);
+            root.add(ringC);
 
-            const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(18, 8), wallMaterial);
-            leftWall.rotation.y = Math.PI / 2;
-            leftWall.position.set(-9, 4, 0);
-            room.add(leftWall);
-
-            const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(18, 8), wallMaterial);
-            rightWall.rotation.y = -Math.PI / 2;
-            rightWall.position.set(9, 4, 0);
-            room.add(rightWall);
-
-            const ceiling = new THREE.Mesh(
-                new THREE.PlaneGeometry(18, 18),
-                new THREE.MeshStandardMaterial({ color: 0x090909, roughness: 1, metalness: 0.02, side: THREE.DoubleSide })
+            // Inner glow
+            const glowSphere = new THREE.Mesh(
+                new THREE.SphereGeometry(1.3, 32, 32),
+                new THREE.MeshBasicMaterial({
+                    color: 0xffcf86,
+                    transparent: true,
+                    opacity: 0.08
+                })
             );
-            ceiling.rotation.x = Math.PI / 2;
-            ceiling.position.y = 8;
-            room.add(ceiling);
+            glowSphere.position.set(0, 2.1, 0);
+            root.add(glowSphere);
 
-            
+            // Starfield
+            function randomPointOnSphere(minR, maxR) {
+                const u = Math.random();
+                const v = Math.random();
+                const theta = 2 * Math.PI * u;
+                const phi = Math.acos(2 * v - 1);
+                const r = minR + Math.random() * (maxR - minR);
+                return new THREE.Vector3(
+                    r * Math.sin(phi) * Math.cos(theta),
+                    r * Math.cos(phi) + 2.2,
+                    r * Math.sin(phi) * Math.sin(theta)
+                );
+            }
 
+            const starsCount = 1200;
+            const starPositions = new Float32Array(starsCount * 3);
+            for (let i = 0; i < starsCount; i++) {
+                const p = randomPointOnSphere(18, 34);
+                starPositions[i * 3 + 0] = p.x;
+                starPositions[i * 3 + 1] = p.y;
+                starPositions[i * 3 + 2] = p.z;
+            }
+
+            const starGeo = new THREE.BufferGeometry();
+            starGeo.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
+            const starMat = new THREE.PointsMaterial({
+                color: 0xf7deb0,
+                size: 0.06,
+                transparent: true,
+                opacity: 0.9
+            });
+            const stars = new THREE.Points(starGeo, starMat);
+            root.add(stars);
+
+            // Constellation lines
+            const constellationGroup = new THREE.Group();
+            root.add(constellationGroup);
+
+            for (let c = 0; c < 8; c++) {
+                const center = randomPointOnSphere(16, 22);
+                const points = [];
+                for (let j = 0; j < 4; j++) {
+                    points.push(center.clone().add(new THREE.Vector3(
+                        (Math.random() - 0.5) * 2.4,
+                        (Math.random() - 0.5) * 2.4,
+                        (Math.random() - 0.5) * 2.4
+                    )));
+                }
+
+                const linePositions = [];
+                for (let j = 0; j < points.length - 1; j++) {
+                    linePositions.push(points[j].x, points[j].y, points[j].z);
+                    linePositions.push(points[j + 1].x, points[j + 1].y, points[j + 1].z);
+                }
+
+                const geo = new THREE.BufferGeometry();
+                geo.setAttribute("position", new THREE.Float32BufferAttribute(linePositions, 3));
+                const mat = new THREE.LineBasicMaterial({
+                    color: 0xd7b57a,
+                    transparent: true,
+                    opacity: 0.32
+                });
+                constellationGroup.add(new THREE.LineSegments(geo, mat));
+            }
+
+            // Works distributed around the observer
+            const loader = new THREE.TextureLoader();
             const frameMaterial = new THREE.MeshStandardMaterial({
-                color: 0x8f6220,
-                roughness: 0.35,
-                metalness: 0.85
+                color: 0x9a6a28,
+                roughness: 0.34,
+                metalness: 0.88
             });
 
-            const loader = new THREE.TextureLoader();
-            const works = [
-                { title: "Obra 01 · Norte I", description: "Primeira estação do lado norte. A obra aparece como presença frontal na borda do espaço.", file: "obra1.jpg", position: [-4.6, 3.2, -8.82], rotationY: 0, size: [2.15, 2.8] },
-                { title: "Obra 02 · Norte II", description: "Segunda estação do lado norte. Campo visual de transição, ritmo e intensidade cromática.", file: "obra2.jpg", position: [0, 3.2, -8.82], rotationY: 0, size: [2.15, 2.8] },
-                { title: "Fluxos Orgânicos Primordiais · Norte III", description: "Terceira estação do lado norte. Núcleo conceitual voltado ao observador no centro.", file: "obra3.jpg", position: [4.6, 3.2, -8.82], rotationY: 0, size: [2.15, 2.8] },
-
-                { title: "Obra 01 · Leste I", description: "Primeira estação do lado leste. A imagem acompanha a rotação do olhar em torno do centro.", file: "obra1.jpg", position: [8.82, 3.2, -4.6], rotationY: -Math.PI / 2, size: [2.15, 2.8] },
-                { title: "Obra 02 · Leste II", description: "Segunda estação do lado leste. Um ponto de correspondência entre presença, superfície e vibração.", file: "obra2.jpg", position: [8.82, 3.2, 0], rotationY: -Math.PI / 2, size: [2.15, 2.8] },
-                { title: "Fluxos Orgânicos Primordiais · Leste III", description: "Terceira estação do lado leste. A obra entra no percurso como continuidade simbólica.", file: "obra3.jpg", position: [8.82, 3.2, 4.6], rotationY: -Math.PI / 2, size: [2.15, 2.8] },
-
-                { title: "Obra 01 · Sul I", description: "Primeira estação do lado sul. A parede posterior fecha o circuito ao redor do observador.", file: "obra1.jpg", position: [4.6, 3.2, 8.82], rotationY: Math.PI, size: [2.15, 2.8] },
-                { title: "Obra 02 · Sul II", description: "Segunda estação do lado sul. Um novo eixo de leitura para quem gira o corpo no centro do ambiente.", file: "obra2.jpg", position: [0, 3.2, 8.82], rotationY: Math.PI, size: [2.15, 2.8] },
-                { title: "Fluxos Orgânicos Primordiais · Sul III", description: "Terceira estação do lado sul. A obra reaparece como retorno, eco e expansão.", file: "obra3.jpg", position: [-4.6, 3.2, 8.82], rotationY: Math.PI, size: [2.15, 2.8] },
-
-                { title: "Obra 01 · Oeste I", description: "Primeira estação do lado oeste. O percurso se fecha em torno da centralidade do observador.", file: "obra1.jpg", position: [-8.82, 3.2, 4.6], rotationY: Math.PI / 2, size: [2.15, 2.8] },
-                { title: "Obra 02 · Oeste II", description: "Segunda estação do lado oeste. Uma pausa visual de densidade, contraste e ressonância.", file: "obra2.jpg", position: [-8.82, 3.2, 0], rotationY: Math.PI / 2, size: [2.15, 2.8] },
-                { title: "Fluxos Orgânicos Primordiais · Oeste III", description: "Terceira estação do lado oeste. A experiência retorna ao ponto de origem do percurso circular.", file: "obra3.jpg", position: [-8.82, 3.2, -4.6], rotationY: Math.PI / 2, size: [2.15, 2.8] }
+            const works = [];
+            const files = ["obra1.jpg", "obra2.jpg", "obra3.jpg"];
+            const labels = ["Obra 01", "Obra 02", "Fluxos Orgânicos Primordiais"];
+            const descriptions = [
+                "Primeira presença do percurso cósmico. A obra surge como campo de condensação visual.",
+                "Segunda presença do percurso. Uma estação de contraste, vibração e forma em expansão.",
+                "Núcleo conceitual do conjunto. A obra aparece como imagem-síntese da poética do projeto."
             ];
 
+            for (let side = 0; side < 4; side++) {
+                for (let i = 0; i < 3; i++) {
+                    const angle = side * (Math.PI / 2) + (-0.28 + i * 0.28);
+                    const radius = 10.6;
+                    works.push({
+                        title: `${labels[i]} · Quadrante ${side + 1}`,
+                        description: descriptions[i],
+                        file: files[i],
+                        position: [
+                            Math.sin(angle) * radius,
+                            2.9 + Math.sin(i * 0.7) * 0.16,
+                            Math.cos(angle) * radius
+                        ],
+                        size: [2.05, 2.72]
+                    });
+                }
+            }
+
             const clickableWorks = [];
-            const frameDepth = 0.1;
 
             function createPainting(work) {
                 const group = new THREE.Group();
                 const [w, h] = work.size;
 
                 const frame = new THREE.Mesh(
-                    new THREE.BoxGeometry(w + 0.22, h + 0.22, frameDepth),
+                    new THREE.BoxGeometry(w + 0.24, h + 0.24, 0.12),
                     frameMaterial
                 );
                 group.add(frame);
@@ -1184,59 +1280,55 @@
 
                 const art = new THREE.Mesh(
                     new THREE.PlaneGeometry(w, h),
-                    new THREE.MeshStandardMaterial({
-                        map: texture,
-                        roughness: 0.85,
-                        metalness: 0.04
+                    new THREE.MeshBasicMaterial({
+                        map: texture
                     })
                 );
-                art.position.z = frameDepth / 2 + 0.01;
+                art.position.z = 0.07;
                 art.userData = work;
                 group.add(art);
 
-                const glow = new THREE.Mesh(
-                    new THREE.PlaneGeometry(w + 0.34, h + 0.34),
+                const aura = new THREE.Mesh(
+                    new THREE.PlaneGeometry(w + 0.55, h + 0.55),
                     new THREE.MeshBasicMaterial({
-                        color: 0xffd18f,
+                        color: 0xffc870,
                         transparent: true,
-                        opacity: 0.06
+                        opacity: 0.09
                     })
                 );
-                glow.position.z = -0.01;
-                group.add(glow);
+                aura.position.z = -0.02;
+                group.add(aura);
 
-                const wallLight = new THREE.SpotLight(0xffc97b, 6, 8, Math.PI / 7, 0.65, 1.2);
-                wallLight.position.set(0, 1.7, 1.7);
-                wallLight.target = art;
-                group.add(wallLight);
+                const pos = new THREE.Vector3(...work.position);
+                group.position.copy(pos);
+                group.lookAt(new THREE.Vector3(0, 2.1, 0));
 
-                group.position.set(...work.position);
-                group.rotation.y = work.rotationY;
-                room.add(group);
-
+                root.add(group);
                 clickableWorks.push(art);
             }
 
             works.forEach(createPainting);
 
-            const particlesCount = 110;
-            const positions = new Float32Array(particlesCount * 3);
-            for (let i = 0; i < particlesCount; i++) {
-                positions[i * 3 + 0] = (Math.random() - 0.5) * 14;
-                positions[i * 3 + 1] = 1 + Math.random() * 5.5;
-                positions[i * 3 + 2] = (Math.random() - 0.5) * 14;
+            // Floating dust
+            const dustCount = 260;
+            const dustPositions = new Float32Array(dustCount * 3);
+            for (let i = 0; i < dustCount; i++) {
+                dustPositions[i * 3 + 0] = (Math.random() - 0.5) * 14;
+                dustPositions[i * 3 + 1] = Math.random() * 7 + 0.3;
+                dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 14;
             }
-            const particleGeo = new THREE.BufferGeometry();
-            particleGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-            const particleMat = new THREE.PointsMaterial({
-                color: 0xf7d89d,
-                size: 0.04,
+            const dustGeo = new THREE.BufferGeometry();
+            dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
+            const dustMat = new THREE.PointsMaterial({
+                color: 0xf0cf93,
+                size: 0.03,
                 transparent: true,
-                opacity: 0.65
+                opacity: 0.28
             });
-            const particles = new THREE.Points(particleGeo, particleMat);
-            room.add(particles);
+            const dust = new THREE.Points(dustGeo, dustMat);
+            root.add(dust);
 
+            // Info panel
             const infoPanel = document.getElementById("metaverse-info");
             const infoTitle = document.getElementById("metaverse-title");
             const infoDescription = document.getElementById("metaverse-description");
@@ -1254,20 +1346,17 @@
 
             closeButton.addEventListener("click", closeInfo);
 
+            // Look controls from the center
             const raycaster = new THREE.Raycaster();
             const pointer = new THREE.Vector2();
 
-            let yaw = -0.2;
-            let pitch = 0;
+            let yaw = 0.25;
+            let pitch = -0.08;
             let dragging = false;
-            let hoverObject = null;
+            let moved = false;
             let lastX = 0;
             let lastY = 0;
-
-            const keys = { KeyW: false, KeyA: false, KeyS: false, KeyD: false };
-            const velocity = new THREE.Vector3();
-            const direction = new THREE.Vector3();
-            const minX = -7.5, maxX = 7.5, minZ = -7.5, maxZ = 7.5;
+            let hoverObject = null;
 
             function updateCameraRotation() {
                 camera.rotation.order = "YXZ";
@@ -1275,45 +1364,56 @@
                 camera.rotation.x = pitch;
             }
 
-            function onPointerMove(clientX, clientY) {
+            function setPointerFromClient(clientX, clientY) {
                 const rect = canvas.getBoundingClientRect();
                 pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
                 pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
             }
 
-            canvas.addEventListener("mousedown", (event) => {
+            function startDrag(clientX, clientY) {
                 dragging = true;
-                lastX = event.clientX;
-                lastY = event.clientY;
-                onPointerMove(event.clientX, event.clientY);
-            });
+                moved = false;
+                lastX = clientX;
+                lastY = clientY;
+                setPointerFromClient(clientX, clientY);
+            }
 
-            window.addEventListener("mouseup", () => {
-                dragging = false;
-            });
-
-            window.addEventListener("mousemove", (event) => {
-                onPointerMove(event.clientX, event.clientY);
+            function moveDrag(clientX, clientY) {
+                setPointerFromClient(clientX, clientY);
                 if (!dragging) return;
-                const dx = event.clientX - lastX;
-                const dy = event.clientY - lastY;
-                lastX = event.clientX;
-                lastY = event.clientY;
-                yaw -= dx * 0.004;
-                pitch -= dy * 0.003;
-                pitch = Math.max(-0.7, Math.min(0.7, pitch));
+                const dx = clientX - lastX;
+                const dy = clientY - lastY;
+                if (Math.abs(dx) > 2 || Math.abs(dy) > 2) moved = true;
+                lastX = clientX;
+                lastY = clientY;
+                yaw -= dx * 0.0042;
+                pitch -= dy * 0.0032;
+                pitch = Math.max(-1.1, Math.min(1.1, pitch));
                 updateCameraRotation();
-            });
+            }
 
-            window.addEventListener("keydown", (event) => {
-                if (event.code in keys) keys[event.code] = true;
-            });
+            function endDrag() {
+                dragging = false;
+            }
 
-            window.addEventListener("keyup", (event) => {
-                if (event.code in keys) keys[event.code] = false;
-            });
+            canvas.addEventListener("mousedown", (event) => startDrag(event.clientX, event.clientY));
+            window.addEventListener("mousemove", (event) => moveDrag(event.clientX, event.clientY));
+            window.addEventListener("mouseup", endDrag);
+
+            canvas.addEventListener("touchstart", (event) => {
+                const t = event.touches[0];
+                startDrag(t.clientX, t.clientY);
+            }, { passive: true });
+
+            window.addEventListener("touchmove", (event) => {
+                const t = event.touches[0];
+                if (t) moveDrag(t.clientX, t.clientY);
+            }, { passive: true });
+
+            window.addEventListener("touchend", endDrag, { passive: true });
 
             canvas.addEventListener("click", () => {
+                if (moved) return;
                 raycaster.setFromCamera(pointer, camera);
                 const hits = raycaster.intersectObjects(clickableWorks, false);
                 if (hits.length) {
@@ -1335,52 +1435,34 @@
 
             function animate() {
                 const delta = Math.min(clock.getDelta(), 0.03);
+                const t = clock.elapsedTime;
 
-                direction.set(0, 0, 0);
-                if (keys.KeyW) direction.z -= 1;
-                if (keys.KeyS) direction.z += 1;
-                if (keys.KeyA) direction.x -= 1;
-                if (keys.KeyD) direction.x += 1;
-                direction.normalize();
-
-                const moveSpeed = 4.2;
-                velocity.x = direction.x * moveSpeed * delta;
-                velocity.z = direction.z * moveSpeed * delta;
-
-                const forward = new THREE.Vector3(0, 0, -1).applyEuler(camera.rotation);
-                forward.y = 0;
-                forward.normalize();
-
-                const right = new THREE.Vector3(1, 0, 0).applyEuler(camera.rotation);
-                right.y = 0;
-                right.normalize();
-
-                camera.position.addScaledVector(forward, velocity.z);
-                camera.position.addScaledVector(right, velocity.x);
-
-                camera.position.x = Math.max(minX, Math.min(maxX, camera.position.x));
-                camera.position.z = Math.max(minZ, Math.min(maxZ, camera.position.z));
-                camera.position.y = 1.7;
-
-                ring.rotation.z += delta * 0.28;
-                orb.position.y = 3.6 + Math.sin(clock.elapsedTime * 1.2) * 0.08;
-                particles.rotation.y += delta * 0.03;
+                ringA.rotation.z += delta * 0.08;
+                ringB.rotation.y += delta * 0.05;
+                ringC.rotation.x += delta * 0.04;
+                shellLines.rotation.y += delta * 0.035;
+                shell.rotation.y -= delta * 0.015;
+                constellationGroup.rotation.y += delta * 0.01;
+                dust.rotation.y -= delta * 0.012;
 
                 raycaster.setFromCamera(pointer, camera);
                 const hits = raycaster.intersectObjects(clickableWorks, false);
                 const nextHover = hits.length ? hits[0].object : null;
 
                 if (hoverObject && hoverObject !== nextHover) {
-                    hoverObject.material.emissive?.setHex?.(0x000000);
-                    hoverObject.material.emissiveIntensity = 0;
+                    hoverObject.scale.set(1, 1, 1);
                 }
 
                 if (nextHover) {
-                    hoverObject = nextHover;
-                    hoverObject.material.emissive = new THREE.Color(0x5d2c00);
-                    hoverObject.material.emissiveIntensity = 0.6;
-                } else {
-                    hoverObject = null;
+                    nextHover.scale.set(1.03, 1.03, 1.03);
+                }
+
+                hoverObject = nextHover;
+
+                // very subtle idle drift
+                if (!dragging) {
+                    yaw += Math.sin(t * 0.18) * 0.00028;
+                    updateCameraRotation();
                 }
 
                 resizeRenderer();
@@ -1391,7 +1473,6 @@
             updateCameraRotation();
             resizeRenderer();
             animate();
-
             window.addEventListener("resize", resizeRenderer);
         }
     </script>
