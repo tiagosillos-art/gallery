@@ -937,7 +937,7 @@
                             <div class="meta-card">
                                 <strong>Galeria imersiva</strong>
                                 <p>
-                                    Uma sala escura, com presença luminosa e atmosfera simbólica, desenhada para prolongar a experiência da obra no espaço digital.
+                                    Um espaço expositivo centrado no observador: as obras passam a orbitar o visitante, criando uma experiência mais imersiva e contemplativa.
                                 </p>
                                 <small>Arquivos esperados na pasta do site: obra1.jpg, obra2.jpg, obra3.jpg</small>
                             </div>
@@ -954,15 +954,15 @@
                 <div class="metaverse-notes reveal">
                     <div class="metaverse-note">
                         <strong>Imersão sem sair da home</strong>
-                        <span>O visitante atravessa a narrativa do site e encontra um espaço de exibição embutido na mesma página.</span>
+                        <span>O visitante ocupa o centro do espaço enquanto as obras se distribuem ao redor em quatro lados do metaverso.</span>
                     </div>
                     <div class="metaverse-note">
                         <strong>Pronto para GitHub Pages</strong>
-                        <span>Estrutura estática com Three.js via CDN, sem backend e sem build complexo.</span>
+                        <span>Estrutura estática com Three.js via CDN, sem backend e pronta para experimentar no GitHub Pages.</span>
                     </div>
                     <div class="metaverse-note">
                         <strong>Escalável</strong>
-                        <span>Depois dá para evoluir para partículas, áudio ambiente, hotspots curatoriais e novas salas.</span>
+                        <span>Depois dá para evoluir para áudio ambiente, constelações mais complexas, hotspots curatoriais e novas salas.</span>
                     </div>
                 </div>
             </div>
@@ -1071,7 +1071,7 @@
             renderer.outputColorSpace = THREE.SRGBColorSpace;
 
             const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
-            camera.position.set(0, 1.7, 7);
+            camera.position.set(0, 1.7, 0);
 
             const room = new THREE.Group();
             scene.add(room);
@@ -1115,6 +1115,12 @@
             backWall.position.set(0, 4, -9);
             room.add(backWall);
 
+
+            const frontWall = new THREE.Mesh(new THREE.PlaneGeometry(18, 8), wallMaterial);
+            frontWall.rotation.y = Math.PI;
+            frontWall.position.set(0, 4, 9);
+            room.add(frontWall);
+
             const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(18, 8), wallMaterial);
             leftWall.rotation.y = Math.PI / 2;
             leftWall.position.set(-9, 4, 0);
@@ -1133,41 +1139,7 @@
             ceiling.position.y = 8;
             room.add(ceiling);
 
-            const ringGeo = new THREE.TorusGeometry(1.1, 0.05, 24, 120);
-            const ringMat = new THREE.MeshStandardMaterial({
-                color: 0xf0c57d,
-                emissive: 0x9a5e1d,
-                emissiveIntensity: 0.6,
-                roughness: 0.2,
-                metalness: 0.95
-            });
-            const ring = new THREE.Mesh(ringGeo, ringMat);
-            ring.rotation.x = Math.PI / 2;
-            ring.position.set(0, 3.6, 0.2);
-            room.add(ring);
-
-            const orb = new THREE.Mesh(
-                new THREE.SphereGeometry(0.65, 48, 48),
-                new THREE.MeshPhysicalMaterial({
-                    color: 0xffd18f,
-                    emissive: 0xc76f16,
-                    emissiveIntensity: 0.45,
-                    transmission: 0.12,
-                    roughness: 0.22,
-                    metalness: 0.18,
-                    transparent: true,
-                    opacity: 0.92
-                })
-            );
-            orb.position.set(0, 3.6, 0.2);
-            room.add(orb);
-
-            const pedestal = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.7, 0.9, 1.2, 40),
-                new THREE.MeshStandardMaterial({ color: 0x1b1b1b, roughness: 0.82, metalness: 0.18 })
-            );
-            pedestal.position.set(0, 0.6, 0.2);
-            room.add(pedestal);
+            
 
             const frameMaterial = new THREE.MeshStandardMaterial({
                 color: 0x8f6220,
@@ -1177,46 +1149,21 @@
 
             const loader = new THREE.TextureLoader();
             const works = [
-                {
-                    title: "Obra 01",
-                    description: "Primeira presença do percurso. Uma aparição matérica inserida na atmosfera do espaço expositivo.",
-                    file: "obra1.jpg",
-                    position: [-4.4, 3.2, -8.82],
-                    rotationY: 0,
-                    size: [2.35, 3.0]
-                },
-                {
-                    title: "Obra 02",
-                    description: "Segunda estação visual. Campo de tensão entre densidade, forma e pulsação cromática.",
-                    file: "obra2.jpg",
-                    position: [0, 3.2, -8.82],
-                    rotationY: 0,
-                    size: [2.35, 3.0]
-                },
-                {
-                    title: "Fluxos Orgânicos Primordiais",
-                    description: "Núcleo conceitual da galeria. Uma superfície que sugere emergência, vibração e presença simbólica.",
-                    file: "obra3.jpg",
-                    position: [4.4, 3.2, -8.82],
-                    rotationY: 0,
-                    size: [2.35, 3.0]
-                },
-                {
-                    title: "Estudo Lateral I",
-                    description: "Variação lateral do percurso, ampliando a sensação de travessia e de campo expandido.",
-                    file: "obra3.jpg",
-                    position: [-8.82, 3.2, -2.4],
-                    rotationY: Math.PI / 2,
-                    size: [2.15, 2.8]
-                },
-                {
-                    title: "Estudo Lateral II",
-                    description: "Uma segunda aparição lateral, criando correspondência entre repetição, ritmo e retorno.",
-                    file: "obra1.jpg",
-                    position: [8.82, 3.2, -2.4],
-                    rotationY: -Math.PI / 2,
-                    size: [2.15, 2.8]
-                }
+                { title: "Obra 01 · Norte I", description: "Primeira estação do lado norte. A obra aparece como presença frontal na borda do espaço.", file: "obra1.jpg", position: [-4.6, 3.2, -8.82], rotationY: 0, size: [2.15, 2.8] },
+                { title: "Obra 02 · Norte II", description: "Segunda estação do lado norte. Campo visual de transição, ritmo e intensidade cromática.", file: "obra2.jpg", position: [0, 3.2, -8.82], rotationY: 0, size: [2.15, 2.8] },
+                { title: "Fluxos Orgânicos Primordiais · Norte III", description: "Terceira estação do lado norte. Núcleo conceitual voltado ao observador no centro.", file: "obra3.jpg", position: [4.6, 3.2, -8.82], rotationY: 0, size: [2.15, 2.8] },
+
+                { title: "Obra 01 · Leste I", description: "Primeira estação do lado leste. A imagem acompanha a rotação do olhar em torno do centro.", file: "obra1.jpg", position: [8.82, 3.2, -4.6], rotationY: -Math.PI / 2, size: [2.15, 2.8] },
+                { title: "Obra 02 · Leste II", description: "Segunda estação do lado leste. Um ponto de correspondência entre presença, superfície e vibração.", file: "obra2.jpg", position: [8.82, 3.2, 0], rotationY: -Math.PI / 2, size: [2.15, 2.8] },
+                { title: "Fluxos Orgânicos Primordiais · Leste III", description: "Terceira estação do lado leste. A obra entra no percurso como continuidade simbólica.", file: "obra3.jpg", position: [8.82, 3.2, 4.6], rotationY: -Math.PI / 2, size: [2.15, 2.8] },
+
+                { title: "Obra 01 · Sul I", description: "Primeira estação do lado sul. A parede posterior fecha o circuito ao redor do observador.", file: "obra1.jpg", position: [4.6, 3.2, 8.82], rotationY: Math.PI, size: [2.15, 2.8] },
+                { title: "Obra 02 · Sul II", description: "Segunda estação do lado sul. Um novo eixo de leitura para quem gira o corpo no centro do ambiente.", file: "obra2.jpg", position: [0, 3.2, 8.82], rotationY: Math.PI, size: [2.15, 2.8] },
+                { title: "Fluxos Orgânicos Primordiais · Sul III", description: "Terceira estação do lado sul. A obra reaparece como retorno, eco e expansão.", file: "obra3.jpg", position: [-4.6, 3.2, 8.82], rotationY: Math.PI, size: [2.15, 2.8] },
+
+                { title: "Obra 01 · Oeste I", description: "Primeira estação do lado oeste. O percurso se fecha em torno da centralidade do observador.", file: "obra1.jpg", position: [-8.82, 3.2, 4.6], rotationY: Math.PI / 2, size: [2.15, 2.8] },
+                { title: "Obra 02 · Oeste II", description: "Segunda estação do lado oeste. Uma pausa visual de densidade, contraste e ressonância.", file: "obra2.jpg", position: [-8.82, 3.2, 0], rotationY: Math.PI / 2, size: [2.15, 2.8] },
+                { title: "Fluxos Orgânicos Primordiais · Oeste III", description: "Terceira estação do lado oeste. A experiência retorna ao ponto de origem do percurso circular.", file: "obra3.jpg", position: [-8.82, 3.2, -4.6], rotationY: Math.PI / 2, size: [2.15, 2.8] }
             ];
 
             const clickableWorks = [];
@@ -1310,7 +1257,7 @@
             const raycaster = new THREE.Raycaster();
             const pointer = new THREE.Vector2();
 
-            let yaw = 0;
+            let yaw = -0.2;
             let pitch = 0;
             let dragging = false;
             let hoverObject = null;
