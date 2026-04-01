@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluxos Orgânicos Primordiais | Tiago Sillos</title>
-    <meta name="description" content="Página conceitual de Fluxos Orgânicos Primordiais, projeto artístico de Tiago Sillos sobre forma, energia, transformação e visualidade liminar.">
-    <meta name="theme-color" content="#0a0a0a">
-    <link rel="canonical" href="https://tiagosillos.art.br/fluxos-organicos-primordiais.html">
+    <title>Tiago Sillos | Galeria de Arte</title>
+    <meta name="description" content="Galeria de arte de Tiago Sillos Padovani, com obras autorais, pinturas e esculturas. Solicite o catálogo pelo WhatsApp.">
+    <meta name="theme-color" content="#0b0b0b">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="canonical" href="https://tiagosillos.art.br/">
 
     <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -15,25 +16,30 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Fluxos Orgânicos Primordiais | Tiago Sillos">
-    <meta property="og:description" content="Uma investigação visual sobre a zona intermediária entre o nada e a existência.">
-    <meta property="og:url" content="https://tiagosillos.art.br/fluxos-organicos-primordiais.html">
+    <meta property="og:title" content="Tiago Sillos | Galeria de Arte">
+    <meta property="og:description" content="Obras autorais, pinturas e esculturas de Tiago Sillos Padovani. Solicite o catálogo pelo WhatsApp.">
+    <meta property="og:url" content="https://tiagosillos.art.br/">
+    <meta property="og:image" content="https://tiagosillos.art.br/obra3.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tiago Sillos | Galeria de Arte">
+    <meta name="twitter:description" content="Obras autorais, pinturas e esculturas de Tiago Sillos Padovani.">
 
     <style>
         :root {
-            --bg: #060606;
-            --bg-2: #0d0d0d;
-            --panel: rgba(255,255,255,0.045);
-            --line: rgba(255,220,162,0.16);
-            --gold: #efc77e;
-            --gold-2: #ffdca2;
-            --text: #f6efe4;
-            --muted: #cbbda7;
-            --muted-2: #a9977f;
-            --shadow: 0 30px 70px rgba(0,0,0,.38);
-            --radius-xl: 34px;
-            --radius-lg: 26px;
-            --radius-md: 20px;
+            --bg: #070707;
+            --bg-soft: #101010;
+            --card: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 220, 146, 0.16);
+            --text: #f6f1e8;
+            --muted: #b9ac96;
+            --gold: #f1c267;
+            --gold-strong: #ffd98b;
+            --line: rgba(255, 214, 143, 0.12);
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 18px;
             --max: 1180px;
         }
 
@@ -42,14 +48,13 @@
 
         body {
             margin: 0;
-            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
             color: var(--text);
             background:
-                radial-gradient(circle at 12% 12%, rgba(239,199,126,.16), transparent 28%),
-                radial-gradient(circle at 84% 18%, rgba(239,199,126,.09), transparent 22%),
-                radial-gradient(circle at 50% 110%, rgba(239,199,126,.07), transparent 28%),
-                linear-gradient(180deg, #050505 0%, #090909 36%, #0d0d0d 100%);
-            line-height: 1.7;
+                radial-gradient(circle at top left, rgba(241, 194, 103, 0.18), transparent 30%),
+                radial-gradient(circle at 85% 18%, rgba(241, 194, 103, 0.10), transparent 22%),
+                linear-gradient(180deg, #050505 0%, #090909 45%, #0d0d0d 100%);
+            line-height: 1.65;
             overflow-x: hidden;
         }
 
@@ -58,29 +63,25 @@
             position: fixed;
             inset: 0;
             pointer-events: none;
-            opacity: .05;
             background:
-                linear-gradient(transparent 0%, rgba(255,255,255,.02) 50%, transparent 100%),
-                linear-gradient(90deg, transparent 0%, rgba(255,255,255,.02) 50%, transparent 100%);
+                linear-gradient(transparent 0%, rgba(255,255,255,0.02) 49%, transparent 100%),
+                linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.02) 49%, transparent 100%);
             background-size: 100% 3px, 3px 100%;
+            opacity: 0.06;
             mix-blend-mode: screen;
         }
 
-        a { color: inherit; text-decoration: none; }
         img { max-width: 100%; display: block; }
-
-        .wrap {
-            width: min(var(--max), calc(100% - 40px));
-            margin: 0 auto;
-        }
+        a { color: inherit; text-decoration: none; }
+        .wrap { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
 
         .site-header {
             position: sticky;
             top: 0;
             z-index: 50;
             backdrop-filter: blur(18px);
-            background: rgba(8,8,8,.68);
-            border-bottom: 1px solid rgba(255,255,255,.05);
+            background: rgba(7, 7, 7, 0.68);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
         }
 
         .nav {
@@ -95,76 +96,82 @@
             display: inline-flex;
             align-items: center;
             gap: 12px;
+            font-size: 0.98rem;
             font-weight: 700;
-            letter-spacing: .18em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
-            font-size: .92rem;
         }
 
         .brand-mark {
-            width: 15px;
-            height: 15px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            background: radial-gradient(circle at 28% 28%, var(--gold-2), #c78934 74%, #8d5f1e 100%);
-            box-shadow: 0 0 24px rgba(239,199,126,.35);
+            background: radial-gradient(circle at 30% 30%, var(--gold-strong), #c98d2d 75%, #8b5a15 100%);
+            box-shadow: 0 0 24px rgba(241, 194, 103, 0.35);
         }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 22px;
+            gap: 24px;
             color: var(--muted);
-            font-size: .95rem;
+            font-size: 0.95rem;
         }
 
         .nav-links a:hover { color: var(--text); }
 
-        .btn, .btn-outline {
+        .nav-cta,
+        .btn-primary,
+        .btn-secondary {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             border-radius: 999px;
             padding: 13px 22px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
             font-weight: 700;
-            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+            letter-spacing: 0.02em;
         }
 
-        .btn {
-            color: #111;
-            background: linear-gradient(135deg, #ffe6b7 0%, #efc77e 52%, #ca8d35 100%);
-            box-shadow: 0 18px 34px rgba(239,199,126,.18);
+        .nav-cta,
+        .btn-primary {
+            color: #101010;
+            background: linear-gradient(135deg, #ffe3a6 0%, #f1c267 52%, #d38d2e 100%);
+            box-shadow: 0 16px 34px rgba(241, 194, 103, 0.22);
         }
 
-        .btn-outline {
+        .nav-cta:hover,
+        .btn-primary:hover,
+        .btn-secondary:hover { transform: translateY(-2px); }
+
+        .btn-secondary {
             color: var(--text);
-            border: 1px solid var(--line);
-            background: rgba(255,255,255,.025);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
         }
 
-        .btn:hover, .btn-outline:hover { transform: translateY(-2px); }
-
-        .hero { position: relative; padding: 92px 0 72px; }
+        .hero { position: relative; padding: 92px 0 56px; }
 
         .hero-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.08fr) minmax(300px, .92fr);
-            gap: 34px;
+            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+            gap: 44px;
             align-items: center;
         }
 
-        .eyebrow, .section-kicker {
+        .eyebrow {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            color: var(--gold-2);
-            font-size: .83rem;
-            font-weight: 800;
-            letter-spacing: .18em;
+            color: var(--gold-strong);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
         }
 
-        .eyebrow::before, .section-kicker::before {
+        .eyebrow::before {
             content: "";
             width: 42px;
             height: 1px;
@@ -173,16 +180,15 @@
 
         h1 {
             margin: 18px 0 18px;
-            font-size: clamp(3rem, 7vw, 6.4rem);
-            line-height: .92;
-            letter-spacing: -.05em;
-            max-width: 12ch;
+            font-size: clamp(2.8rem, 6vw, 5.6rem);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
         }
 
-        .lead {
+        .hero p.lead {
             max-width: 680px;
             margin: 0 0 28px;
-            color: #ddcfbb;
+            color: #d8cbb7;
             font-size: clamp(1.05rem, 2vw, 1.22rem);
         }
 
@@ -190,308 +196,271 @@
             display: flex;
             flex-wrap: wrap;
             gap: 14px;
-            margin-bottom: 26px;
+            margin-bottom: 28px;
         }
 
         .hero-meta {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
-            list-style: none;
             padding: 0;
             margin: 0;
+            list-style: none;
         }
 
         .hero-meta li {
-            padding: 10px 14px;
-            border-radius: 999px;
             border: 1px solid var(--line);
-            background: rgba(255,255,255,.03);
+            background: rgba(255, 255, 255, 0.03);
             color: var(--muted);
-            font-size: .92rem;
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-size: 0.92rem;
         }
 
-        .orb-panel {
-            position: relative;
-            min-height: 520px;
-            border-radius: var(--radius-xl);
-            border: 1px solid var(--line);
-            background:
-                radial-gradient(circle at 52% 26%, rgba(255,224,163,.55), rgba(255,193,88,.18) 16%, transparent 32%),
-                radial-gradient(circle at 50% 46%, rgba(242,165,72,.18), transparent 20%),
-                radial-gradient(circle at 50% 58%, rgba(255,255,255,.08), transparent 8%),
-                radial-gradient(circle at 34% 60%, rgba(255,200,120,.12), transparent 14%),
-                radial-gradient(circle at 68% 61%, rgba(255,200,120,.12), transparent 14%),
-                linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
+        .hero-panel { position: relative; }
 
-        .orb-panel::before, .orb-panel::after {
+        .hero-panel::before {
             content: "";
             position: absolute;
+            inset: 8% 12% auto auto;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
-            filter: blur(2px);
+            background: radial-gradient(circle, rgba(241, 194, 103, 0.28), transparent 70%);
+            filter: blur(10px);
         }
 
-        .orb-panel::before {
-            width: 62%;
-            aspect-ratio: 1;
-            left: 19%;
-            top: 17%;
+        .hero-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            padding: 26px;
             background:
-                radial-gradient(circle at 50% 36%, rgba(255,230,183,.82), rgba(241,196,110,.28) 25%, rgba(0,0,0,0) 56%);
-            opacity: .92;
+                linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)),
+                linear-gradient(135deg, rgba(241, 194, 103, 0.08), rgba(255, 255, 255, 0.02));
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow);
+            min-height: 470px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
         }
 
-        .orb-panel::after {
-            width: 140%;
-            height: 140%;
-            left: -20%;
-            top: 58%;
-            background:
-                radial-gradient(circle at 50% 0%, rgba(255,224,163,.18), transparent 18%),
-                radial-gradient(circle at 50% 12%, rgba(255,184,95,.18), transparent 14%),
-                radial-gradient(circle at 50% 22%, rgba(255,255,255,.09), transparent 9%);
-            opacity: .7;
-        }
-
-        .orb-caption {
+        .hero-card::after {
+            content: "";
             position: absolute;
-            inset: auto 24px 24px 24px;
-            padding: 20px 22px;
-            border-radius: var(--radius-md);
-            border: 1px solid rgba(255,255,255,.08);
-            background: rgba(9,9,9,.54);
-            backdrop-filter: blur(12px);
+            inset: 0;
+            background:
+                radial-gradient(circle at 78% 16%, rgba(255, 217, 139, 0.22), transparent 18%),
+                linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.36));
+            pointer-events: none;
         }
 
-        .orb-caption strong { display: block; margin-bottom: 6px; font-size: 1.08rem; }
-        .orb-caption span { color: var(--muted); font-size: .96rem; }
+        .hero-kicker,
+        .section-kicker {
+            color: var(--gold-strong);
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-size: 0.82rem;
+        }
 
-        .section { padding: 72px 0; }
+        .hero-card h2 {
+            margin: 12px 0 10px;
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            line-height: 1.04;
+            max-width: 9ch;
+        }
+
+        .hero-card p {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            color: #decfb8;
+            max-width: 28ch;
+        }
+
+        .stats { padding: 16px 0 28px; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .stat {
+            padding: 22px;
+            border-radius: var(--radius-lg);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--line);
+        }
+
+        .stat strong { display: block; font-size: 1.4rem; margin-bottom: 8px; }
+        .stat span { color: var(--muted); font-size: 0.95rem; }
+        .section { padding: 68px 0; }
 
         .section-head {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(260px, 430px);
-            gap: 22px;
+            grid-template-columns: 1fr auto;
+            gap: 24px;
             align-items: end;
             margin-bottom: 28px;
         }
 
         .section-head h2 {
-            margin: 12px 0 0;
-            font-size: clamp(2rem, 4vw, 3.4rem);
-            line-height: .98;
-            letter-spacing: -.05em;
-        }
-
-        .section-head p { margin: 0; color: var(--muted); }
-
-        .panel {
-            border-radius: var(--radius-xl);
-            background: rgba(255,255,255,0.045);
-            border: 1px solid rgba(255,255,255,.08);
-            box-shadow: var(--shadow);
-        }
-
-        .panel-inner { padding: 30px; }
-
-        .story-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            gap: 22px;
-        }
-
-        .story-block h3,
-        .quote-block h3,
-        .process-card h3,
-        .matrix-card h3,
-        .contact-card h3 {
-            margin: 0 0 12px;
-            font-size: 1.34rem;
-            letter-spacing: -.02em;
-        }
-
-        .story-block p,
-        .matrix-card p,
-        .process-card p,
-        .contact-card p,
-        .quote-text,
-        .refs li { margin: 0; color: #ddcfbb; }
-
-        .story-stack { display: grid; gap: 22px; }
-
-        .quote-block {
-            position: relative;
-            overflow: hidden;
-            min-height: 100%;
-            background:
-                linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)),
-                radial-gradient(circle at 15% 20%, rgba(239,199,126,.14), transparent 22%);
-        }
-
-        .quote-block::before {
-            content: "“";
-            position: absolute;
-            right: 24px;
-            top: 0;
-            font-size: 8rem;
+            margin: 10px 0 0;
+            font-size: clamp(2rem, 4vw, 3.3rem);
             line-height: 1;
-            color: rgba(255,220,162,.12);
-            font-family: Georgia, serif;
+            letter-spacing: -0.04em;
         }
 
-        .quote-text {
-            font-size: clamp(1.22rem, 2vw, 1.58rem);
-            line-height: 1.5;
-            max-width: 28ch;
-        }
+        .section-head p { margin: 0; max-width: 520px; color: var(--muted); }
 
-        .quote-sign {
-            display: block;
-            margin-top: 18px;
-            color: var(--muted-2);
-            font-size: .92rem;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-        }
-
-        .matrix-grid {
+        .about-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
             gap: 20px;
         }
 
-        .matrix-card {
-            overflow: hidden;
-            background:
-                linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03)),
-                linear-gradient(135deg, rgba(239,199,126,.10), rgba(255,255,255,.02));
+        .panel {
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
         }
 
-        .card-tag {
+        .panel p { margin: 0; color: #d8cbb7; }
+        .manifesto { display: grid; gap: 16px; }
+
+        .manifesto-item {
+            padding: 18px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .manifesto-item:first-child { border-top: 0; padding-top: 0; }
+        .manifesto-item strong { display: block; margin-bottom: 6px; font-size: 1.05rem; }
+        .manifesto-item span { color: var(--muted); }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .art-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: var(--shadow);
+            transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .art-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 220, 146, 0.28);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.46);
+        }
+
+        .art-card img {
+            aspect-ratio: 4 / 4.8;
+            object-fit: cover;
+            width: 100%;
+            background: #0f0f0f;
+        }
+
+        .art-info { padding: 20px 20px 22px; }
+
+        .art-chip {
             display: inline-flex;
             align-items: center;
             padding: 8px 12px;
             border-radius: 999px;
-            border: 1px solid rgba(239,199,126,.24);
-            background: rgba(239,199,126,.08);
-            color: var(--gold-2);
-            font-size: .78rem;
-            font-weight: 800;
-            letter-spacing: .08em;
+            background: rgba(241, 194, 103, 0.10);
+            border: 1px solid rgba(241, 194, 103, 0.18);
+            color: var(--gold-strong);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-            margin-bottom: 16px;
         }
 
-        .principles {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 18px;
+        .art-title {
+            display: block;
+            margin: 14px 0 8px;
+            font-size: 1.35rem;
+            font-weight: 700;
         }
 
-        .principles .panel-inner { padding: 26px; }
+        .art-tech,
+        .art-note { color: var(--muted); }
 
-        .principles ul {
-            list-style: none;
-            padding: 0;
-            margin: 16px 0 0;
-            display: grid;
-            gap: 12px;
-        }
-
-        .principles li {
-            color: #ddcfbb;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255,255,255,.08);
-        }
-
-        .principles li:first-child { border-top: 0; padding-top: 0; }
-        .principles strong { color: var(--text); }
-
-        .process-grid {
-            display: grid;
-            grid-template-columns: 1.08fr .92fr;
-            gap: 22px;
-        }
-
-        .material-list {
-            list-style: none;
-            padding: 0;
-            margin: 18px 0 0;
-            display: grid;
-            gap: 14px;
-        }
-
-        .material-list li {
-            color: #ddcfbb;
-            padding-top: 14px;
-            border-top: 1px solid rgba(255,255,255,.08);
-        }
-
-        .material-list li:first-child { border-top: 0; padding-top: 0; }
-        .material-list strong { color: var(--text); }
+        .art-note { margin-top: 14px; font-size: 0.94rem; }
 
         .contact-grid {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
-            gap: 22px;
+            gap: 24px;
+            align-items: stretch;
         }
 
-        .contact-list {
-            display: grid;
-            gap: 14px;
-            margin-top: 20px;
-        }
+        .contact-card { min-height: 100%; }
+        .contact-list { display: grid; gap: 14px; margin-top: 22px; }
 
         .contact-item {
             display: flex;
             gap: 14px;
             align-items: flex-start;
-            border-top: 1px solid rgba(255,255,255,.08);
-            padding-top: 14px;
+            padding: 14px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
         }
 
-        .contact-item:first-child { border-top: 0; padding-top: 0; }
+        .contact-item:first-child { padding-top: 0; border-top: 0; }
 
-        .contact-dot {
-            width: 10px;
-            height: 10px;
-            margin-top: 10px;
+        .contact-bullet {
+            width: 11px;
+            height: 11px;
+            margin-top: 8px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold-2), #c88932);
-            box-shadow: 0 0 18px rgba(239,199,126,.35);
+            background: linear-gradient(135deg, var(--gold-strong), #cf8b2b);
+            box-shadow: 0 0 20px rgba(241, 194, 103, 0.42);
             flex: none;
         }
 
         .contact-item strong { display: block; margin-bottom: 4px; }
         .contact-item span { color: var(--muted); }
 
-        .refs {
-            padding-left: 18px;
-            margin: 14px 0 0;
+        .contact-box {
             display: grid;
-            gap: 10px;
+            align-content: space-between;
+            gap: 18px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04)),
+                linear-gradient(135deg, rgba(241, 194, 103, 0.12), rgba(255,255,255,0.02));
         }
 
-        footer { padding: 12px 0 46px; }
+        .contact-box h3 { margin: 12px 0 8px; font-size: 1.8rem; line-height: 1.05; }
+        .contact-box p { margin: 0; color: #decfb8; }
+        .contact-box small { color: var(--muted); display: block; }
+        footer { padding: 18px 0 44px; }
 
         .footer-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 18px;
             padding-top: 24px;
-            border-top: 1px solid rgba(255,255,255,.08);
+            border-top: 1px solid rgba(255,255,255,0.08);
             color: var(--muted);
-            font-size: .92rem;
+            font-size: 0.92rem;
         }
 
         .reveal {
             opacity: 0;
-            transform: translateY(26px);
-            transition: opacity .75s ease, transform .75s ease;
+            transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
         }
 
         .reveal.is-visible {
@@ -500,44 +469,274 @@
         }
 
         @media (max-width: 980px) {
-            .hero-grid, .section-head, .story-grid, .matrix-grid, .principles, .process-grid, .contact-grid {
-                grid-template-columns: 1fr;
-            }
-            .orb-panel { min-height: 420px; }
+            .hero-grid,
+            .about-grid,
+            .contact-grid,
+            .section-head { grid-template-columns: 1fr; }
+            .gallery,
+            .stats-grid { grid-template-columns: 1fr; }
+            .hero { padding-top: 70px; }
+            .hero-card { min-height: 340px; }
         }
 
         @media (max-width: 760px) {
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                gap: 16px;
+                font-size: 0.92rem;
+            }
+
+            .brand,
+            .nav-cta { justify-content: center; }
             .wrap { width: min(var(--max), calc(100% - 24px)); }
-            .nav { flex-wrap: wrap; justify-content: center; }
-            .nav-links { order: 3; width: 100%; justify-content: center; gap: 16px; }
+
+            .panel,
+            .hero-card,
+            .art-info {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .btn-primary,
+            .btn-secondary,
+            .nav-cta { width: 100%; }
             .hero-actions { display: grid; grid-template-columns: 1fr; }
-            .btn, .btn-outline { width: 100%; }
-            .panel-inner { padding: 22px 20px; }
             .footer-bar { flex-direction: column; text-align: center; }
         }
 
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
-            .reveal, .btn, .btn-outline { transition: none; }
+            .reveal,
+            .art-card,
+            .nav-cta,
+            .btn-primary,
+            .btn-secondary { transition: none; }
         }
+    
+        .meta-section {
+            position: relative;
+        }
+
+        .metaverse-shell {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255,255,255,.08);
+            box-shadow: var(--shadow);
+            background:
+                radial-gradient(circle at 20% 20%, rgba(241, 194, 103, .08), transparent 20%),
+                linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+        }
+
+        .metaverse-stage {
+            position: relative;
+            width: 100%;
+            min-height: 640px;
+            background: radial-gradient(circle at 50% 10%, rgba(255,214,143,.08), transparent 26%), #060606;
+        }
+
+        #metaverse-canvas {
+            width: 100%;
+            height: 640px;
+            display: block;
+        }
+
+        .metaverse-ui {
+            position: absolute;
+            inset: 18px 18px auto 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            pointer-events: none;
+        }
+
+        .meta-badge,
+        .meta-card {
+            pointer-events: auto;
+            backdrop-filter: blur(12px);
+            background: rgba(7,7,7,.58);
+            border: 1px solid rgba(255,255,255,.10);
+            box-shadow: 0 18px 34px rgba(0,0,0,.25);
+        }
+
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 999px;
+            padding: 12px 16px;
+            color: var(--muted);
+            font-size: .92rem;
+        }
+
+        .meta-card {
+            width: min(340px, 100%);
+            border-radius: 22px;
+            padding: 18px;
+        }
+
+        .meta-card strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .meta-card p {
+            margin: 0;
+            color: #ddcfbb;
+            font-size: .94rem;
+            line-height: 1.6;
+        }
+
+        .meta-card small {
+            display: block;
+            margin-top: 10px;
+            color: var(--muted-2);
+            font-size: .82rem;
+        }
+
+        .metaverse-panel {
+            position: absolute;
+            right: 18px;
+            bottom: 18px;
+            width: min(360px, calc(100% - 36px));
+            padding: 18px;
+            border-radius: 22px;
+            backdrop-filter: blur(14px);
+            background: rgba(9,9,9,.72);
+            border: 1px solid rgba(255,255,255,.10);
+            box-shadow: 0 18px 34px rgba(0,0,0,.32);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity .25s ease, transform .25s ease;
+            pointer-events: none;
+        }
+
+        .metaverse-panel.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .metaverse-panel h3 {
+            margin: 0 0 8px;
+            font-size: 1.1rem;
+        }
+
+        .metaverse-panel p {
+            margin: 0;
+            color: #ddcfbb;
+        }
+
+        .metaverse-panel button {
+            margin-top: 14px;
+            border: 0;
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #111;
+            background: linear-gradient(135deg, #ffe6b7 0%, #efc77e 52%, #ca8d35 100%);
+        }
+
+        .metaverse-notes {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .metaverse-note {
+            border-radius: 22px;
+            padding: 20px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .metaverse-note strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .metaverse-note span {
+            color: var(--muted);
+        }
+
+        @media (max-width: 980px) {
+            .metaverse-notes {
+                grid-template-columns: 1fr;
+            }
+
+            #metaverse-canvas,
+            .metaverse-stage {
+                height: 560px;
+                min-height: 560px;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .metaverse-ui {
+                inset: 12px 12px auto 12px;
+            }
+
+            .metaverse-panel {
+                right: 12px;
+                left: 12px;
+                width: auto;
+                bottom: 12px;
+            }
+
+            .meta-card {
+                width: 100%;
+            }
+
+            #metaverse-canvas,
+            .metaverse-stage {
+                height: 500px;
+                min-height: 500px;
+            }
+        }
+
     </style>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Tiago Sillos Padovani",
+      "jobTitle": "Arquiteto e Artista Plástico",
+      "url": "https://tiagosillos.art.br/",
+      "sameAs": [
+        "https://tiagosillos.art.br/"
+      ]
+    }
+    </script>
 </head>
 <body>
     <header class="site-header">
         <div class="wrap nav">
-            <a class="brand" href="#topo" aria-label="Fluxos Orgânicos Primordiais">
+            <a class="brand" href="#topo" aria-label="Página inicial Tiago Sillos">
                 <span class="brand-mark" aria-hidden="true"></span>
-                <span>Fluxos Orgânicos Primordiais</span>
+                <span>Tiago Sillos</span>
             </a>
 
             <nav class="nav-links" aria-label="Navegação principal">
-                <a href="#manifesto">Manifesto</a>
-                <a href="#matriz">Matriz conceitual</a>
-                <a href="#processo">Processo</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#obras">Obras</a>
+                <a href="#metaverso">Metaverso</a>
                 <a href="#contato">Contato</a>
             </nav>
 
-            <a class="btn" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
+            <a class="nav-cta" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
                 Solicitar catálogo
             </a>
         </div>
@@ -547,347 +746,260 @@
         <section class="hero">
             <div class="wrap hero-grid">
                 <div class="reveal is-visible">
-                    <span class="eyebrow">Página conceitual</span>
-                    <h1>Dar forma ao invisível antes que ele se estabilize como mundo.</h1>
+                    <span class="eyebrow">Galeria de Arte</span>
+                    <h1>Arte autoral com presença, matéria e gesto.</h1>
                     <p class="lead">
-                        <strong>Fluxos Orgânicos Primordiais</strong> é uma investigação visual sobre aquilo que antecede a forma estabilizada do ser.
-                        Não se trata de figuração, nem apenas de abstração em sentido formal, mas de uma visualidade simbólica e ontológica:
-                        uma tentativa de insinuar, por meio de formas, volumes e cores, a zona intermediária entre o nada e a existência.
+                        O trabalho de Tiago Sillos Padovani transita entre pintura, superfície, estrutura e sensibilidade plástica.
+                        Uma linguagem visual pensada para quem busca obras com identidade, força estética e permanência.
                     </p>
 
                     <div class="hero-actions">
-                        <a class="btn" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
+                        <a class="btn-primary" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
                             Solicitar catálogo
                         </a>
-                        <a class="btn-outline" href="#manifesto">
-                            Ler a proposta
+                        <a class="btn-secondary" href="#obras">
+                            Ver obras em destaque
                         </a>
                     </div>
 
-                    <ul class="hero-meta" aria-label="Eixos do projeto">
-                        <li>Forma liminar</li>
-                        <li>Energia simbólica</li>
-                        <li>Micro e macrocosmo</li>
+                    <ul class="hero-meta" aria-label="Destaques da galeria">
+                        <li>Obras autorais</li>
+                        <li>Pintura e técnica mista</li>
+                        <li>Atendimento por WhatsApp</li>
                     </ul>
                 </div>
 
-                <div class="reveal">
-                    <div class="orb-panel" aria-hidden="true">
-                        <div class="orb-caption">
-                            <strong>Uma forma ainda nascente</strong>
-                            <span>Uma condensação sensível entre impulso, presença, ritmo e metamorfose.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="manifesto">
-            <div class="wrap">
-                <div class="section-head reveal">
-                    <div>
-                        <span class="section-kicker">Manifesto</span>
-                        <h2>Entre o não manifesto e o cosmo pensado.</h2>
-                    </div>
-                    <p>
-                        A obra deixa de ser objeto estático para se tornar campo de condensação sensível, ponto de passagem entre o visível e o invisível.
-                    </p>
-                </div>
-
-                <div class="story-grid">
-                    <div class="story-stack">
-                        <article class="panel story-block reveal">
-                            <div class="panel-inner">
-                                <h3>Uma hipótese visual</h3>
-                                <p>
-                                    O projeto parte da hipótese de que é possível materializar, ainda que de modo primitivo, aquilo que vem antes do ser plenamente constituído.
-                                    As formas orgânicas, curvas fluidas, volumes esféricos e transições cromáticas intensas não aparecem como ornamento:
-                                    elas formam a gramática de uma tentativa de materialização do intangível primordial.
-                                </p>
-                            </div>
-                        </article>
-
-                        <article class="panel story-block reveal">
-                            <div class="panel-inner">
-                                <h3>Uma arte que não explica, entreabre</h3>
-                                <p>
-                                    Essas concepções visuais não explicam racionalmente o real. Elas operam como chaves simbólicas, abrindo a alma para outra forma de ver
-                                    — e também de não ver —, rompendo a ilusão da aparência e conduzindo o olhar a uma experiência de desvelamento.
-                                </p>
-                            </div>
-                        </article>
-                    </div>
-
-                    <article class="panel quote-block reveal">
-                        <div class="panel-inner">
-                            <h3>Princípio de leitura</h3>
-                            <p class="quote-text">
-                                A imagem não encerra o real. Ela o entreabre, como se tempo e espaço pudessem ser intuídos em um único ponto de presença.
-                            </p>
-                            <span class="quote-sign">Fluxos Orgânicos Primordiais</span>
-                        </div>
+                <div class="hero-panel reveal">
+                    <article class="hero-card" aria-label="Obra em destaque">
+                        <span class="hero-kicker">Em destaque</span>
+                        <h2>Fluxos Orgânicos Primordiais</h2>
+                        <p>
+                            Uma composição que traduz movimento, densidade e expansão visual em linguagem contemporânea.
+                        </p>
                     </article>
                 </div>
             </div>
         </section>
 
-        <section class="section" id="matriz">
-            <div class="wrap">
-                <div class="section-head reveal">
-                    <div>
-                        <span class="section-kicker">Matriz conceitual</span>
-                        <h2>Arquétipos, hermetismo, teosofia e abstração espiritual.</h2>
-                    </div>
-                    <p>
-                        A página organiza em linguagem editorial as bases do projeto, sem transformar a obra em aula ou doutrina.
-                    </p>
-                </div>
-
-                <div class="matrix-grid">
-                    <article class="panel matrix-card reveal">
-                        <div class="panel-inner">
-                            <span class="card-tag">Arquétipos</span>
-                            <h3>Simbologia arquetípica primordial</h3>
-                            <p>
-                                Aqui, arquétipo não é repertório fixo de imagens. É matriz primordial de energia, forma e movimento.
-                                Em vez de representar figuras estabilizadas, a obra busca dar forma a padrões universais em fluxo,
-                                anteriores à cristalização simbólica e à narrativa.
-                            </p>
-                        </div>
-                    </article>
-
-                    <article class="panel matrix-card reveal">
-                        <div class="panel-inner">
-                            <span class="card-tag">Hermetismo</span>
-                            <h3>Estrutura invisível da forma</h3>
-                            <p>
-                                Os princípios herméticos não são ilustrados literalmente. Eles operam como lógica interna:
-                                ritmo, contraste, vibração, polaridade, correspondência, integração e implicação entre os elementos
-                                de uma composição que pulsa como organismo simbólico.
-                            </p>
-                        </div>
-                    </article>
-
-                    <article class="panel matrix-card reveal">
-                        <div class="panel-inner">
-                            <span class="card-tag">Abstração espiritual</span>
-                            <h3>Uma continuidade singular</h3>
-                            <p>
-                                O projeto dialoga com a teosofia e com a vertente espiritual da abstração moderna,
-                                mas assume linguagem própria: mais orgânica, mais fluida, mais vibracional,
-                                como se a forma surgisse por germinação, pulsação e metamorfose.
-                            </p>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="wrap principles">
-                <article class="panel reveal">
-                    <div class="panel-inner">
-                        <span class="section-kicker">Leitura hermética</span>
-                        <h3>Princípios traduzidos plasticamente</h3>
-                        <ul>
-                            <li><strong>Mentalismo:</strong> a obra nasce como expressão de uma realidade concebida como mental e energética.</li>
-                            <li><strong>Correspondência:</strong> as formas sugerem relações entre interioridade e universo, micro e macrocosmo.</li>
-                            <li><strong>Vibração:</strong> tudo pulsa, se move e se transforma no interior da composição.</li>
-                            <li><strong>Polaridade:</strong> luz e sombra, expansão e contração, cheio e vazio revelam tensões complementares.</li>
-                        </ul>
-                    </div>
+        <section class="stats">
+            <div class="wrap stats-grid">
+                <article class="stat reveal">
+                    <strong>Curadoria visual</strong>
+                    <span>Apresentação elegante e direta para valorizar a obra e facilitar a decisão de compra.</span>
                 </article>
 
-                <article class="panel reveal">
-                    <div class="panel-inner">
-                        <span class="section-kicker">Continuidades</span>
-                        <h3>O simples não reduz o mistério</h3>
-                        <ul>
-                            <li><strong>Ritmo:</strong> repetições, curvas cíclicas e variações visuais materializam alternância e retorno.</li>
-                            <li><strong>Causa e efeito:</strong> cada elemento participa de uma rede de implicações formais e simbólicas.</li>
-                            <li><strong>Gênero:</strong> forças geradoras e receptivas aparecem como equilíbrio e fecundidade estética.</li>
-                            <li><strong>Limiar:</strong> a imagem funciona como passagem entre o visível e o invisível, entre o intuído e o manifestado.</li>
-                        </ul>
-                    </div>
+                <article class="stat reveal">
+                    <strong>Catálogo sob consulta</strong>
+                    <span>Contato rápido pelo WhatsApp para disponibilidade, detalhes técnicos e negociação.</span>
+                </article>
+
+                <article class="stat reveal">
+                    <strong>Identidade autoral</strong>
+                    <span>Site com linguagem sofisticada, foco no artista e atmosfera condizente com a proposta da galeria.</span>
                 </article>
             </div>
         </section>
 
-        <section class="section" id="processo">
+        <section class="section" id="sobre">
             <div class="wrap">
                 <div class="section-head reveal">
                     <div>
-                        <span class="section-kicker">Processo</span>
-                        <h2>Metodologia poética e material.</h2>
+                        <span class="section-kicker">Sobre</span>
+                        <h2>Arquitetura, arte e linguagem própria.</h2>
                     </div>
                     <p>
-                        Uma prática intuitiva, sustentada por base teórica consistente, em que a matéria participa do pensamento.
+                        Uma presença digital pensada para comunicar refinamento, autoria e consistência visual sem ruído.
                     </p>
                 </div>
 
-                <div class="process-grid">
-                    <article class="panel process-card reveal">
-                        <div class="panel-inner">
-                            <h3>Escuta, forma e presença</h3>
-                            <p>
-                                O processo de criação parte da escuta sensível de impulsos formais e energéticos. Depois, esses impulsos são conduzidos por escolhas compositivas
-                                e materiais capazes de sugerir densidade simbólica, mutação e presença. A forma aparece como fluxo e emergência, não como resolução fechada.
-                            </p>
-                            <ul class="material-list">
-                                <li><strong>Modelagem orgânica:</strong> curvas, espirais, dobras, volumes suspensos e campos de expansão.</li>
-                                <li><strong>Matéria vibrante:</strong> resina epóxi, acabamentos metálicos, texturas e superfícies de alta intensidade visual.</li>
-                                <li><strong>Cor como campo:</strong> tonalidades saturadas e contrastes controlados ampliam imersão, ressonância e contemplação.</li>
-                            </ul>
+                <div class="about-grid">
+                    <article class="panel reveal">
+                        <p>
+                            Tiago Sillos Padovani apresenta uma produção que articula gesto, composição e matéria em uma estética
+                            contemporânea. O site foi desenhado para criar impacto visual, valorizar cada peça e conduzir o visitante
+                            para uma ação clara: solicitar o catálogo e iniciar contato.
+                        </p>
+                    </article>
+
+                    <aside class="panel manifesto reveal" aria-label="Princípios da galeria">
+                        <div class="manifesto-item">
+                            <strong>Presença visual</strong>
+                            <span>Direção de arte sóbria, elegante e com atmosfera premium.</span>
+                        </div>
+                        <div class="manifesto-item">
+                            <strong>Leitura objetiva</strong>
+                            <span>Informação essencial, sem excesso, com foco total na percepção da obra.</span>
+                        </div>
+                        <div class="manifesto-item">
+                            <strong>Conversão discreta</strong>
+                            <span>Contato estratégico por WhatsApp, sem quebrar a experiência estética.</span>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="obras">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <div>
+                        <span class="section-kicker">Obras</span>
+                        <h2>Seleção em destaque.</h2>
+                    </div>
+                    <p>
+                        Substitua estas imagens pelos arquivos finais da galeria para manter o visual já pronto com seus conteúdos definitivos.
+                    </p>
+                </div>
+
+                <div class="gallery">
+                    <article class="art-card reveal">
+                        <img src="obra1.jpg" alt="Obra 01 de Tiago Sillos" loading="lazy">
+                        <div class="art-info">
+                            <span class="art-chip">Pintura</span>
+                            <span class="art-title">Obra 01</span>
+                            <span class="art-tech">Óleo e giz pastel sobre tela</span>
+                            <p class="art-note">Peça apresentada em layout editorial para valorizar textura, forma e presença visual.</p>
                         </div>
                     </article>
 
-                    <article class="panel process-card reveal">
-                        <div class="panel-inner">
-                            <h3>Aplicação na obra</h3>
-                            <p>
-                                Na prática, a obra não representa objetos reconhecíveis do mundo exterior. Ela apresenta estados de energia, campos de transformação
-                                e organizações simbólicas em processo de emergência. O trabalho assume quase uma dimensão ritual:
-                                tornar perceptível aquilo que normalmente permanece oculto.
-                            </p>
+                    <article class="art-card reveal">
+                        <img src="obra2.jpg" alt="Obra 02 de Tiago Sillos" loading="lazy">
+                        <div class="art-info">
+                            <span class="art-chip">Escultura</span>
+                            <span class="art-title">Obra 02</span>
+                            <span class="art-tech">Escultura metálica / técnica mista</span>
+                            <p class="art-note">Composição destacada em card premium com leitura limpa e foco na materialidade.</p>
+                        </div>
+                    </article>
+
+                    <article class="art-card reveal">
+                        <img src="obra3.jpg" alt="Fluxos Orgânicos Primordiais" loading="lazy">
+                        <div class="art-info">
+                            <span class="art-chip">Técnica mista</span>
+                            <span class="art-title">Fluxos Orgânicos Primordiais</span>
+                            <span class="art-tech">Técnica mista sobre tela</span>
+                            <p class="art-note">Obra em evidência para reforçar a assinatura visual da galeria e o tom contemporâneo do site.</p>
                         </div>
                     </article>
                 </div>
             </div>
         </section>
 
-        <section class="section">
+
+        <section class="section meta-section" id="metaverso">
             <div class="wrap">
                 <div class="section-head reveal">
                     <div>
-                        <span class="section-kicker">Experiência</span>
-                        <h2>Do olhar literal à presença intuitiva.</h2>
+                        <span class="section-kicker">Metaverso</span>
+                        <h2>Explore as obras em um espaço expositivo imersivo.</h2>
                     </div>
                     <p>
-                        O observador não é conduzido a uma leitura fechada, mas a uma experiência de correspondência, vibração e presença.
+                        Um ambiente WebGL embutido na própria página, transformando a galeria em experiência espacial sem sair do site.
                     </p>
                 </div>
 
-                <div class="story-grid">
-                    <article class="panel story-block reveal">
-                        <div class="panel-inner">
-                            <h3>Contemplação como travessia</h3>
-                            <p>
-                                Ao contemplar essas formas, o espectador encontra um campo em que ver e não ver deixam de ser opostos simples.
-                                A imagem se oferece como limiar, desilusão da aparência e abertura para uma consciência ampliada.
-                            </p>
-                        </div>
-                    </article>
+                <div class="metaverse-shell reveal">
+                    <div class="metaverse-stage">
+                        <canvas id="metaverse-canvas" aria-label="Galeria 3D de obras"></canvas>
 
-                    <article class="panel story-block reveal">
-                        <div class="panel-inner">
-                            <h3>Uma cosmologia visual</h3>
-                            <p>
-                                Fluxos Orgânicos Primordiais pode ser compreendido como uma tentativa de dar forma à zona intermediária entre o nada e a existência
-                                cosmo-pensada: um lugar em que o simples abre a mente ao infinito e em que micro e macrocosmo se reconhecem numa mesma tensão formal.
-                            </p>
+                        <div class="metaverse-ui">
+                            <div class="meta-badge">Clique e arraste para olhar • WASD para caminhar • clique nas obras</div>
+                            <div class="meta-card">
+                                <strong>Galeria imersiva</strong>
+                                <p>
+                                    Uma sala escura, com presença luminosa e atmosfera simbólica, desenhada para prolongar a experiência da obra no espaço digital.
+                                </p>
+                                <small>Arquivos esperados na pasta do site: obra1.jpg, obra2.jpg, obra3.jpg</small>
+                            </div>
                         </div>
-                    </article>
+
+                        <div class="metaverse-panel" id="metaverse-info" aria-live="polite">
+                            <h3 id="metaverse-title">Obra</h3>
+                            <p id="metaverse-description">Descrição da obra selecionada.</p>
+                            <button type="button" id="metaverse-close">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metaverse-notes reveal">
+                    <div class="metaverse-note">
+                        <strong>Imersão sem sair da home</strong>
+                        <span>O visitante atravessa a narrativa do site e encontra um espaço de exibição embutido na mesma página.</span>
+                    </div>
+                    <div class="metaverse-note">
+                        <strong>Pronto para GitHub Pages</strong>
+                        <span>Estrutura estática com Three.js via CDN, sem backend e sem build complexo.</span>
+                    </div>
+                    <div class="metaverse-note">
+                        <strong>Escalável</strong>
+                        <span>Depois dá para evoluir para partículas, áudio ambiente, hotspots curatoriais e novas salas.</span>
+                    </div>
                 </div>
             </div>
         </section>
+
 
         <section class="section" id="contato">
             <div class="wrap">
                 <div class="section-head reveal">
                     <div>
                         <span class="section-kicker">Contato</span>
-                        <h2>Solicite o catálogo e continue a travessia.</h2>
+                        <h2>Solicite o catálogo e converse direto.</h2>
                     </div>
                     <p>
-                        A página já está preparada para conduzir o visitante a um contato direto, simples e elegante.
+                        Um caminho simples e elegante para iniciar atendimento, consultar disponibilidade e avançar na aquisição das obras.
                     </p>
                 </div>
 
                 <div class="contact-grid">
                     <article class="panel contact-card reveal">
-                        <div class="panel-inner">
-                            <h3>O que esta página comunica</h3>
-                            <p>
-                                Em vez de apenas descrever um estilo, esta estrutura apresenta uma narrativa conceitual única. Ela posiciona a obra como linguagem,
-                                hipótese, processo e experiência.
-                            </p>
+                        <p>
+                            O site já está configurado para direcionar o visitante ao WhatsApp com mensagem pronta.
+                            Isso reduz atrito, aumenta resposta e deixa a conversão natural.
+                        </p>
 
-                            <div class="contact-list">
-                                <div class="contact-item">
-                                    <span class="contact-dot" aria-hidden="true"></span>
-                                    <div>
-                                        <strong>Página-manifesto</strong>
-                                        <span>Uma leitura contínua, pensada para instaurar atmosfera e não apenas informar.</span>
-                                    </div>
+                        <div class="contact-list">
+                            <div class="contact-item">
+                                <span class="contact-bullet" aria-hidden="true"></span>
+                                <div>
+                                    <strong>Catálogo</strong>
+                                    <span>Entrega imediata do primeiro contato com texto pré-preenchido.</span>
                                 </div>
+                            </div>
 
-                                <div class="contact-item">
-                                    <span class="contact-dot" aria-hidden="true"></span>
-                                    <div>
-                                        <strong>Linguagem premium</strong>
-                                        <span>Tom editorial e visual sofisticado, coerente com uma presença de galeria contemporânea.</span>
-                                    </div>
+                            <div class="contact-item">
+                                <span class="contact-bullet" aria-hidden="true"></span>
+                                <div>
+                                    <strong>Disponibilidade</strong>
+                                    <span>Espaço ideal para informar medidas, técnica, valores e negociação.</span>
                                 </div>
+                            </div>
 
-                                <div class="contact-item">
-                                    <span class="contact-dot" aria-hidden="true"></span>
-                                    <div>
-                                        <strong>Conversão discreta</strong>
-                                        <span>O WhatsApp entra como continuidade natural da experiência, sem quebrar o clima da página.</span>
-                                    </div>
+                            <div class="contact-item">
+                                <span class="contact-bullet" aria-hidden="true"></span>
+                                <div>
+                                    <strong>Atendimento direto</strong>
+                                    <span>Conversa sem intermediários, coerente com uma experiência mais pessoal e autoral.</span>
                                 </div>
                             </div>
                         </div>
                     </article>
 
-                    <article class="panel contact-card reveal">
-                        <div class="panel-inner">
-                            <h3>Solicitar catálogo</h3>
-                            <p>
-                                Use esta chamada para apresentar obras, disponibilidade, medidas, técnica e aprofundar a conversa com o visitante.
-                            </p>
-
-                            <div class="hero-actions" style="margin-top: 20px; margin-bottom: 16px;">
-                                <a class="btn" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
-                                    Solicitar catálogo
-                                </a>
-                            </div>
-
-                            <p style="color: var(--muted); margin-top: 18px;">
-                                WhatsApp: +55 61 99571-3322
-                            </p>
+                    <aside class="panel contact-box reveal">
+                        <div>
+                            <span class="section-kicker">WhatsApp</span>
+                            <h3>+55 61 99571-3322</h3>
+                            <p>Pronto para receber solicitações de catálogo, consultas e interesse em obras.</p>
                         </div>
-                    </article>
-                </div>
-            </div>
-        </section>
 
-        <section class="section">
-            <div class="wrap">
-                <div class="section-head reveal">
-                    <div>
-                        <span class="section-kicker">Referências</span>
-                        <h2>Base conceitual do projeto.</h2>
-                    </div>
-                    <p>
-                        Esta seção pode permanecer visível ou ser recolhida depois, dependendo do tom final desejado para a página.
-                    </p>
+                        <div>
+                            <a class="btn-primary" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
+                                Solicitar catálogo agora
+                            </a>
+                            <small>Mensagem automática já configurada.</small>
+                        </div>
+                    </aside>
                 </div>
-
-                <article class="panel reveal">
-                    <div class="panel-inner">
-                        <ul class="refs">
-                            <li>Jung, C. G. <em>O Homem e seus Símbolos</em>.</li>
-                            <li>Jung, C. G. <em>Os Arquétipos e o Inconsciente Coletivo</em>.</li>
-                            <li>Three Initiates. <em>The Kybalion</em>.</li>
-                            <li>Blavatsky, H. P. <em>A Voz do Silêncio</em>.</li>
-                            <li>Besant, Annie; Leadbeater, C. W. <em>Thought-Forms</em>.</li>
-                            <li>Kandinsky, Wassily. <em>Do Espiritual na Arte</em>.</li>
-                            <li>Mondrian, Piet. <em>Neo-Plasticism in Pictorial Art</em>.</li>
-                            <li>Hilma af Klint. <em>Paintings for the Future</em> e estudos sobre pintura espiritual.</li>
-                        </ul>
-                    </div>
-                </article>
             </div>
         </section>
     </main>
@@ -895,7 +1007,7 @@
     <footer>
         <div class="wrap footer-bar">
             <span>© <span id="ano"></span> Tiago Sillos. Todos os direitos reservados.</span>
-            <span>Fluxos Orgânicos Primordiais</span>
+            <span>tiagosillos.art.br</span>
         </div>
     </footer>
 
@@ -909,9 +1021,403 @@
                     entry.target.classList.add("is-visible");
                 }
             });
-        }, { threshold: 0.14 });
+        }, { threshold: 0.16 });
 
         elements.forEach((el) => observer.observe(el));
     </script>
+
+    <script type="module">
+        import * as THREE from "https://unpkg.com/three@0.166.1/build/three.module.js";
+
+        const canvas = document.getElementById("metaverse-canvas");
+
+        if (canvas) {
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x050505);
+            scene.fog = new THREE.Fog(0x050505, 8, 30);
+
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+            const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+            camera.position.set(0, 1.7, 7);
+
+            const room = new THREE.Group();
+            scene.add(room);
+
+            const ambient = new THREE.AmbientLight(0xf2d39a, 0.55);
+            scene.add(ambient);
+
+            const spot = new THREE.SpotLight(0xffd189, 26, 40, Math.PI / 5, 0.45, 1.2);
+            spot.position.set(0, 6.8, 3.6);
+            spot.target.position.set(0, 0, 0);
+            scene.add(spot);
+            scene.add(spot.target);
+
+            const goldLightLeft = new THREE.PointLight(0xf2b35d, 2.8, 10);
+            goldLightLeft.position.set(-4, 2.4, -3);
+            scene.add(goldLightLeft);
+
+            const goldLightRight = new THREE.PointLight(0xf2b35d, 2.8, 10);
+            goldLightRight.position.set(4, 2.4, -3);
+            scene.add(goldLightRight);
+
+            const floor = new THREE.Mesh(
+                new THREE.PlaneGeometry(18, 18),
+                new THREE.MeshStandardMaterial({
+                    color: 0x121212,
+                    roughness: 0.92,
+                    metalness: 0.08
+                })
+            );
+            floor.rotation.x = -Math.PI / 2;
+            room.add(floor);
+
+            const wallMaterial = new THREE.MeshStandardMaterial({
+                color: 0x101010,
+                roughness: 0.98,
+                metalness: 0.04,
+                side: THREE.DoubleSide
+            });
+
+            const backWall = new THREE.Mesh(new THREE.PlaneGeometry(18, 8), wallMaterial);
+            backWall.position.set(0, 4, -9);
+            room.add(backWall);
+
+            const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(18, 8), wallMaterial);
+            leftWall.rotation.y = Math.PI / 2;
+            leftWall.position.set(-9, 4, 0);
+            room.add(leftWall);
+
+            const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(18, 8), wallMaterial);
+            rightWall.rotation.y = -Math.PI / 2;
+            rightWall.position.set(9, 4, 0);
+            room.add(rightWall);
+
+            const ceiling = new THREE.Mesh(
+                new THREE.PlaneGeometry(18, 18),
+                new THREE.MeshStandardMaterial({ color: 0x090909, roughness: 1, metalness: 0.02, side: THREE.DoubleSide })
+            );
+            ceiling.rotation.x = Math.PI / 2;
+            ceiling.position.y = 8;
+            room.add(ceiling);
+
+            const ringGeo = new THREE.TorusGeometry(1.1, 0.05, 24, 120);
+            const ringMat = new THREE.MeshStandardMaterial({
+                color: 0xf0c57d,
+                emissive: 0x9a5e1d,
+                emissiveIntensity: 0.6,
+                roughness: 0.2,
+                metalness: 0.95
+            });
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.rotation.x = Math.PI / 2;
+            ring.position.set(0, 3.6, 0.2);
+            room.add(ring);
+
+            const orb = new THREE.Mesh(
+                new THREE.SphereGeometry(0.65, 48, 48),
+                new THREE.MeshPhysicalMaterial({
+                    color: 0xffd18f,
+                    emissive: 0xc76f16,
+                    emissiveIntensity: 0.45,
+                    transmission: 0.12,
+                    roughness: 0.22,
+                    metalness: 0.18,
+                    transparent: true,
+                    opacity: 0.92
+                })
+            );
+            orb.position.set(0, 3.6, 0.2);
+            room.add(orb);
+
+            const pedestal = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.7, 0.9, 1.2, 40),
+                new THREE.MeshStandardMaterial({ color: 0x1b1b1b, roughness: 0.82, metalness: 0.18 })
+            );
+            pedestal.position.set(0, 0.6, 0.2);
+            room.add(pedestal);
+
+            const frameMaterial = new THREE.MeshStandardMaterial({
+                color: 0x8f6220,
+                roughness: 0.35,
+                metalness: 0.85
+            });
+
+            const loader = new THREE.TextureLoader();
+            const works = [
+                {
+                    title: "Obra 01",
+                    description: "Primeira presença do percurso. Uma aparição matérica inserida na atmosfera do espaço expositivo.",
+                    file: "obra1.jpg",
+                    position: [-4.4, 3.2, -8.82],
+                    rotationY: 0,
+                    size: [2.35, 3.0]
+                },
+                {
+                    title: "Obra 02",
+                    description: "Segunda estação visual. Campo de tensão entre densidade, forma e pulsação cromática.",
+                    file: "obra2.jpg",
+                    position: [0, 3.2, -8.82],
+                    rotationY: 0,
+                    size: [2.35, 3.0]
+                },
+                {
+                    title: "Fluxos Orgânicos Primordiais",
+                    description: "Núcleo conceitual da galeria. Uma superfície que sugere emergência, vibração e presença simbólica.",
+                    file: "obra3.jpg",
+                    position: [4.4, 3.2, -8.82],
+                    rotationY: 0,
+                    size: [2.35, 3.0]
+                },
+                {
+                    title: "Estudo Lateral I",
+                    description: "Variação lateral do percurso, ampliando a sensação de travessia e de campo expandido.",
+                    file: "obra3.jpg",
+                    position: [-8.82, 3.2, -2.4],
+                    rotationY: Math.PI / 2,
+                    size: [2.15, 2.8]
+                },
+                {
+                    title: "Estudo Lateral II",
+                    description: "Uma segunda aparição lateral, criando correspondência entre repetição, ritmo e retorno.",
+                    file: "obra1.jpg",
+                    position: [8.82, 3.2, -2.4],
+                    rotationY: -Math.PI / 2,
+                    size: [2.15, 2.8]
+                }
+            ];
+
+            const clickableWorks = [];
+            const frameDepth = 0.1;
+
+            function createPainting(work) {
+                const group = new THREE.Group();
+                const [w, h] = work.size;
+
+                const frame = new THREE.Mesh(
+                    new THREE.BoxGeometry(w + 0.22, h + 0.22, frameDepth),
+                    frameMaterial
+                );
+                group.add(frame);
+
+                const texture = loader.load(work.file);
+                texture.colorSpace = THREE.SRGBColorSpace;
+
+                const art = new THREE.Mesh(
+                    new THREE.PlaneGeometry(w, h),
+                    new THREE.MeshStandardMaterial({
+                        map: texture,
+                        roughness: 0.85,
+                        metalness: 0.04
+                    })
+                );
+                art.position.z = frameDepth / 2 + 0.01;
+                art.userData = work;
+                group.add(art);
+
+                const glow = new THREE.Mesh(
+                    new THREE.PlaneGeometry(w + 0.34, h + 0.34),
+                    new THREE.MeshBasicMaterial({
+                        color: 0xffd18f,
+                        transparent: true,
+                        opacity: 0.06
+                    })
+                );
+                glow.position.z = -0.01;
+                group.add(glow);
+
+                const wallLight = new THREE.SpotLight(0xffc97b, 6, 8, Math.PI / 7, 0.65, 1.2);
+                wallLight.position.set(0, 1.7, 1.7);
+                wallLight.target = art;
+                group.add(wallLight);
+
+                group.position.set(...work.position);
+                group.rotation.y = work.rotationY;
+                room.add(group);
+
+                clickableWorks.push(art);
+            }
+
+            works.forEach(createPainting);
+
+            const particlesCount = 110;
+            const positions = new Float32Array(particlesCount * 3);
+            for (let i = 0; i < particlesCount; i++) {
+                positions[i * 3 + 0] = (Math.random() - 0.5) * 14;
+                positions[i * 3 + 1] = 1 + Math.random() * 5.5;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 14;
+            }
+            const particleGeo = new THREE.BufferGeometry();
+            particleGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+            const particleMat = new THREE.PointsMaterial({
+                color: 0xf7d89d,
+                size: 0.04,
+                transparent: true,
+                opacity: 0.65
+            });
+            const particles = new THREE.Points(particleGeo, particleMat);
+            room.add(particles);
+
+            const infoPanel = document.getElementById("metaverse-info");
+            const infoTitle = document.getElementById("metaverse-title");
+            const infoDescription = document.getElementById("metaverse-description");
+            const closeButton = document.getElementById("metaverse-close");
+
+            function openInfo(work) {
+                infoTitle.textContent = work.title;
+                infoDescription.textContent = work.description;
+                infoPanel.classList.add("is-visible");
+            }
+
+            function closeInfo() {
+                infoPanel.classList.remove("is-visible");
+            }
+
+            closeButton.addEventListener("click", closeInfo);
+
+            const raycaster = new THREE.Raycaster();
+            const pointer = new THREE.Vector2();
+
+            let yaw = 0;
+            let pitch = 0;
+            let dragging = false;
+            let hoverObject = null;
+            let lastX = 0;
+            let lastY = 0;
+
+            const keys = { KeyW: false, KeyA: false, KeyS: false, KeyD: false };
+            const velocity = new THREE.Vector3();
+            const direction = new THREE.Vector3();
+            const minX = -7.5, maxX = 7.5, minZ = -7.5, maxZ = 7.5;
+
+            function updateCameraRotation() {
+                camera.rotation.order = "YXZ";
+                camera.rotation.y = yaw;
+                camera.rotation.x = pitch;
+            }
+
+            function onPointerMove(clientX, clientY) {
+                const rect = canvas.getBoundingClientRect();
+                pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+                pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+            }
+
+            canvas.addEventListener("mousedown", (event) => {
+                dragging = true;
+                lastX = event.clientX;
+                lastY = event.clientY;
+                onPointerMove(event.clientX, event.clientY);
+            });
+
+            window.addEventListener("mouseup", () => {
+                dragging = false;
+            });
+
+            window.addEventListener("mousemove", (event) => {
+                onPointerMove(event.clientX, event.clientY);
+                if (!dragging) return;
+                const dx = event.clientX - lastX;
+                const dy = event.clientY - lastY;
+                lastX = event.clientX;
+                lastY = event.clientY;
+                yaw -= dx * 0.004;
+                pitch -= dy * 0.003;
+                pitch = Math.max(-0.7, Math.min(0.7, pitch));
+                updateCameraRotation();
+            });
+
+            window.addEventListener("keydown", (event) => {
+                if (event.code in keys) keys[event.code] = true;
+            });
+
+            window.addEventListener("keyup", (event) => {
+                if (event.code in keys) keys[event.code] = false;
+            });
+
+            canvas.addEventListener("click", () => {
+                raycaster.setFromCamera(pointer, camera);
+                const hits = raycaster.intersectObjects(clickableWorks, false);
+                if (hits.length) {
+                    openInfo(hits[0].object.userData);
+                } else {
+                    closeInfo();
+                }
+            });
+
+            function resizeRenderer() {
+                const width = canvas.clientWidth;
+                const height = canvas.clientHeight;
+                renderer.setSize(width, height, false);
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+            }
+
+            const clock = new THREE.Clock();
+
+            function animate() {
+                const delta = Math.min(clock.getDelta(), 0.03);
+
+                direction.set(0, 0, 0);
+                if (keys.KeyW) direction.z -= 1;
+                if (keys.KeyS) direction.z += 1;
+                if (keys.KeyA) direction.x -= 1;
+                if (keys.KeyD) direction.x += 1;
+                direction.normalize();
+
+                const moveSpeed = 4.2;
+                velocity.x = direction.x * moveSpeed * delta;
+                velocity.z = direction.z * moveSpeed * delta;
+
+                const forward = new THREE.Vector3(0, 0, -1).applyEuler(camera.rotation);
+                forward.y = 0;
+                forward.normalize();
+
+                const right = new THREE.Vector3(1, 0, 0).applyEuler(camera.rotation);
+                right.y = 0;
+                right.normalize();
+
+                camera.position.addScaledVector(forward, velocity.z);
+                camera.position.addScaledVector(right, velocity.x);
+
+                camera.position.x = Math.max(minX, Math.min(maxX, camera.position.x));
+                camera.position.z = Math.max(minZ, Math.min(maxZ, camera.position.z));
+                camera.position.y = 1.7;
+
+                ring.rotation.z += delta * 0.28;
+                orb.position.y = 3.6 + Math.sin(clock.elapsedTime * 1.2) * 0.08;
+                particles.rotation.y += delta * 0.03;
+
+                raycaster.setFromCamera(pointer, camera);
+                const hits = raycaster.intersectObjects(clickableWorks, false);
+                const nextHover = hits.length ? hits[0].object : null;
+
+                if (hoverObject && hoverObject !== nextHover) {
+                    hoverObject.material.emissive?.setHex?.(0x000000);
+                    hoverObject.material.emissiveIntensity = 0;
+                }
+
+                if (nextHover) {
+                    hoverObject = nextHover;
+                    hoverObject.material.emissive = new THREE.Color(0x5d2c00);
+                    hoverObject.material.emissiveIntensity = 0.6;
+                } else {
+                    hoverObject = null;
+                }
+
+                resizeRenderer();
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+
+            updateCameraRotation();
+            resizeRenderer();
+            animate();
+
+            window.addEventListener("resize", resizeRenderer);
+        }
+    </script>
+
 </body>
 </html>
