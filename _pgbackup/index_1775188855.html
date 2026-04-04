@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiago Sillos | Galeria de Arte</title>
+    <meta name="description" content="Galeria de arte de Tiago Sillos Padovani, com obras autorais, pinturas e esculturas. Solicite o catálogo pelo WhatsApp.">
+    <meta name="theme-color" content="#0b0b0b">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="canonical" href="https://tiagosillos.art.br/">
+
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon-512x512.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Tiago Sillos | Galeria de Arte">
+    <meta property="og:description" content="Obras autorais, pinturas e esculturas de Tiago Sillos Padovani. Solicite o catálogo pelo WhatsApp.">
+    <meta property="og:url" content="https://tiagosillos.art.br/">
+    <meta property="og:image" content="https://tiagosillos.art.br/obra3.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tiago Sillos | Galeria de Arte">
+    <meta name="twitter:description" content="Obras autorais, pinturas e esculturas de Tiago Sillos Padovani.">
+
+    <style>
+        :root {
+            --bg: #070707;
+            --bg-soft: #101010;
+            --card: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 220, 146, 0.16);
+            --text: #f6f1e8;
+            --muted: #b9ac96;
+            --gold: #f1c267;
+            --gold-strong: #ffd98b;
+            --line: rgba(255, 214, 143, 0.12);
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 18px;
+            --max: 1180px;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(241, 194, 103, 0.18), transparent 30%),
+                radial-gradient(circle at 85% 18%, rgba(241, 194, 103, 0.10), transparent 22%),
+                linear-gradient(180deg, #050505 0%, #090909 45%, #0d0d0d 100%);
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(transparent 0%, rgba(255,255,255,0.02) 49%, transparent 100%),
+                linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.02) 49%, transparent 100%);
+            background-size: 100% 3px, 3px 100%;
+            opacity: 0.06;
+            mix-blend-mode: screen;
+        }
+
+        img { max-width: 100%; display: block; }
+        a { color: inherit; text-decoration: none; }
+        .wrap { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(18px);
+            background: rgba(7, 7, 7, 0.68);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 18px 0;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.98rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .brand-mark {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, var(--gold-strong), #c98d2d 75%, #8b5a15 100%);
+            box-shadow: 0 0 24px rgba(241, 194, 103, 0.35);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover { color: var(--text); }
+
+        .nav-cta,
+        .btn-primary,
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 999px;
+            padding: 13px 22px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-cta,
+        .btn-primary {
+            color: #101010;
+            background: linear-gradient(135deg, #ffe3a6 0%, #f1c267 52%, #d38d2e 100%);
+            box-shadow: 0 16px 34px rgba(241, 194, 103, 0.22);
+        }
+
+        .nav-cta:hover,
+        .btn-primary:hover,
+        .btn-secondary:hover { transform: translateY(-2px); }
+
+        .btn-secondary {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+        }
+
+        .hero { position: relative; padding: 92px 0 56px; }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+            gap: 44px;
+            align-items: center;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gold-strong);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 42px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold));
+        }
+
+        h1 {
+            margin: 18px 0 18px;
+            font-size: clamp(2.8rem, 6vw, 5.6rem);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+        }
+
+        .hero p.lead {
+            max-width: 680px;
+            margin: 0 0 28px;
+            color: #d8cbb7;
+            font-size: clamp(1.05rem, 2vw, 1.22rem);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .hero-meta li {
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--muted);
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-size: 0.92rem;
+        }
+
+        .hero-panel { position: relative; }
+
+        .hero-panel::before {
+            content: "";
+            position: absolute;
+            inset: 8% 12% auto auto;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(241, 194, 103, 0.28), transparent 70%);
+            filter: blur(10px);
+        }
+
+        .hero-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            padding: 26px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)),
+                linear-gradient(135deg, rgba(241, 194, 103, 0.08), rgba(255, 255, 255, 0.02));
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow);
+            min-height: 470px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 78% 16%, rgba(255, 217, 139, 0.22), transparent 18%),
+                linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.36));
+            pointer-events: none;
+        }
+
+        .hero-kicker,
+        .section-kicker {
+            color: var(--gold-strong);
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-size: 0.82rem;
+        }
+
+        .hero-card h2 {
+            margin: 12px 0 10px;
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            line-height: 1.04;
+            max-width: 9ch;
+        }
+
+        .hero-card p {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            color: #decfb8;
+            max-width: 28ch;
+        }
+
+        .stats { padding: 16px 0 28px; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .stat {
+            padding: 22px;
+            border-radius: var(--radius-lg);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--line);
+        }
+
+        .stat strong { display: block; font-size: 1.4rem; margin-bottom: 8px; }
+        .stat span { color: var(--muted); font-size: 0.95rem; }
+        .section { padding: 68px 0; }
+
+        .section-head {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 24px;
+            align-items: end;
+            margin-bottom: 28px;
+        }
+
+        .section-head h2 {
+            margin: 10px 0 0;
+            font-size: clamp(2rem, 4vw, 3.3rem);
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+
+        .section-head p { margin: 0; max-width: 520px; color: var(--muted); }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+            gap: 20px;
+        }
+
+        .panel {
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+
+        .panel p { margin: 0; color: #d8cbb7; }
+        .manifesto { display: grid; gap: 16px; }
+
+        .manifesto-item {
+            padding: 18px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .manifesto-item:first-child { border-top: 0; padding-top: 0; }
+        .manifesto-item strong { display: block; margin-bottom: 6px; font-size: 1.05rem; }
+        .manifesto-item span { color: var(--muted); }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .art-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: var(--shadow);
+            transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .art-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 220, 146, 0.28);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.46);
+        }
+
+        .art-card img {
+            aspect-ratio: 4 / 4.8;
+            object-fit: cover;
+            width: 100%;
+            background: #0f0f0f;
+        }
+
+        .art-info { padding: 20px 20px 22px; }
+
+        .art-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(241, 194, 103, 0.10);
+            border: 1px solid rgba(241, 194, 103, 0.18);
+            color: var(--gold-strong);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .art-title {
+            display: block;
+            margin: 14px 0 8px;
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .art-tech,
+        .art-note { color: var(--muted); }
+
+        .art-note { margin-top: 14px; font-size: 0.94rem; }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .contact-card { min-height: 100%; }
+        .contact-list { display: grid; gap: 14px; margin-top: 22px; }
+
+        .contact-item {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            padding: 14px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .contact-item:first-child { padding-top: 0; border-top: 0; }
+
+        .contact-bullet {
+            width: 11px;
+            height: 11px;
+            margin-top: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-strong), #cf8b2b);
+            box-shadow: 0 0 20px rgba(241, 194, 103, 0.42);
+            flex: none;
+        }
+
+        .contact-item strong { display: block; margin-bottom: 4px; }
+        .contact-item span { color: var(--muted); }
+
+        .contact-box {
+            display: grid;
+            align-content: space-between;
+            gap: 18px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04)),
+                linear-gradient(135deg, rgba(241, 194, 103, 0.12), rgba(255,255,255,0.02));
+        }
+
+        .contact-box h3 { margin: 12px 0 8px; font-size: 1.8rem; line-height: 1.05; }
+        .contact-box p { margin: 0; color: #decfb8; }
+        .contact-box small { color: var(--muted); display: block; }
+        footer { padding: 18px 0 44px; }
+
+        .footer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 980px) {
+            .hero-grid,
+            .about-grid,
+            .contact-grid,
+            .section-head { grid-template-columns: 1fr; }
+            .gallery,
+            .stats-grid { grid-template-columns: 1fr; }
+            .hero { padding-top: 70px; }
+            .hero-card { min-height: 340px; }
+        }
+
+        @media (max-width: 760px) {
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                gap: 16px;
+                font-size: 0.92rem;
+            }
+
+            .brand,
+            .nav-cta { justify-content: center; }
+            .wrap { width: min(var(--max), calc(100% - 24px)); }
+
+            .panel,
+            .hero-card,
+            .art-info {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .btn-primary,
+            .btn-secondary,
+            .nav-cta { width: 100%; }
+            .hero-actions { display: grid; grid-template-columns: 1fr; }
+            .footer-bar { flex-direction: column; text-align: center; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .reveal,
+            .art-card,
+            .nav-cta,
+            .btn-primary,
+            .btn-secondary { transition: none; }
+        }
+    
+        .meta-section {
+            position: relative;
+        }
+
+        .metaverse-shell {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255,255,255,.08);
+            box-shadow: var(--shadow);
+            background:
+                radial-gradient(circle at 20% 20%, rgba(241, 194, 103, .08), transparent 20%),
+                linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+        }
+
+        .metaverse-stage {
+            position: relative;
+            width: 100%;
+            min-height: 640px;
+            background: radial-gradient(circle at 50% 10%, rgba(255,214,143,.08), transparent 26%), #060606;
+        }
+
+        #metaverse-canvas {
+            width: 100%;
+            height: 640px;
+            display: block;
+        }
+
+        .metaverse-ui {
+            position: absolute;
+            inset: 18px 18px auto 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            pointer-events: none;
+        }
+
+        .meta-badge,
+        .meta-card {
+            pointer-events: auto;
+            backdrop-filter: blur(12px);
+            background: rgba(7,7,7,.58);
+            border: 1px solid rgba(255,255,255,.10);
+            box-shadow: 0 18px 34px rgba(0,0,0,.25);
+        }
+
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 999px;
+            padding: 12px 16px;
+            color: var(--muted);
+            font-size: .92rem;
+        }
+
+        .meta-card {
+            width: min(340px, 100%);
+            border-radius: 22px;
+            padding: 18px;
+        }
+
+        .meta-card strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .meta-card p {
+            margin: 0;
+            color: #ddcfbb;
+            font-size: .94rem;
+            line-height: 1.6;
+        }
+
+        .meta-card small {
+            display: block;
+            margin-top: 10px;
+            color: var(--muted-2);
+            font-size: .82rem;
+        }
+
+        .metaverse-panel {
+            position: absolute;
+            right: 18px;
+            bottom: 18px;
+            width: min(360px, calc(100% - 36px));
+            padding: 18px;
+            border-radius: 22px;
+            backdrop-filter: blur(14px);
+            background: rgba(9,9,9,.72);
+            border: 1px solid rgba(255,255,255,.10);
+            box-shadow: 0 18px 34px rgba(0,0,0,.32);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity .25s ease, transform .25s ease;
+            pointer-events: none;
+        }
+
+        .metaverse-panel.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .metaverse-panel h3 {
+            margin: 0 0 8px;
+            font-size: 1.1rem;
+        }
+
+        .metaverse-panel p {
+            margin: 0;
+            color: #ddcfbb;
+        }
+
+        .metaverse-panel button {
+            margin-top: 14px;
+            border: 0;
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #111;
+            background: linear-gradient(135deg, #ffe6b7 0%, #efc77e 52%, #ca8d35 100%);
+        }
+
+        .metaverse-notes {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .metaverse-note {
+            border-radius: 22px;
+            padding: 20px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .metaverse-note strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .metaverse-note span {
+            color: var(--muted);
+        }
+
+        @media (max-width: 980px) {
+            .metaverse-notes {
+                grid-template-columns: 1fr;
+            }
+
+            #metaverse-canvas,
+            .metaverse-stage {
+                height: 560px;
+                min-height: 560px;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .metaverse-stage {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                min-height: 0;
+                padding: 12px 12px 14px;
+                gap: 12px;
+            }
+
+            .metaverse-ui {
+                position: static;
+                inset: auto;
+                order: 1;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 12px;
+                pointer-events: auto;
+            }
+
+            .meta-badge,
+            .meta-card {
+                width: 100%;
+            }
+
+            #metaverse-canvas {
+                order: 2;
+                height: 380px;
+            }
+
+            .metaverse-panel {
+                position: static;
+                order: 3;
+                right: auto;
+                left: auto;
+                bottom: auto;
+                width: 100%;
+                margin: 0;
+                display: none;
+                opacity: 1;
+                transform: none;
+                pointer-events: auto;
+            }
+
+            .metaverse-panel.is-visible {
+                display: block;
+            }
+
+            .metaverse-note {
+                padding: 18px;
+            }
+        }
+
+    </style>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Tiago Sillos Padovani",
+      "jobTitle": "Arquiteto e Artista Plástico",
+      "url": "https://tiagosillos.art.br/",
+      "sameAs": [
+        "https://tiagosillos.art.br/"
+      ]
+    }
+    </script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="wrap nav">
+            <a class="brand" href="#topo" aria-label="Página inicial Tiago Sillos">
+                <span class="brand-mark" aria-hidden="true"></span>
+                <span>Tiago Sillos</span>
+            </a>
+
+            <nav class="nav-links" aria-label="Navegação principal">
+                <a href="#sobre">Sobre</a>
+                <a href="#obras">Obras</a>
+                <a href="#metaverso">Metaverso</a>
+                <a href="#contato">Contato</a>
+            </nav>
+
+            <a class="nav-cta" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
+                Solicitar catálogo
+            </a>
+        </div>
+    </header>
+
+    <main id="topo">
+        <section class="hero">
+            <div class="wrap hero-grid">
+                <div class="reveal is-visible">
+                    <span class="eyebrow">Galeria de Arte</span>
+                    <h1>Arte autoral com presença, matéria e gesto.</h1>
+                    <p class="lead">
+                        O trabalho de Tiago Sillos Padovani transita entre pintura, superfície, estrutura e sensibilidade plástica.
+                        Uma linguagem visual pensada para quem busca obras com identidade, força estética e permanência.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a class="btn-primary" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
+                            Solicitar catálogo
+                        </a>
+                        <a class="btn-secondary" href="#obras">
+                            Ver obras em destaque
+                        </a>
+                    </div>
+
+                    <ul class="hero-meta" aria-label="Destaques da galeria">
+                        <li>Obras autorais</li>
+                        <li>Pintura e técnica mista</li>
+                        <li>Atendimento por WhatsApp</li>
+                    </ul>
+                </div>
+
+                <div class="hero-panel reveal">
+                    <article class="hero-card" aria-label="Obra em destaque">
+                        <span class="hero-kicker">Em destaque</span>
+                        <h2>Fluxos Orgânicos Primordiais</h2>
+                        <p>
+                            Uma composição que traduz movimento, densidade e expansão visual em linguagem contemporânea.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="wrap stats-grid">
+                <article class="stat reveal">
+                    <strong>Curadoria visual</strong>
+                    <span>Apresentação elegante e direta para valorizar a obra e facilitar a decisão de compra.</span>
+                </article>
+
+                <article class="stat reveal">
+                    <strong>Catálogo sob consulta</strong>
+                    <span>Contato rápido pelo WhatsApp para disponibilidade, detalhes técnicos e negociação.</span>
+                </article>
+
+                <article class="stat reveal">
+                    <strong>Identidade autoral</strong>
+                    <span>Site com linguagem sofisticada, foco no artista e atmosfera condizente com a proposta da galeria.</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" id="sobre">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <div>
+                        <span class="section-kicker">Sobre</span>
+                        <h2>Arquitetura, arte e linguagem própria.</h2>
+                    </div>
+                    <p>
+                        Uma presença digital pensada para comunicar refinamento, autoria e consistência visual sem ruído.
+                    </p>
+                </div>
+
+                <div class="about-grid">
+                    <article class="panel reveal">
+                        <p>
+                            Tiago Sillos Padovani apresenta uma produção que articula gesto, composição e matéria em uma estética
+                            contemporânea. O site foi desenhado para criar impacto visual, valorizar cada peça e conduzir o visitante
+                            para uma ação clara: solicitar o catálogo e iniciar contato.
+                        </p>
+                    </article>
+
+                    <aside class="panel manifesto reveal" aria-label="Princípios da galeria">
+                        <div class="manifesto-item">
+                            <strong>Presença visual</strong>
+                            <span>Direção de arte sóbria, elegante e com atmosfera premium.</span>
+                        </div>
+                        <div class="manifesto-item">
+                            <strong>Leitura objetiva</strong>
+                            <span>Informação essencial, sem excesso, com foco total na percepção da obra.</span>
+                        </div>
+                        <div class="manifesto-item">
+                            <strong>Conversão discreta</strong>
+                            <span>Contato estratégico por WhatsApp, sem quebrar a experiência estética.</span>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="obras">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <div>
+                        <span class="section-kicker">Obras</span>
+                        <h2>Seleção em destaque.</h2>
+                    </div>
+                    <p>
+                        Substitua estas imagens pelos arquivos finais da galeria para manter o visual já pronto com seus conteúdos definitivos.
+                    </p>
+                </div>
+
+                <div class="gallery">
+                    <article class="art-card reveal">
+                        <img src="obra1.jpg" alt="Obra 01 de Tiago Sillos" loading="lazy">
+                        <div class="art-info">
+                            <span class="art-chip">Pintura</span>
+                            <span class="art-title">Obra 01</span>
+                            <span class="art-tech">Óleo e giz pastel sobre tela</span>
+                            <p class="art-note">Peça apresentada em layout editorial para valorizar textura, forma e presença visual.</p>
+                        </div>
+                    </article>
+
+                    <article class="art-card reveal">
+                        <img src="obra2.jpg" alt="Obra 02 de Tiago Sillos" loading="lazy">
+                        <div class="art-info">
+                            <span class="art-chip">Escultura</span>
+                            <span class="art-title">Obra 02</span>
+                            <span class="art-tech">Escultura metálica / técnica mista</span>
+                            <p class="art-note">Composição destacada em card premium com leitura limpa e foco na materialidade.</p>
+                        </div>
+                    </article>
+
+                    <article class="art-card reveal">
+                        <img src="obra3.jpg" alt="Fluxos Orgânicos Primordiais" loading="lazy">
+                        <div class="art-info">
+                            <span class="art-chip">Técnica mista</span>
+                            <span class="art-title">Fluxos Orgânicos Primordiais</span>
+                            <span class="art-tech">Técnica mista sobre tela</span>
+                            <p class="art-note">Obra em evidência para reforçar a assinatura visual da galeria e o tom contemporâneo do site.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="section meta-section" id="metaverso">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <div>
+                        <span class="section-kicker">Metaverso</span>
+                        <h2>Explore as obras em um espaço expositivo imersivo.</h2>
+                    </div>
+                    <p>
+                        Um ambiente WebGL embutido na própria página, transformando a galeria em experiência espacial sem sair do site.
+                    </p>
+                </div>
+
+                <div class="metaverse-shell reveal">
+                    <div class="metaverse-stage">
+                        <canvas id="metaverse-canvas" aria-label="Galeria 3D de obras"></canvas>
+
+                        <div class="metaverse-ui">
+                            <div class="meta-badge">Arraste para olhar • toque/clique nas obras</div>
+                            <div class="meta-card">
+                                <strong>Galeria imersiva</strong>
+                                <p>
+                                    Um centro cósmico esférico com constelações e obras distribuídas ao redor do observador, criando uma experiência contemplativa e imersiva.
+                                </p>
+                                <small>Arquivos esperados na pasta do site: obra1.jpg, obra2.jpg, obra3.jpg</small>
+                            </div>
+                        </div>
+
+                        <div class="metaverse-panel" id="metaverse-info" aria-live="polite">
+                            <h3 id="metaverse-title">Obra</h3>
+                            <p id="metaverse-description">Descrição da obra selecionada.</p>
+                            <button type="button" id="metaverse-close">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metaverse-notes reveal">
+                    <div class="metaverse-note">
+                        <strong>Imersão sem sair da home</strong>
+                        <span>O visitante permanece no centro da experiência, enquanto as obras e as constelações organizam o espaço ao redor.</span>
+                    </div>
+                    <div class="metaverse-note">
+                        <strong>Pronto para GitHub Pages</strong>
+                        <span>Estrutura estática com Three.js via CDN, sem backend e pronta para experimentar no GitHub Pages.</span>
+                    </div>
+                    <div class="metaverse-note">
+                        <strong>Escalável</strong>
+                        <span>Depois dá para evoluir para áudio ambiente, constelações mais complexas, hotspots curatoriais e novas salas.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="section" id="contato">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <div>
+                        <span class="section-kicker">Contato</span>
+                        <h2>Solicite o catálogo e converse direto.</h2>
+                    </div>
+                    <p>
+                        Um caminho simples e elegante para iniciar atendimento, consultar disponibilidade e avançar na aquisição das obras.
+                    </p>
+                </div>
+
+                <div class="contact-grid">
+                    <article class="panel contact-card reveal">
+                        <p>
+                            O site já está configurado para direcionar o visitante ao WhatsApp com mensagem pronta.
+                            Isso reduz atrito, aumenta resposta e deixa a conversão natural.
+                        </p>
+
+                        <div class="contact-list">
+                            <div class="contact-item">
+                                <span class="contact-bullet" aria-hidden="true"></span>
+                                <div>
+                                    <strong>Catálogo</strong>
+                                    <span>Entrega imediata do primeiro contato com texto pré-preenchido.</span>
+                                </div>
+                            </div>
+
+                            <div class="contact-item">
+                                <span class="contact-bullet" aria-hidden="true"></span>
+                                <div>
+                                    <strong>Disponibilidade</strong>
+                                    <span>Espaço ideal para informar medidas, técnica, valores e negociação.</span>
+                                </div>
+                            </div>
+
+                            <div class="contact-item">
+                                <span class="contact-bullet" aria-hidden="true"></span>
+                                <div>
+                                    <strong>Atendimento direto</strong>
+                                    <span>Conversa sem intermediários, coerente com uma experiência mais pessoal e autoral.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <aside class="panel contact-box reveal">
+                        <div>
+                            <span class="section-kicker">WhatsApp</span>
+                            <h3>+55 61 99571-3322</h3>
+                            <p>Pronto para receber solicitações de catálogo, consultas e interesse em obras.</p>
+                        </div>
+
+                        <div>
+                            <a class="btn-primary" href="https://wa.me/5561995713322?text=Olá%2C%20gostaria%20de%20solicitar%20o%20catálogo." target="_blank" rel="noopener noreferrer">
+                                Solicitar catálogo agora
+                            </a>
+                            <small>Mensagem automática já configurada.</small>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="wrap footer-bar">
+            <span>© <span id="ano"></span> Tiago Sillos. Todos os direitos reservados.</span>
+            <span>tiagosillos.art.br</span>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("ano").textContent = new Date().getFullYear();
+
+        const elements = document.querySelectorAll(".reveal");
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("is-visible");
+                }
+            });
+        }, { threshold: 0.16 });
+
+        elements.forEach((el) => observer.observe(el));
+    </script>
+
+    <script type="module">
+        import * as THREE from "https://unpkg.com/three@0.166.1/build/three.module.js";
+
+        const canvas = document.getElementById("metaverse-canvas");
+
+        if (canvas) {
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x040404);
+
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+            renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+            const camera = new THREE.PerspectiveCamera(62, 1, 0.1, 250);
+            camera.position.set(0, 2.1, 0);
+
+            const root = new THREE.Group();
+            scene.add(root);
+
+            const ambient = new THREE.AmbientLight(0xf6dfbb, 0.95);
+            scene.add(ambient);
+
+            const hemisphere = new THREE.HemisphereLight(0xffe1b0, 0x140a04, 0.85);
+            scene.add(hemisphere);
+
+            const coreLight = new THREE.PointLight(0xffc979, 8, 40, 2);
+            coreLight.position.set(0, 2.1, 0);
+            scene.add(coreLight);
+
+            const upperLeftLight = new THREE.PointLight(0xbe7425, 5, 60, 2);
+            upperLeftLight.position.set(-12, 11, -4);
+            scene.add(upperLeftLight);
+
+            const upperRightLight = new THREE.PointLight(0xbe7425, 5, 60, 2);
+            upperRightLight.position.set(12, 11, 4);
+            scene.add(upperRightLight);
+
+            // Central cosmic shell, visible from the inside
+            const shellGeometry = new THREE.IcosahedronGeometry(10.2, 2);
+
+            const shellMesh = new THREE.Mesh(
+                shellGeometry,
+                new THREE.MeshPhysicalMaterial({
+                    color: 0x9a6326,
+                    emissive: 0x4c2100,
+                    emissiveIntensity: 0.24,
+                    transparent: true,
+                    opacity: 0.10,
+                    roughness: 0.28,
+                    metalness: 0.78,
+                    transmission: 0.06,
+                    side: THREE.BackSide
+                })
+            );
+            shellMesh.position.set(0, 2.1, 0);
+            root.add(shellMesh);
+
+            const shellWire = new THREE.LineSegments(
+                new THREE.WireframeGeometry(shellGeometry),
+                new THREE.LineBasicMaterial({
+                    color: 0xe2b669,
+                    transparent: true,
+                    opacity: 0.34
+                })
+            );
+            shellWire.position.set(0, 2.1, 0);
+            root.add(shellWire);
+
+            // Surrounding luminous rings
+            function makeRing(radius, tube, opacity) {
+                const ring = new THREE.Mesh(
+                    new THREE.TorusGeometry(radius, tube, 24, 180),
+                    new THREE.MeshStandardMaterial({
+                        color: 0xe6ba6c,
+                        emissive: 0x884100,
+                        emissiveIntensity: 0.6,
+                        roughness: 0.18,
+                        metalness: 0.94,
+                        transparent: true,
+                        opacity
+                    })
+                );
+                ring.position.set(0, 2.1, 0);
+                return ring;
+            }
+
+            const ringA = makeRing(7.2, 0.045, 0.72);
+            ringA.rotation.set(Math.PI / 2, 0, 0);
+            root.add(ringA);
+
+            const ringB = makeRing(6.3, 0.035, 0.42);
+            ringB.rotation.set(Math.PI / 2.7, 0.8, 0.1);
+            root.add(ringB);
+
+            const ringC = makeRing(5.6, 0.03, 0.26);
+            ringC.rotation.set(Math.PI / 2.2, -0.65, 0.34);
+            root.add(ringC);
+
+            const innerGlow = new THREE.Mesh(
+                new THREE.SphereGeometry(1.6, 32, 32),
+                new THREE.MeshBasicMaterial({
+                    color: 0xffcd83,
+                    transparent: true,
+                    opacity: 0.09
+                })
+            );
+            innerGlow.position.set(0, 2.1, 0);
+            root.add(innerGlow);
+
+            // Small floating motes near the center
+            const dustCount = 280;
+            const dustPositions = new Float32Array(dustCount * 3);
+            for (let i = 0; i < dustCount; i++) {
+                dustPositions[i * 3 + 0] = (Math.random() - 0.5) * 14;
+                dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 6 + 2.1;
+                dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 14;
+            }
+            const dustGeo = new THREE.BufferGeometry();
+            dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
+            const dustMat = new THREE.PointsMaterial({
+                color: 0xf4d7a2,
+                size: 0.03,
+                transparent: true,
+                opacity: 0.34
+            });
+            const dust = new THREE.Points(dustGeo, dustMat);
+            root.add(dust);
+
+            // Star field and constellations outside the shell
+            function randomPointOnSphere(minR, maxR) {
+                const u = Math.random();
+                const v = Math.random();
+                const theta = 2 * Math.PI * u;
+                const phi = Math.acos(2 * v - 1);
+                const r = minR + Math.random() * (maxR - minR);
+                return new THREE.Vector3(
+                    r * Math.sin(phi) * Math.cos(theta),
+                    r * Math.cos(phi) + 2.1,
+                    r * Math.sin(phi) * Math.sin(theta)
+                );
+            }
+
+            const starCount = 1400;
+            const starPositions = new Float32Array(starCount * 3);
+            for (let i = 0; i < starCount; i++) {
+                const p = randomPointOnSphere(18, 34);
+                starPositions[i * 3 + 0] = p.x;
+                starPositions[i * 3 + 1] = p.y;
+                starPositions[i * 3 + 2] = p.z;
+            }
+            const starGeo = new THREE.BufferGeometry();
+            starGeo.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
+            const starMat = new THREE.PointsMaterial({
+                color: 0xf8e2ba,
+                size: 0.06,
+                transparent: true,
+                opacity: 0.95
+            });
+            const stars = new THREE.Points(starGeo, starMat);
+            root.add(stars);
+
+            const constellationGroup = new THREE.Group();
+            root.add(constellationGroup);
+
+            for (let c = 0; c < 9; c++) {
+                const center = randomPointOnSphere(16, 22);
+                const points = [];
+                for (let j = 0; j < 5; j++) {
+                    points.push(center.clone().add(new THREE.Vector3(
+                        (Math.random() - 0.5) * 2.8,
+                        (Math.random() - 0.5) * 2.8,
+                        (Math.random() - 0.5) * 2.8
+                    )));
+                }
+
+                const linePositions = [];
+                for (let j = 0; j < points.length - 1; j++) {
+                    linePositions.push(points[j].x, points[j].y, points[j].z);
+                    linePositions.push(points[j + 1].x, points[j + 1].y, points[j + 1].z);
+                }
+
+                const geo = new THREE.BufferGeometry();
+                geo.setAttribute("position", new THREE.Float32BufferAttribute(linePositions, 3));
+                const mat = new THREE.LineBasicMaterial({
+                    color: 0xdab67b,
+                    transparent: true,
+                    opacity: 0.34
+                });
+                constellationGroup.add(new THREE.LineSegments(geo, mat));
+            }
+
+            // Twelve paintings around the observer, facing inward
+            const loader = new THREE.TextureLoader();
+            const frameMaterial = new THREE.MeshStandardMaterial({
+                color: 0x9a6a28,
+                roughness: 0.34,
+                metalness: 0.88
+            });
+
+            const files = ["obra1.jpg", "obra2.jpg", "obra3.jpg"];
+            const labels = ["Obra 01", "Obra 02", "Fluxos Orgânicos Primordiais"];
+            const descriptions = [
+                "Primeira presença do percurso cósmico. A obra surge como campo de condensação visual.",
+                "Segunda presença do percurso. Uma estação de contraste, vibração e forma em expansão.",
+                "Núcleo conceitual do conjunto. A obra aparece como imagem-síntese da poética do projeto."
+            ];
+
+            const works = [];
+            for (let side = 0; side < 4; side++) {
+                for (let i = 0; i < 3; i++) {
+                    const angle = side * (Math.PI / 2) + (-0.30 + i * 0.30);
+                    const radius = 11.2;
+                    works.push({
+                        title: `${labels[i]} · Quadrante ${side + 1}`,
+                        description: descriptions[i],
+                        file: files[i],
+                        position: [
+                            Math.sin(angle) * radius,
+                            2.85 + Math.sin(i * 0.9) * 0.16,
+                            Math.cos(angle) * radius
+                        ],
+                        size: [2.05, 2.72]
+                    });
+                }
+            }
+
+            const clickableWorks = [];
+
+            function createPainting(work) {
+                const group = new THREE.Group();
+                const [w, h] = work.size;
+
+                const frame = new THREE.Mesh(
+                    new THREE.BoxGeometry(w + 0.24, h + 0.24, 0.12),
+                    frameMaterial
+                );
+                group.add(frame);
+
+                const texture = loader.load(work.file);
+                texture.colorSpace = THREE.SRGBColorSpace;
+
+                const art = new THREE.Mesh(
+                    new THREE.PlaneGeometry(w, h),
+                    new THREE.MeshBasicMaterial({ map: texture })
+                );
+                art.position.z = 0.07;
+                art.userData = work;
+                group.add(art);
+
+                const aura = new THREE.Mesh(
+                    new THREE.PlaneGeometry(w + 0.55, h + 0.55),
+                    new THREE.MeshBasicMaterial({
+                        color: 0xffcb73,
+                        transparent: true,
+                        opacity: 0.10
+                    })
+                );
+                aura.position.z = -0.02;
+                group.add(aura);
+
+                const pos = new THREE.Vector3(...work.position);
+                group.position.copy(pos);
+                group.lookAt(new THREE.Vector3(0, 2.1, 0));
+
+                root.add(group);
+                clickableWorks.push(art);
+            }
+
+            works.forEach(createPainting);
+
+            const infoPanel = document.getElementById("metaverse-info");
+            const infoTitle = document.getElementById("metaverse-title");
+            const infoDescription = document.getElementById("metaverse-description");
+            const closeButton = document.getElementById("metaverse-close");
+
+            function openInfo(work) {
+                infoTitle.textContent = work.title;
+                infoDescription.textContent = work.description;
+                infoPanel.classList.add("is-visible");
+            }
+
+            function closeInfo() {
+                infoPanel.classList.remove("is-visible");
+            }
+
+            closeButton.addEventListener("click", closeInfo);
+
+            const raycaster = new THREE.Raycaster();
+            const pointer = new THREE.Vector2();
+            let yaw = 0.25;
+            let pitch = -0.08;
+            let dragging = false;
+            let moved = false;
+            let lastX = 0;
+            let lastY = 0;
+            let hoverObject = null;
+
+            function updateCameraRotation() {
+                camera.rotation.order = "YXZ";
+                camera.rotation.y = yaw;
+                camera.rotation.x = pitch;
+            }
+
+            function setPointerFromClient(clientX, clientY) {
+                const rect = canvas.getBoundingClientRect();
+                pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+                pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+            }
+
+            function startDrag(clientX, clientY) {
+                dragging = true;
+                moved = false;
+                lastX = clientX;
+                lastY = clientY;
+                setPointerFromClient(clientX, clientY);
+            }
+
+            function moveDrag(clientX, clientY) {
+                setPointerFromClient(clientX, clientY);
+                if (!dragging) return;
+
+                const dx = clientX - lastX;
+                const dy = clientY - lastY;
+                if (Math.abs(dx) > 2 || Math.abs(dy) > 2) moved = true;
+
+                lastX = clientX;
+                lastY = clientY;
+
+                yaw -= dx * 0.0042;
+                pitch -= dy * 0.0032;
+                pitch = Math.max(-1.12, Math.min(1.12, pitch));
+                updateCameraRotation();
+            }
+
+            function endDrag() {
+                dragging = false;
+            }
+
+            canvas.addEventListener("mousedown", (event) => startDrag(event.clientX, event.clientY));
+            window.addEventListener("mousemove", (event) => moveDrag(event.clientX, event.clientY));
+            window.addEventListener("mouseup", endDrag);
+
+            canvas.addEventListener("touchstart", (event) => {
+                const t = event.touches[0];
+                if (t) startDrag(t.clientX, t.clientY);
+            }, { passive: true });
+
+            window.addEventListener("touchmove", (event) => {
+                const t = event.touches[0];
+                if (t) moveDrag(t.clientX, t.clientY);
+            }, { passive: true });
+
+            window.addEventListener("touchend", endDrag, { passive: true });
+
+            canvas.addEventListener("click", () => {
+                if (moved) return;
+                raycaster.setFromCamera(pointer, camera);
+                const hits = raycaster.intersectObjects(clickableWorks, false);
+                if (hits.length) {
+                    openInfo(hits[0].object.userData);
+                } else {
+                    closeInfo();
+                }
+            });
+
+            function resizeRenderer() {
+                const width = canvas.clientWidth;
+                const height = canvas.clientHeight;
+                renderer.setSize(width, height, false);
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+            }
+
+            const clock = new THREE.Clock();
+
+            function animate() {
+                const delta = Math.min(clock.getDelta(), 0.03);
+                const t = clock.elapsedTime;
+
+                ringA.rotation.z += delta * 0.07;
+                ringB.rotation.y += delta * 0.05;
+                ringC.rotation.x += delta * 0.04;
+                shellWire.rotation.y += delta * 0.026;
+                shellMesh.rotation.y -= delta * 0.012;
+                constellationGroup.rotation.y += delta * 0.008;
+                dust.rotation.y -= delta * 0.012;
+
+                raycaster.setFromCamera(pointer, camera);
+                const hits = raycaster.intersectObjects(clickableWorks, false);
+                const nextHover = hits.length ? hits[0].object : null;
+
+                if (hoverObject && hoverObject !== nextHover) {
+                    hoverObject.scale.set(1, 1, 1);
+                }
+                if (nextHover) {
+                    nextHover.scale.set(1.03, 1.03, 1.03);
+                }
+                hoverObject = nextHover;
+
+                if (!dragging) {
+                    yaw += Math.sin(t * 0.18) * 0.00028;
+                    updateCameraRotation();
+                }
+
+                resizeRenderer();
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+
+            updateCameraRotation();
+            resizeRenderer();
+            animate();
+            window.addEventListener("resize", resizeRenderer);
+        }
+    </script>
+
+</body>
+</html>
