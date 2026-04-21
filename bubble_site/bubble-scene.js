@@ -77,9 +77,9 @@ const CONFIG = {
 const BUBBLE_GROUPS = [
   {
     key: "A",
-    count: 3,
+    count: 1,
     radiusMin: 0.42,
-    radiusMax: 1.98,
+    radiusMax: 1.28,
     speedMin: 0.10,
     speedMax: 0.22,
     color: 0xffffff,
@@ -95,7 +95,7 @@ const BUBBLE_GROUPS = [
   },
   {
     key: "B",
-    count: 3,
+    count: 2,
     radiusMin: 0.44,
     radiusMax: 0.75,
     speedMin: 0.14,
