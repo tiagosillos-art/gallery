@@ -1,0 +1,105 @@
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(84, 77, 180, 0.14), transparent 30%),
+    radial-gradient(circle at 80% 30%, rgba(255, 110, 200, 0.06), transparent 28%),
+    radial-gradient(circle at 50% 80%, rgba(80, 180, 255, 0.08), transparent 34%),
+    #16355b;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#webgl {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+
+#hint {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 20;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  user-select: none;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
+}
+
+#panel {
+  position: fixed;
+  right: 14px;
+  top: 14px;
+  z-index: 30;
+  width: 320px;
+  max-height: calc(100vh - 28px);
+  overflow: auto;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(8, 16, 28, 0.62);
+  color: rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.30);
+}
+
+#panel h3 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#panel .group {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.10);
+}
+
+#panel .row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  margin: 8px 0;
+  font-size: 12px;
+}
+
+#panel .row input[type="range"] {
+  width: 100%;
+}
+
+#panel .row .value {
+  min-width: 44px;
+  text-align: right;
+  opacity: 0.85;
+  font-variant-numeric: tabular-nums;
+}
+
+#panel .sub {
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.72;
+  line-height: 1.35;
+}
+
+#togglePanel {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 40;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+}
