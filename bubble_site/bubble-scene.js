@@ -52,9 +52,10 @@ const CONFIG = {
   softBodyMaxOffset: 0.12,
   softBodyVolumePressure: 10.5,
 
-  filmStrength: 0.34,
-  filmDrift: 0.95,
-  fresnelBoost: 0.86,
+  // Iridescência reforçada: mais presença da película sem aumentar custo de geometria
+  filmStrength: 0.68,
+  filmDrift: 1.10,
+  fresnelBoost: 1.28,
   wobbleAmount: 0.006,
   wobbleSpeedA: 0.85,
   wobbleSpeedB: 0.66,
@@ -76,34 +77,36 @@ const CONFIG = {
 const BUBBLE_GROUPS = [
   {
     key: "A",
-    count: 1,
+    count: 3,
     radiusMin: 0.42,
-    radiusMax: 0.98,
+    radiusMax: 1.98,
     speedMin: 0.10,
     speedMax: 0.22,
     color: 0xffffff,
     haloColor: 0xdacbff,
-    opacity: 0.6,
+    opacity: 0.30,
     thickness: 0.018,
-    iridescenceMin: 140,
-    iridescenceMax: 280,
+    // Faixa mais ampla para bolhas grandes
+    iridescenceMin: 220,
+    iridescenceMax: 520,
     haloScale: 2.8,
     segments: 30,
     normalUpdateStep: 2
   },
   {
     key: "B",
-    count: 2,
+    count: 3,
     radiusMin: 0.44,
     radiusMax: 0.75,
     speedMin: 0.14,
     speedMax: 0.30,
     color: 0xffffff,
     haloColor: 0xffdff3,
-    opacity: 0.6,
+    opacity: 0.27,
     thickness: 0.014,
-    iridescenceMin: 120,
-    iridescenceMax: 220,
+    // Faixa mais ampla para bolhas médias
+    iridescenceMin: 180,
+    iridescenceMax: 420,
     haloScale: 2.4,
     segments: 24,
     normalUpdateStep: 3
@@ -117,10 +120,11 @@ const BUBBLE_GROUPS = [
     speedMax: 0.38,
     color: 0xffffff,
     haloColor: 0xdaf3ff,
-    opacity: 0.6,
+    opacity: 0.24,
     thickness: 0.010,
-    iridescenceMin: 90,
-    iridescenceMax: 170,
+    // Faixa mais ampla para bolhas pequenas
+    iridescenceMin: 130,
+    iridescenceMax: 300,
     haloScale: 2.1,
     segments: 16,
     normalUpdateStep: 4
@@ -426,9 +430,10 @@ function createBubbleMaterial(cfg) {
     metalness: 0.0,
     transmission: 1.0,
     thickness: cfg.thickness,
-    ior: 1.03,
+    // IOR levemente maior para reforçar leitura da película
+    ior: 1.06,
     iridescence: 1.0,
-    iridescenceIOR: 1.04,
+    iridescenceIOR: 1.12,
     iridescenceThicknessRange: [cfg.iridescenceMin, cfg.iridescenceMax],
     clearcoat: 1.0,
     clearcoatRoughness: 0.02,
@@ -441,6 +446,8 @@ function createBubbleMaterial(cfg) {
     shader.uniforms.uPhase = { value: cfg.phase };
     shader.uniforms.uRadius = { value: cfg.radius };
     shader.uniforms.uFilmStrength = { value: CONFIG.filmStrength };
+    // Controle separado para abrir/fechar a intensidade da borda iridescente
+    shader.uniforms.uFresnelBoost = { value: CONFIG.fresnelBoost };
     shader.uniforms.uPointerWorld = { value: FLOW.pointerWorld };
     shader.uniforms.uPointerVelocity = { value: FLOW.pointerVelocity };
     shader.uniforms.uPointerActive = FLOW.pointerActive;
@@ -488,6 +495,7 @@ function createBubbleMaterial(cfg) {
         uniform float uTime;
         uniform float uPhase;
         uniform float uFilmStrength;
+        uniform float uFresnelBoost;
         uniform vec2 uPointerWorld;
         uniform vec2 uPointerVelocity;
         uniform float uPointerActive;
@@ -503,7 +511,8 @@ function createBubbleMaterial(cfg) {
         `
         vec3 viewDir = normalize(cameraPosition - vWorldPos);
         vec3 nrm = normalize(vWorldNormal);
-        float fresnel = pow(1.0 - max(dot(nrm, viewDir), 0.0), 2.4);
+        // Fresnel mais aberto para a película aparecer em mais área da bolha
+        float fresnel = pow(1.0 - max(dot(nrm, viewDir), 0.0), 1.75);
 
         vec2 flowDir = vec2(0.0);
         float flowField = 0.0;
@@ -557,9 +566,13 @@ function createBubbleMaterial(cfg) {
 
         vec3 fluidGlow = mix(vec3(0.08, 0.28, 0.52), vec3(0.78, 0.95, 1.0), bandC);
         fluidGlow = mix(fluidGlow, vec3(0.92, 0.78, 1.0), flowMask * 0.35);
-        vec3 filmTint = filmMix * (uFilmStrength * (0.04 + fresnel * 0.86));
-        filmTint += fluidGlow * (flowField * uFilmStrength * (0.03 + fresnel * 0.08));
-        filmTint += flowSample * (0.015 + fresnel * 0.035) * uFilmStrength;
+        // Reforço principal da película iridescente
+        vec3 filmTint = filmMix * (uFilmStrength * (0.10 + fresnel * uFresnelBoost));
+        // Leitura do flow-field influenciando a película
+        filmTint += fluidGlow * (flowField * uFilmStrength * (0.07 + fresnel * 0.22));
+        filmTint += flowSample * (0.04 + fresnel * 0.09) * uFilmStrength;
+        // Pop extra na borda sem precisar aumentar partículas ou segmentos
+        filmTint += filmMix * smoothstep(0.32, 1.0, fresnel) * (0.18 * uFilmStrength);
         vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance + filmTint;
         `
       );
@@ -1479,6 +1492,7 @@ function animate() {
     if (b.mesh.material.userData.shader) {
       b.mesh.material.userData.shader.uniforms.uTime.value = t;
       b.mesh.material.userData.shader.uniforms.uFilmStrength.value = CONFIG.filmStrength;
+      b.mesh.material.userData.shader.uniforms.uFresnelBoost.value = CONFIG.fresnelBoost;
     }
 
     updateBubbleAudio(b, halfW, halfH, t);
