@@ -78,7 +78,7 @@ const BUBBLE_GROUPS = [
   {
     key: "A",
     count: 1,
-    radiusMin: 0.42,
+    radiusMin: 0.72,
     radiusMax: 1.28,
     speedMin: 0.10,
     speedMax: 0.22,
