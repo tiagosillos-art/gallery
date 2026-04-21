@@ -2,8 +2,18 @@ import * as THREE from "https://esm.sh/three@0.166.1";
 
 const CONFIG = {
   sceneBg: 0x16355b,
+  maxPixelRatio: 1.35,
+  flowPulseDecay: 1.65,
+  pointerFlowRadius: 0.78,
+  pointerFlowStrength: 0.42,
+  flowMapSize: 192,
+  flowMapParticles: 180,
+  flowMapFrameSkip: 2,
+  flowMapFadeAlpha: 0.085,
+  flowMapDarkSpeed: 0.95,
+  flowMapBrightSpeed: 0.32,
 
-  particleCount: 11000,
+  particleCount: 7600,
   particleSizeMin: 1.95,
   particleSizeMax: 16.8,
   particlePointScale: 7.0,
@@ -77,7 +87,9 @@ const BUBBLE_GROUPS = [
     thickness: 0.018,
     iridescenceMin: 140,
     iridescenceMax: 280,
-    haloScale: 2.8
+    haloScale: 2.8,
+    segments: 30,
+    normalUpdateStep: 2
   },
   {
     key: "B",
@@ -92,7 +104,9 @@ const BUBBLE_GROUPS = [
     thickness: 0.014,
     iridescenceMin: 120,
     iridescenceMax: 220,
-    haloScale: 2.4
+    haloScale: 2.4,
+    segments: 24,
+    normalUpdateStep: 3
   },
   {
     key: "C",
@@ -107,7 +121,9 @@ const BUBBLE_GROUPS = [
     thickness: 0.010,
     iridescenceMin: 90,
     iridescenceMax: 170,
-    haloScale: 2.1
+    haloScale: 2.1,
+    segments: 16,
+    normalUpdateStep: 4
   }
 ];
 
@@ -123,7 +139,7 @@ const renderer = new THREE.WebGLRenderer({
   powerPreference: "high-performance"
 });
 
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, CONFIG.maxPixelRatio));
 renderer.setSize(window.innerWidth, window.innerHeight, false);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -140,9 +156,13 @@ camera.position.set(0, 0, 7);
 function resize() {
   const w = window.innerWidth;
   const h = window.innerHeight;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, CONFIG.maxPixelRatio));
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
+  if (particlesMat) {
+    particlesMat.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, CONFIG.maxPixelRatio);
+  }
 }
 
 function getViewBounds(z = 0) {
@@ -150,6 +170,215 @@ function getViewBounds(z = 0) {
   const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * distance;
   const halfW = halfH * camera.aspect;
   return { halfW, halfH };
+}
+
+function screenToWorld(clientX, clientY, z = 0) {
+  const { halfW, halfH } = getViewBounds(z);
+  return new THREE.Vector2(
+    (clientX / window.innerWidth) * halfW * 2 - halfW,
+    (1 - clientY / window.innerHeight) * halfH * 2 - halfH
+  );
+}
+
+const FLOW = {
+  maxPulses: 8,
+  pulses: Array.from({ length: 8 }, () => new THREE.Vector4(999, 999, 0, -100)),
+  pointerWorld: new THREE.Vector2(999, 999),
+  pointerVelocity: new THREE.Vector2(),
+  pointerActive: { value: 0 },
+  sceneBounds: new THREE.Vector2(1, 1),
+  nextPulse: 0,
+  lastPointerMoveAt: -100
+};
+
+let sceneTime = 0;
+
+const FLOW_MASK_SVG = `<svg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000' viewBox='0 0 1000 1000'>
+  <defs>
+    <radialGradient id='g1' cx='50%' cy='50%' r='56%'>
+      <stop offset='0%' stop-color='#0a2442'/>
+      <stop offset='45%' stop-color='#6bbcff'/>
+      <stop offset='70%' stop-color='#224a8a'/>
+      <stop offset='100%' stop-color='#08111e'/>
+    </radialGradient>
+  </defs>
+  <rect width='1000' height='1000' fill='url(#g1)'/>
+  <path fill='#dfefff' fill-opacity='0.8' d='M500 70 C650 110 760 240 760 390 C760 520 680 620 560 690 C505 722 470 768 470 840 C470 905 495 945 530 980 C370 930 280 790 280 630 C280 525 326 450 398 396 C458 351 498 305 498 245 C498 181 474 132 430 92 C452 81 475 75 500 70 Z'/>
+  <path fill='#96d8ff' fill-opacity='0.55' d='M500 170 C560 210 604 270 604 346 C604 430 564 493 506 556 C457 610 418 666 418 744 C418 786 428 825 447 863 C365 812 320 724 320 630 C320 558 345 497 391 446 C442 389 475 337 475 279 C475 236 465 201 448 176 C466 169 484 166 500 170 Z'/>
+  <circle cx='500' cy='500' r='190' fill='#041120' fill-opacity='0.24'/>
+</svg>`;
+
+function createFlowFieldMap() {
+  const size = CONFIG.flowMapSize;
+  const cellSize = 8;
+  const cols = Math.floor(size / cellSize);
+  const rows = Math.floor(size / cellSize);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext("2d", { alpha: true });
+
+  const maskCanvas = document.createElement("canvas");
+  maskCanvas.width = maskCanvas.height = size;
+  const maskCtx = maskCanvas.getContext("2d", { alpha: false });
+
+  let brightnessGrid = Array.from({ length: rows }, () => Array(cols).fill(0.5));
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+
+  function rebuildBrightnessGrid() {
+    const data = maskCtx.getImageData(0, 0, size, size).data;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        let sum = 0;
+        let count = 0;
+        const sx = c * cellSize;
+        const sy = r * cellSize;
+        const ex = Math.min(sx + cellSize, size);
+        const ey = Math.min(sy + cellSize, size);
+
+        for (let y = sy; y < ey; y++) {
+          for (let x = sx; x < ex; x++) {
+            const i = (y * size + x) * 4;
+            const lum = (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]) / 255;
+            sum += lum;
+            count++;
+          }
+        }
+
+        brightnessGrid[r][c] = count ? sum / count : 0.5;
+      }
+    }
+  }
+
+  const maskImg = new Image();
+  maskImg.onload = () => {
+    maskCtx.clearRect(0, 0, size, size);
+    maskCtx.drawImage(maskImg, 0, 0, size, size);
+    rebuildBrightnessGrid();
+  };
+  maskImg.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(FLOW_MASK_SVG)}`;
+
+  function sampleBrightness(u, v) {
+    const x = THREE.MathUtils.clamp(u, 0, 0.9999);
+    const y = THREE.MathUtils.clamp(v, 0, 0.9999);
+    const c = Math.floor(x * cols);
+    const r = Math.floor(y * rows);
+    return brightnessGrid[r][c];
+  }
+
+  function wrapParticle(p) {
+    if (p.x > size + 24) p.x = -24;
+    else if (p.x < -24) p.x = size + 24;
+    if (p.y > size + 24) p.y = -24;
+    else if (p.y < -24) p.y = size + 24;
+  }
+
+  const particles = Array.from({ length: CONFIG.flowMapParticles }, () => ({
+    x: Math.random() * size,
+    y: Math.random() * size,
+    seed: Math.random() * Math.PI * 2,
+    drift: 0.72 + Math.random() * 0.56,
+    jitter: 0.15 + Math.random() * 0.35
+  }));
+
+  let frame = 0;
+  const worldToUv = (x, y, halfW, halfH) => ({
+    x: x / (Math.max(halfW, 0.001) * 2) + 0.5,
+    y: y / (Math.max(halfH, 0.001) * 2) + 0.5
+  });
+
+  function update(time, halfW, halfH) {
+    frame++;
+    if (frame % CONFIG.flowMapFrameSkip !== 0) return;
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = `rgba(3, 8, 18, ${CONFIG.flowMapFadeAlpha})`;
+    ctx.fillRect(0, 0, size, size);
+
+    const baseAngle = Math.sin(time * 0.24) * 0.7 + Math.cos(time * 0.15) * 0.45;
+
+    let pointerUv = null;
+    let pointerSpeed = 0;
+    if (FLOW.pointerActive.value > 0.01) {
+      pointerUv = worldToUv(FLOW.pointerWorld.x, FLOW.pointerWorld.y, halfW, halfH);
+      pointerSpeed = Math.min(1.5, FLOW.pointerVelocity.length() * 0.015);
+    }
+
+    for (const p of particles) {
+      const prevX = p.x;
+      const prevY = p.y;
+      const u = prevX / size;
+      const v = prevY / size;
+      const brightness = sampleBrightness(u, v);
+
+      let angle = baseAngle + Math.sin(time * 0.42 + p.seed) * 0.32 + (0.5 - brightness) * 1.4;
+      let speed = THREE.MathUtils.lerp(CONFIG.flowMapDarkSpeed, CONFIG.flowMapBrightSpeed, brightness) * p.drift;
+
+      if (pointerUv) {
+        const dx = u - pointerUv.x;
+        const dy = v - pointerUv.y;
+        const dist = Math.hypot(dx, dy) + 1e-5;
+        const falloff = FLOW.pointerActive.value * Math.exp(-(dist * dist) / 0.028);
+        angle += Math.atan2(dy, dx) + Math.PI * 0.5;
+        speed += falloff * (0.8 + pointerSpeed);
+      }
+
+      for (let i = 0; i < FLOW.maxPulses; i++) {
+        const pulse = FLOW.pulses[i];
+        const age = time - pulse.w;
+        if (age < 0) continue;
+        const amp = pulse.z * Math.exp(-age * CONFIG.flowPulseDecay);
+        if (amp < 0.01) continue;
+
+        const uvPulse = worldToUv(pulse.x, pulse.y, halfW, halfH);
+        const dx = u - uvPulse.x;
+        const dy = v - uvPulse.y;
+        const dist = Math.hypot(dx, dy) + 1e-5;
+        const falloff = amp * Math.exp(-(dist * dist) / (0.012 + pulse.z * 0.065));
+        angle += (Math.atan2(dy, dx) + Math.PI * 0.5) * falloff * 0.9;
+        speed += falloff * 1.2;
+      }
+
+      angle += Math.sin((u * 8.0 + v * 5.0) + time * 0.8 + p.seed) * p.jitter * 0.15;
+
+      p.x += Math.cos(angle) * speed;
+      p.y += Math.sin(angle) * speed;
+      wrapParticle(p);
+
+      const hueShift = 0.55 + brightness * 0.35;
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(${Math.round(130 + hueShift * 60)}, ${Math.round(190 + hueShift * 30)}, 255, ${0.18 + (1.0 - brightness) * 0.22})`;
+      ctx.lineWidth = 0.8 + (1.0 - brightness) * 1.3;
+      ctx.moveTo(prevX, prevY);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+
+      if (Math.random() < 0.08) {
+        ctx.fillStyle = "rgba(210, 238, 255, 0.16)";
+        ctx.fillRect(p.x, p.y, 1.5, 1.5);
+      }
+    }
+
+    texture.needsUpdate = true;
+  }
+
+  ctx.fillStyle = "#050912";
+  ctx.fillRect(0, 0, size, size);
+  texture.needsUpdate = true;
+
+  return { canvas, texture, update };
+}
+
+const flowFieldMap = createFlowFieldMap();
+
+function emitFlowPulse(x, y, strength = 0.4) {
+  const s = THREE.MathUtils.clamp(strength, 0.08, 1.0);
+  FLOW.pulses[FLOW.nextPulse].set(x, y, s, sceneTime);
+  FLOW.nextPulse = (FLOW.nextPulse + 1) % FLOW.maxPulses;
 }
 
 window.addEventListener("resize", resize, { passive: true });
@@ -212,6 +441,12 @@ function createBubbleMaterial(cfg) {
     shader.uniforms.uPhase = { value: cfg.phase };
     shader.uniforms.uRadius = { value: cfg.radius };
     shader.uniforms.uFilmStrength = { value: CONFIG.filmStrength };
+    shader.uniforms.uPointerWorld = { value: FLOW.pointerWorld };
+    shader.uniforms.uPointerVelocity = { value: FLOW.pointerVelocity };
+    shader.uniforms.uPointerActive = FLOW.pointerActive;
+    shader.uniforms.uFlowPulses = { value: FLOW.pulses };
+    shader.uniforms.uSceneBounds = { value: FLOW.sceneBounds };
+    shader.uniforms.uFlowMap = { value: flowFieldMap.texture };
 
     shader.vertexShader = shader.vertexShader
       .replace(
@@ -253,6 +488,12 @@ function createBubbleMaterial(cfg) {
         uniform float uTime;
         uniform float uPhase;
         uniform float uFilmStrength;
+        uniform vec2 uPointerWorld;
+        uniform vec2 uPointerVelocity;
+        uniform float uPointerActive;
+        uniform vec4 uFlowPulses[8];
+        uniform vec2 uSceneBounds;
+        uniform sampler2D uFlowMap;
         varying vec3 vWorldPos;
         varying vec3 vWorldNormal;
         `
@@ -264,9 +505,48 @@ function createBubbleMaterial(cfg) {
         vec3 nrm = normalize(vWorldNormal);
         float fresnel = pow(1.0 - max(dot(nrm, viewDir), 0.0), 2.4);
 
-        float bandA = sin(vWorldPos.y * 7.0 + vWorldPos.x * 5.0 + uTime * ${CONFIG.filmDrift.toFixed(2)} + uPhase) * 0.5 + 0.5;
-        float bandB = sin(vWorldPos.x * 8.5 - vWorldPos.z * 4.0 - uTime * 0.75 + uPhase * 1.25) * 0.5 + 0.5;
-        float bandC = sin(vWorldPos.y * 10.0 + vWorldPos.z * 3.5 + uTime * 0.65 - uPhase * 1.4) * 0.5 + 0.5;
+        vec2 flowDir = vec2(0.0);
+        float flowField = 0.0;
+
+        vec2 pointerDelta = vWorldPos.xy - uPointerWorld;
+        float pointerDist = length(pointerDelta);
+        float pointerRadius = 0.78;
+        float pointerFalloff = uPointerActive * exp(-(pointerDist * pointerDist) / max(0.0001, pointerRadius * pointerRadius));
+        float pointerSpeed = clamp(length(uPointerVelocity) * 0.22, 0.0, 1.0);
+        if (pointerDist > 0.0001) {
+          vec2 pointerTangent = vec2(-pointerDelta.y, pointerDelta.x) / pointerDist;
+          flowDir += pointerTangent * pointerFalloff * (0.45 + pointerSpeed * 0.8);
+        }
+        flowField += pointerFalloff * (0.42 + pointerSpeed * 0.55);
+
+        for (int i = 0; i < 8; i++) {
+          vec4 pulse = uFlowPulses[i];
+          float age = max(0.0, uTime - pulse.w);
+          float life = exp(-age * 1.65);
+          float amp = pulse.z * life;
+          vec2 delta = vWorldPos.xy - pulse.xy;
+          float dist = length(delta);
+          float radiusSq = 0.10 + pulse.z * 0.85;
+          float falloff = amp * exp(-(dist * dist) / max(0.0001, radiusSq));
+          if (dist > 0.0001) {
+            vec2 tangent = vec2(-delta.y, delta.x) / dist;
+            flowDir += tangent * falloff;
+          }
+          flowField += falloff;
+        }
+
+        vec2 sceneUv = vWorldPos.xy / (uSceneBounds * 2.0) + 0.5;
+        vec2 mapUv = fract(sceneUv + vec2(uPhase * 0.011, -uPhase * 0.009) + flowDir * 0.035);
+        vec3 flowSample = texture2D(uFlowMap, mapUv).rgb;
+        float flowTex = dot(flowSample, vec3(0.333333));
+        float flowMask = smoothstep(0.07, 0.82, flowTex);
+        vec2 texShift = (flowSample.rg - 0.5) * 0.95;
+
+        flowField = clamp(flowField + flowMask * 0.58, 0.0, 1.55);
+
+        float bandA = sin(vWorldPos.y * 7.0 + vWorldPos.x * 5.0 + uTime * 0.95 + uPhase + flowDir.x * 1.5 + flowField * 2.1 + texShift.x * 1.6) * 0.5 + 0.5;
+        float bandB = sin(vWorldPos.x * 8.5 - vWorldPos.z * 4.0 - uTime * 0.75 + uPhase * 1.25 + flowDir.y * 1.7 + texShift.y * 1.8) * 0.5 + 0.5;
+        float bandC = sin(vWorldPos.y * 10.0 + vWorldPos.z * 3.5 + uTime * 0.65 - uPhase * 1.4 + dot(flowDir, vec2(0.8, 0.6)) * 1.8 + (texShift.x + texShift.y) * 1.2) * 0.5 + 0.5;
 
         vec3 film1 = vec3(1.0, 0.66, 0.95);
         vec3 film2 = vec3(0.58, 0.96, 1.0);
@@ -275,7 +555,11 @@ function createBubbleMaterial(cfg) {
         vec3 filmMix = mix(mix(film1, film2, bandA), film3, bandB);
         filmMix = mix(filmMix, vec3(0.84, 0.72, 1.0), bandC * 0.35);
 
-        vec3 filmTint = filmMix * (uFilmStrength * (0.04 + fresnel * ${CONFIG.fresnelBoost.toFixed(2)}));
+        vec3 fluidGlow = mix(vec3(0.08, 0.28, 0.52), vec3(0.78, 0.95, 1.0), bandC);
+        fluidGlow = mix(fluidGlow, vec3(0.92, 0.78, 1.0), flowMask * 0.35);
+        vec3 filmTint = filmMix * (uFilmStrength * (0.04 + fresnel * 0.86));
+        filmTint += fluidGlow * (flowField * uFilmStrength * (0.03 + fresnel * 0.08));
+        filmTint += flowSample * (0.015 + fresnel * 0.035) * uFilmStrength;
         vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance + filmTint;
         `
       );
@@ -287,7 +571,7 @@ function createBubbleMaterial(cfg) {
 }
 
 function createBubble(cfg) {
-  const geometry = new THREE.SphereGeometry(cfg.radius, 42, 42);
+  const geometry = new THREE.SphereGeometry(cfg.radius, cfg.segments, cfg.segments);
   const posAttr = geometry.getAttribute("position");
   posAttr.setUsage(THREE.DynamicDrawUsage);
 
@@ -328,13 +612,15 @@ function createBubble(cfg) {
     speedMax: cfg.speedMax,
     spinX: cfg.spinX,
     spinY: cfg.spinY,
+    normalUpdateStep: cfg.normalUpdateStep,
     mesh,
     halo,
     posAttr,
     basePositions: posAttr.array.slice(),
     vertexVel: new Float32Array(posAttr.array.length),
     audio: null,
-    lastCollisionAt: -999
+    lastCollisionAt: -999,
+    lastFlowAt: -999
   };
 }
 
@@ -399,7 +685,9 @@ function generateBubbleConfigs() {
         speedMax: group.speedMax,
         spinX: THREE.MathUtils.randFloatSpread(0.12),
         spinY: THREE.MathUtils.randFloatSpread(0.12),
-        phase: Math.random() * Math.PI * 2
+        phase: Math.random() * Math.PI * 2,
+        segments: group.segments,
+        normalUpdateStep: group.normalUpdateStep
       });
     }
   }
@@ -457,7 +745,7 @@ const particlesMat = new THREE.ShaderMaterial({
   blending: THREE.AdditiveBlending,
   vertexColors: true,
   uniforms: {
-    uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 2) },
+    uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, CONFIG.maxPixelRatio) },
     uPointScale: { value: CONFIG.particlePointScale }
   },
   vertexShader: `
@@ -491,6 +779,7 @@ scene.add(particles);
 
 const posAttr = particlesGeo.getAttribute("position");
 const clock = new THREE.Clock();
+let frameIndex = 0;
 
 const AUDIO = {
   ctx: null,
@@ -875,7 +1164,9 @@ function updateBubbleSoftBody(b, dt) {
   }
 
   b.posAttr.needsUpdate = true;
-  b.mesh.geometry.computeVertexNormals();
+  if (frameIndex % b.normalUpdateStep === 0) {
+    b.mesh.geometry.computeVertexNormals();
+  }
 }
 
 function updateBubbleDrive(b, t, dt) {
@@ -970,6 +1261,10 @@ function updateBubbleWalls(b, halfW, halfH, nowT) {
     b.vx = Math.abs(b.vx) * CONFIG.sphereWallRestitution;
     b.vy *= (1.0 - CONFIG.contactFriction * 0.08);
     b.heading = Math.atan2(b.vy, b.vx);
+    if (impact > 0.10 && nowT - b.lastFlowAt > 0.035) {
+      emitFlowPulse(b.x, b.y, impact * 0.9);
+      b.lastFlowAt = nowT;
+    }
     if (nowT - b.lastCollisionAt > 0.08) {
       triggerCollisionSound(THREE.MathUtils.clamp(b.x / Math.max(halfW, 0.001), -1, 1), impact, b.group);
       b.lastCollisionAt = nowT;
@@ -981,6 +1276,10 @@ function updateBubbleWalls(b, halfW, halfH, nowT) {
     b.vx = -Math.abs(b.vx) * CONFIG.sphereWallRestitution;
     b.vy *= (1.0 - CONFIG.contactFriction * 0.08);
     b.heading = Math.atan2(b.vy, b.vx);
+    if (impact > 0.10 && nowT - b.lastFlowAt > 0.035) {
+      emitFlowPulse(b.x, b.y, impact * 0.9);
+      b.lastFlowAt = nowT;
+    }
     if (nowT - b.lastCollisionAt > 0.08) {
       triggerCollisionSound(THREE.MathUtils.clamp(b.x / Math.max(halfW, 0.001), -1, 1), impact, b.group);
       b.lastCollisionAt = nowT;
@@ -994,6 +1293,10 @@ function updateBubbleWalls(b, halfW, halfH, nowT) {
     b.vy = Math.abs(b.vy) * CONFIG.sphereWallRestitution;
     b.vx *= (1.0 - CONFIG.contactFriction * 0.08);
     b.heading = Math.atan2(b.vy, b.vx);
+    if (impact > 0.10 && nowT - b.lastFlowAt > 0.035) {
+      emitFlowPulse(b.x, b.y, impact * 0.9);
+      b.lastFlowAt = nowT;
+    }
     if (nowT - b.lastCollisionAt > 0.08) {
       triggerCollisionSound(THREE.MathUtils.clamp(b.x / Math.max(halfW, 0.001), -1, 1), impact, b.group);
       b.lastCollisionAt = nowT;
@@ -1005,6 +1308,10 @@ function updateBubbleWalls(b, halfW, halfH, nowT) {
     b.vy = -Math.abs(b.vy) * CONFIG.sphereWallRestitution;
     b.vx *= (1.0 - CONFIG.contactFriction * 0.08);
     b.heading = Math.atan2(b.vy, b.vx);
+    if (impact > 0.10 && nowT - b.lastFlowAt > 0.035) {
+      emitFlowPulse(b.x, b.y, impact * 0.9);
+      b.lastFlowAt = nowT;
+    }
     if (nowT - b.lastCollisionAt > 0.08) {
       triggerCollisionSound(THREE.MathUtils.clamp(b.x / Math.max(halfW, 0.001), -1, 1), impact, b.group);
       b.lastCollisionAt = nowT;
@@ -1082,7 +1389,14 @@ function resolveBubbleCollision(a, b, nowT, halfW) {
     b.heading = Math.atan2(b.vy, b.vx);
   }
 
-  const xNorm = THREE.MathUtils.clamp((a.x + b.x) * 0.5 / Math.max(halfW, 0.001), -1, 1);
+  const midX = (a.x + b.x) * 0.5;
+  const midY = (a.y + b.y) * 0.5;
+  const xNorm = THREE.MathUtils.clamp(midX / Math.max(halfW, 0.001), -1, 1);
+  if (impact > 0.08 && (nowT - a.lastFlowAt > 0.03 || nowT - b.lastFlowAt > 0.03)) {
+    emitFlowPulse(midX, midY, impact);
+    a.lastFlowAt = nowT;
+    b.lastFlowAt = nowT;
+  }
   if (nowT - a.lastCollisionAt > 0.08 || nowT - b.lastCollisionAt > 0.08) {
     triggerCollisionSound(xNorm, impact, a.group);
     a.lastCollisionAt = nowT;
@@ -1101,10 +1415,36 @@ window.addEventListener("pointerdown", armAudio, { passive: true });
 window.addEventListener("keydown", armAudio, { passive: true });
 window.addEventListener("touchstart", armAudio, { passive: true });
 
+window.addEventListener("pointermove", (e) => {
+  const now = performance.now() * 0.001;
+  const world = screenToWorld(e.clientX, e.clientY);
+  const dt = Math.max(0.001, now - FLOW.lastPointerMoveAt);
+
+  if (FLOW.lastPointerMoveAt > 0) {
+    FLOW.pointerVelocity.set(
+      (world.x - FLOW.pointerWorld.x) / dt,
+      (world.y - FLOW.pointerWorld.y) / dt
+    );
+  }
+
+  FLOW.pointerWorld.copy(world);
+  FLOW.pointerActive.value = 1;
+  FLOW.lastPointerMoveAt = now;
+}, { passive: true });
+
+window.addEventListener("pointerleave", () => {
+  FLOW.pointerActive.value = 0;
+  FLOW.pointerVelocity.set(0, 0);
+}, { passive: true });
+
 function animate() {
+  frameIndex++;
   dtGlobal = Math.min(clock.getDelta(), 0.033);
   const t = clock.elapsedTime;
+  sceneTime = t;
   const { halfW, halfH } = getViewBounds(0);
+  FLOW.sceneBounds.set(halfW, halfH);
+  flowFieldMap.update(t, halfW, halfH);
 
   for (const b of bubbles) updateBubbleDrive(b, t, dtGlobal);
 
@@ -1117,6 +1457,11 @@ function animate() {
     for (let j = i + 1; j < bubbles.length; j++) {
       resolveBubbleCollision(bubbles[i], bubbles[j], t, halfW);
     }
+  }
+
+  FLOW.pointerVelocity.multiplyScalar(0.92);
+  if (t - FLOW.lastPointerMoveAt > 0.16) {
+    FLOW.pointerActive.value *= 0.9;
   }
 
   for (const b of bubbles) {

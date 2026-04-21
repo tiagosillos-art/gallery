@@ -1,20 +1,25 @@
-Arquivos do site:
-
+Arquivos prontos para aplicar:
 - index.html
 - bubble.css
 - bubble-scene.js
 
-Como usar:
-1. Suba os 3 arquivos na mesma pasta do seu site.
-2. Abra o index.html para testar.
-3. Em produção, sirva por HTTP/HTTPS normal.
-4. O arquivo bubble-scene.js importa Three.js por URL externa (esm.sh).
+Como aplicar:
+1. Substitua os arquivos atuais por estes 3 arquivos na mesma pasta do site.
+2. Sirva a pasta por HTTP/HTTPS normal.
+3. O bubble-scene.js usa Three.js por URL externa (esm.sh).
 
-Se você quiser integrar isso dentro de uma página existente:
-- copie o conteúdo do body de index.html para a sua página
-- mantenha o link para bubble.css
-- mantenha o script type="module" para bubble-scene.js
+O que entrou nesta versão:
+- flow-field leve offscreen embutido como textura dinâmica
+- leitura desse flow-field dentro do shader de cada bolha
+- resposta a mouse, colisões entre bolhas e impacto na parede
+- redução adicional de custo: menos partículas, pixel ratio menor, menos segmentos e menos recomputação de normais
 
-Observação:
-- O áudio só começa depois de clique/toque/tecla, por regra do navegador.
-- Ao ativar, toca um tom curto para confirmar que saiu som.
+Resumo técnico:
+- não usa solver full-screen pesado
+- não cria 1 sistema de fluido por bolha
+- usa 1 mapa de fluxo pequeno compartilhado, só para enriquecer película, brilho e variação orgânica
+
+Observações:
+- o áudio só começa depois de clique/toque/tecla, por regra do navegador
+- esta versão foi validada com checagem sintática do JS
+- ajuste fino visual ainda pode ser feito depois de testar no navegador real
