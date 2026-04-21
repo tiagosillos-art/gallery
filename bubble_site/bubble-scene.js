@@ -3,8 +3,8 @@ import * as THREE from "https://esm.sh/three@0.166.1";
 const CONFIG = {
   sceneBg: 0x16355b,
 
-  particleCount: 11000,
-  particleSizeMin: 0.95,
+  particleCount: 51000,
+  particleSizeMin: 1.95,
   particleSizeMax: 6.8,
   particlePointScale: 7.0,
   particleDamping: 0.988,
@@ -66,9 +66,9 @@ const CONFIG = {
 const BUBBLE_GROUPS = [
   {
     key: "A",
-    count: 2,
+    count: 3,
     radiusMin: 0.42,
-    radiusMax: 0.98,
+    radiusMax: 1.98,
     speedMin: 0.10,
     speedMax: 0.22,
     color: 0xffffff,
