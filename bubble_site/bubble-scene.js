@@ -3,9 +3,9 @@ import * as THREE from "https://esm.sh/three@0.166.1";
 const CONFIG = {
   sceneBg: 0x16355b,
 
-  particleCount: 51000,
+  particleCount: 11000,
   particleSizeMin: 1.95,
-  particleSizeMax: 6.8,
+  particleSizeMax: 16.8,
   particlePointScale: 7.0,
   particleDamping: 0.988,
   particleMaxSpeed: 0.78,
