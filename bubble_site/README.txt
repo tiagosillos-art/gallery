@@ -1,25 +1,35 @@
-Arquivos prontos para aplicar:
+ARQUIVOS PRONTOS - TESTE ISOLADO DA BOLHA
+
+Conteúdo:
 - index.html
 - bubble.css
 - bubble-scene.js
 
+Objetivo desta versão:
+- testar só 1 bolha
+- usar oitavas no volume orgânico da superfície
+- puxar um reflexo mais forte e mais "liquid glass"
+- ficar muito mais leve que um pós-processo full-screen pesado
+
 Como aplicar:
-1. Substitua os arquivos atuais por estes 3 arquivos na mesma pasta do site.
-2. Sirva a pasta por HTTP/HTTPS normal.
-3. O bubble-scene.js usa Three.js por URL externa (esm.sh).
+1. Crie uma pasta nova para o teste.
+2. Coloque os 3 arquivos nela.
+3. Abra via servidor HTTP/HTTPS normal.
+4. O arquivo principal é bubble-scene.js.
 
-O que entrou nesta versão:
-- flow-field leve offscreen embutido como textura dinâmica
-- leitura desse flow-field dentro do shader de cada bolha
-- resposta a mouse, colisões entre bolhas e impacto na parede
-- redução adicional de custo: menos partículas, pixel ratio menor, menos segmentos e menos recomputação de normais
+Controles:
+- oitavas: quantidade de camadas no fbm da superfície
+- volume orgânico: deslocamento da casca
+- iridescência: força da película colorida
+- reflexo: força dos highlights e da leitura especular
 
-Resumo técnico:
-- não usa solver full-screen pesado
-- não cria 1 sistema de fluido por bolha
-- usa 1 mapa de fluxo pequeno compartilhado, só para enriquecer película, brilho e variação orgânica
+O que foi feito aqui:
+- 1 esfera só
+- shader próprio, sem solver de fluido
+- volume gerado por fbm com até 6 oitavas
+- reflexo reforçado com múltiplos highlights especulares inspirados no modelo liquid glass
+- uma segunda casca interna leve para dar mais profundidade visual
 
-Observações:
-- o áudio só começa depois de clique/toque/tecla, por regra do navegador
-- esta versão foi validada com checagem sintática do JS
-- ajuste fino visual ainda pode ser feito depois de testar no navegador real
+Observação importante:
+- esta versão é um laboratório visual
+- a ideia é validar o visual da bolha antes de levar isso para a home inteira

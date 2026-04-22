@@ -4,102 +4,122 @@ html, body {
   height: 100%;
   overflow: hidden;
   background:
-    radial-gradient(circle at 20% 20%, rgba(84, 77, 180, 0.14), transparent 30%),
-    radial-gradient(circle at 80% 30%, rgba(255, 110, 200, 0.06), transparent 28%),
-    radial-gradient(circle at 50% 80%, rgba(80, 180, 255, 0.08), transparent 34%),
-    #16355b;
+    radial-gradient(circle at 20% 18%, rgba(182, 220, 255, 0.18), transparent 24%),
+    radial-gradient(circle at 78% 24%, rgba(255, 160, 220, 0.12), transparent 22%),
+    radial-gradient(circle at 50% 80%, rgba(100, 160, 255, 0.10), transparent 28%),
+    linear-gradient(180deg, #07152e 0%, #0a1f43 42%, #07111d 100%);
   font-family: Arial, Helvetica, sans-serif;
 }
 
 #webgl {
+  position: fixed;
+  inset: 0;
   display: block;
   width: 100vw;
   height: 100vh;
 }
 
-#hint {
+.bg-glow {
   position: fixed;
-  top: 14px;
-  left: 14px;
-  z-index: 20;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.10);
-  color: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  user-select: none;
+  border-radius: 50%;
+  filter: blur(90px);
   pointer-events: none;
-  transition: opacity 0.35s ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
+  mix-blend-mode: screen;
+  opacity: 0.6;
+}
+
+.glow-a {
+  width: 32vw;
+  height: 32vw;
+  left: 8vw;
+  top: 12vh;
+  background: rgba(120, 200, 255, 0.22);
+}
+
+.glow-b {
+  width: 24vw;
+  height: 24vw;
+  right: 12vw;
+  top: 16vh;
+  background: rgba(255, 170, 215, 0.18);
+}
+
+.glow-c {
+  width: 28vw;
+  height: 28vw;
+  left: 40vw;
+  bottom: 6vh;
+  background: rgba(130, 120, 255, 0.12);
 }
 
 #panel {
   position: fixed;
-  right: 14px;
   top: 14px;
-  z-index: 30;
-  width: 320px;
-  max-height: calc(100vh - 28px);
-  overflow: auto;
+  left: 14px;
+  z-index: 20;
+  width: min(320px, calc(100vw - 28px));
   padding: 14px;
   border-radius: 18px;
-  background: rgba(8, 16, 28, 0.62);
-  color: rgba(255,255,255,0.92);
+  background: rgba(8, 14, 25, 0.48);
+  color: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(14px);
-  box-shadow: 0 14px 40px rgba(0,0,0,0.30);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
 }
 
-#panel h3 {
-  margin: 0 0 10px 0;
-  font-size: 14px;
-  font-weight: 600;
+#panel h1 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+#panel .sub {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0.82;
 }
 
 #panel .group {
-  margin-top: 10px;
-  padding-top: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px solid rgba(255,255,255,0.10);
 }
 
 #panel .row {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
   margin: 8px 0;
   font-size: 12px;
 }
 
-#panel .row input[type="range"] {
+#panel input[type="range"] {
   width: 100%;
 }
 
-#panel .row .value {
+#panel span {
   min-width: 44px;
   text-align: right;
-  opacity: 0.85;
+  opacity: 0.9;
   font-variant-numeric: tabular-nums;
 }
 
-#panel .sub {
-  margin-top: 6px;
+#panel .hint {
+  margin-top: 10px;
   font-size: 11px;
-  opacity: 0.72;
   line-height: 1.35;
+  opacity: 0.72;
 }
 
-#togglePanel {
-  position: fixed;
-  right: 14px;
-  bottom: 14px;
-  z-index: 40;
-  border: 0;
-  border-radius: 999px;
-  padding: 10px 14px;
-  background: rgba(255,255,255,0.14);
-  color: #fff;
-  backdrop-filter: blur(10px);
-  cursor: pointer;
+@media (max-width: 680px) {
+  #panel {
+    width: auto;
+    right: 14px;
+  }
+
+  .bg-glow {
+    filter: blur(70px);
+  }
 }

@@ -3,103 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bubble Scene</title>
+  <title>Teste - Bolha com Oitavas e Reflexo</title>
   <link rel="stylesheet" href="./bubble.css" />
 </head>
 <body>
-  <div id="hint">clique / toque / tecla para ativar o som</div>
+  <div class="bg-glow glow-a"></div>
+  <div class="bg-glow glow-b"></div>
+  <div class="bg-glow glow-c"></div>
+
   <canvas id="webgl"></canvas>
 
   <div id="panel">
-    <h3>controles ao vivo</h3>
+    <h1>teste da bolha</h1>
+    <p class="sub">1 bolha só, com oitavas no volume e reflexo forte inspirado no modelo liquid glass.</p>
 
     <div class="group">
-      <div class="row">
-        <label for="masterGain">som master</label>
-        <span class="value" id="masterGainVal"></span>
-      </div>
-      <input id="masterGain" type="range" min="0" max="1.2" step="0.01">
+      <div class="row"><label for="octaves">oitavas</label><span id="octavesVal"></span></div>
+      <input id="octaves" type="range" min="1" max="6" step="1" value="5" />
 
-      <div class="row">
-        <label for="padGain">som base</label>
-        <span class="value" id="padGainVal"></span>
-      </div>
-      <input id="padGain" type="range" min="0" max="0.30" step="0.005">
+      <div class="row"><label for="displacement">volume orgânico</label><span id="displacementVal"></span></div>
+      <input id="displacement" type="range" min="0.00" max="0.22" step="0.005" value="0.095" />
 
-      <div class="row">
-        <label for="collisionGain">impacto sonoro</label>
-        <span class="value" id="collisionGainVal"></span>
-      </div>
-      <input id="collisionGain" type="range" min="0" max="0.40" step="0.005">
+      <div class="row"><label for="filmStrength">iridescência</label><span id="filmStrengthVal"></span></div>
+      <input id="filmStrength" type="range" min="0.00" max="1.50" step="0.01" value="0.92" />
 
-      <div class="row">
-        <label for="audioCutoff">clareza do grave</label>
-        <span class="value" id="audioCutoffVal"></span>
-      </div>
-      <input id="audioCutoff" type="range" min="80" max="420" step="1">
+      <div class="row"><label for="reflectionBoost">reflexo</label><span id="reflectionBoostVal"></span></div>
+      <input id="reflectionBoost" type="range" min="0.20" max="2.50" step="0.01" value="1.55" />
     </div>
 
-    <div class="group">
-      <div class="row">
-        <label for="bubbleRepulsion">repulsão bolhas</label>
-        <span class="value" id="bubbleRepulsionVal"></span>
-      </div>
-      <input id="bubbleRepulsion" type="range" min="0" max="1.2" step="0.01">
-
-      <div class="row">
-        <label for="bubbleSeparation">raio separação</label>
-        <span class="value" id="bubbleSeparationVal"></span>
-      </div>
-      <input id="bubbleSeparation" type="range" min="1.0" max="3.5" step="0.01">
-
-      <div class="row">
-        <label for="contactFriction">atrito bolhas</label>
-        <span class="value" id="contactFrictionVal"></span>
-      </div>
-      <input id="contactFriction" type="range" min="0" max="0.20" step="0.001">
-
-      <div class="row">
-        <label for="restitution">bounce bolhas</label>
-        <span class="value" id="restitutionVal"></span>
-      </div>
-      <input id="restitution" type="range" min="0" max="0.8" step="0.01">
-
-      <div class="row">
-        <label for="wallRestitution">bounce parede</label>
-        <span class="value" id="wallRestitutionVal"></span>
-      </div>
-      <input id="wallRestitution" type="range" min="0" max="0.8" step="0.01">
-    </div>
-
-    <div class="group">
-      <div class="row">
-        <label for="bubbleDrive">força movimento</label>
-        <span class="value" id="bubbleDriveVal"></span>
-      </div>
-      <input id="bubbleDrive" type="range" min="0.2" max="3.0" step="0.01">
-
-      <div class="row">
-        <label for="particleScale">tamanho visual partículas</label>
-        <span class="value" id="particleScaleVal"></span>
-      </div>
-      <input id="particleScale" type="range" min="1" max="18" step="0.1">
-
-      <div class="row">
-        <label for="filmStrength">força película</label>
-        <span class="value" id="filmStrengthVal"></span>
-      </div>
-      <input id="filmStrength" type="range" min="0" max="1.0" step="0.01">
-    </div>
-
-    <div class="sub">
-      dica: para bolhas baterem sem grudar, começa com:
-      atrito entre 0.005 e 0.015,
-      bounce entre 0.22 e 0.32,
-      repulsão entre 0.40 e 0.65.
-    </div>
+    <div class="hint">mouse move a luz e a bolha. esta versão é só um laboratório visual isolado.</div>
   </div>
-
-  <button id="togglePanel">ocultar painel</button>
 
   <script type="module" src="./bubble-scene.js"></script>
 </body>
