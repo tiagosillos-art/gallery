@@ -1,39 +1,991 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teste - Bolha com Oitavas e Reflexo</title>
-  <link rel="stylesheet" href="./bubble.css" />
-</head>
-<body>
-  <div class="bg-glow glow-a"></div>
-  <div class="bg-glow glow-b"></div>
-  <div class="bg-glow glow-c"></div>
+<div class="bg bg-a"></div>
+<div class="bg bg-b"></div>
 
-  <canvas id="webgl"></canvas>
+<canvas id="webgl"></canvas>
 
-  <div id="panel">
-    <h1>teste da bolha</h1>
-    <p class="sub">1 bolha só, com oitavas no volume e reflexo forte inspirado no modelo liquid glass.</p>
+<div id="panel">
+  <h1>teste das bolhas</h1>
+  <p>bolhas com colisão, sem atração, tamanhos randomizados e reverberação amortecida no impacto.</p>
 
-    <div class="group">
-      <div class="row"><label for="octaves">oitavas</label><span id="octavesVal"></span></div>
-      <input id="octaves" type="range" min="1" max="6" step="1" value="5" />
-
-      <div class="row"><label for="displacement">volume orgânico</label><span id="displacementVal"></span></div>
-      <input id="displacement" type="range" min="0.00" max="0.22" step="0.005" value="0.095" />
-
-      <div class="row"><label for="filmStrength">iridescência</label><span id="filmStrengthVal"></span></div>
-      <input id="filmStrength" type="range" min="0.00" max="1.50" step="0.01" value="0.92" />
-
-      <div class="row"><label for="reflectionBoost">reflexo</label><span id="reflectionBoostVal"></span></div>
-      <input id="reflectionBoost" type="range" min="0.20" max="2.50" step="0.01" value="1.55" />
+  <div class="group">
+    <div class="row">
+      <label for="count">quantidade</label>
+      <span id="countVal"></span>
     </div>
+    <input id="count" type="range" min="2" max="18" step="1" value="8" />
 
-    <div class="hint">mouse move a luz e a bolha. esta versão é só um laboratório visual isolado.</div>
+    <div class="row">
+      <label for="minRadius">tamanho mínimo</label>
+      <span id="minRadiusVal"></span>
+    </div>
+    <input id="minRadius" type="range" min="0.10" max="0.90" step="0.01" value="0.10" />
+
+    <div class="row">
+      <label for="maxRadius">tamanho máximo</label>
+      <span id="maxRadiusVal"></span>
+    </div>
+    <input id="maxRadius" type="range" min="0.20" max="1.40" step="0.01" value="0.50" />
+
+    <div class="row">
+      <label for="speed">velocidade</label>
+      <span id="speedVal"></span>
+    </div>
+    <input id="speed" type="range" min="0.05" max="1.20" step="0.01" value="0.16" />
+
+    <div class="row">
+      <label for="bounce">quique</label>
+      <span id="bounceVal"></span>
+    </div>
+    <input id="bounce" type="range" min="0.70" max="1.00" step="0.01" value="0.80" />
+
+    <div class="row">
+      <label for="gelAmount">gelatina</label>
+      <span id="gelAmountVal"></span>
+    </div>
+    <input id="gelAmount" type="range" min="0.00" max="2.60" step="0.01" value="1.80" />
+
+    <div class="row">
+      <label for="gelFreq">freq. gelatina</label>
+      <span id="gelFreqVal"></span>
+    </div>
+    <input id="gelFreq" type="range" min="1.00" max="12.00" step="0.10" value="3.60" />
+
+    <div class="row">
+      <label for="gelDamping">amortecimento</label>
+      <span id="gelDampingVal"></span>
+    </div>
+    <input id="gelDamping" type="range" min="0.60" max="10.00" step="0.05" value="1.80" />
+
+    <div class="row">
+      <label for="displacement">volume orgânico</label>
+      <span id="displacementVal"></span>
+    </div>
+    <input id="displacement" type="range" min="0.00" max="0.14" step="0.001" value="0.120" />
+
+    <div class="row">
+      <label for="filmStrength">iridescência</label>
+      <span id="filmStrengthVal"></span>
+    </div>
+    <input id="filmStrength" type="range" min="0.00" max="1.60" step="0.01" value="0.64" />
+
+    <div class="row">
+      <label for="reflectionBoost">reflexo</label>
+      <span id="reflectionBoostVal"></span>
+    </div>
+    <input id="reflectionBoost" type="range" min="0.20" max="2.40" step="0.01" value="1.80" />
+
+    <div class="row buttons">
+      <button id="randomizeBtn" type="button">randomizar</button>
+      <button id="resetBtn" type="button">resetar</button>
+    </div>
   </div>
 
-  <script type="module" src="./bubble-scene.js"></script>
-</body>
-</html>
+  <div class="hint">
+    agora a pancada injeta energia em dois modos de ressonância. o shader não leva tranco.
+    a reverberação continua e morre aos poucos.
+  </div>
+</div>
+
+<div id="fpsMeter">FPS: --</div>
+
+<style>
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 70%, rgba(48, 78, 120, 0.10), transparent 24%),
+      linear-gradient(180deg, #02060d 0%, #06101b 48%, #071524 72%, #05101a 100%);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  #webgl {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    display: block;
+  }
+
+  .bg {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+    mix-blend-mode: screen;
+    opacity: 0.26;
+  }
+
+  .bg-a {
+    width: 34vw;
+    height: 34vw;
+    left: 8vw;
+    top: 10vh;
+    background: rgba(60, 110, 180, 0.10);
+  }
+
+  .bg-b {
+    width: 28vw;
+    height: 28vw;
+    right: 12vw;
+    top: 16vh;
+    background: rgba(120, 120, 180, 0.08);
+  }
+
+  #panel {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 20;
+    width: min(340px, calc(100vw - 28px));
+    padding: 14px;
+    border-radius: 18px;
+    background: rgba(6, 12, 20, 0.68);
+    color: rgba(255,255,255,0.92);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+  }
+
+  #panel h1 {
+    margin: 0;
+    font-size: 15px;
+  }
+
+  #panel p {
+    margin: 8px 0 0;
+    font-size: 12px;
+    line-height: 1.4;
+    opacity: 0.84;
+  }
+
+  .group {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.10);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+    margin: 8px 0;
+    font-size: 12px;
+  }
+
+  .buttons {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  input[type="range"] {
+    width: 100%;
+  }
+
+  span {
+    min-width: 44px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  button {
+    border: 0;
+    border-radius: 12px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.92);
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .hint {
+    margin-top: 10px;
+    font-size: 11px;
+    line-height: 1.35;
+    opacity: 0.72;
+  }
+
+  #fpsMeter {
+    position: fixed;
+    left: 14px;
+    top: 14px;
+    z-index: 25;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(6, 12, 20, 0.68);
+    color: rgba(255,255,255,0.92);
+    font-size: 12px;
+    line-height: 1;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.20);
+  }
+
+  @media (max-width: 680px) {
+    .bg {
+      filter: blur(70px);
+    }
+  }
+</style>
+
+<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<script>
+  // ------------------------------------------------------------
+  // Preset default aprovado
+  // ------------------------------------------------------------
+
+  const DEFAULTS = {
+    count: 8,
+    minRadius: 0.10,
+    maxRadius: 0.50,
+    speed: 0.16,
+    bounce: 0.80,
+    gelAmount: 1.80,
+    gelFreq: 3.60,
+    gelDamping: 1.80,
+    filmStrength: 0.64,
+    reflectionBoost: 1.80,
+    displacement: 0.120
+  };
+
+  const SETTINGS = { ...DEFAULTS };
+
+  // ------------------------------------------------------------
+  // Cena básica
+  // ------------------------------------------------------------
+
+  const canvas = document.getElementById("webgl");
+
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    alpha: true,
+    powerPreference: "high-performance"
+  });
+
+  // Pixel ratio limitado para aguentar melhor em celular.
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.0));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 20);
+  camera.position.set(0, 0, 6.2);
+  scene.add(camera);
+
+  // ------------------------------------------------------------
+  // Shader estável da bolha
+  // O impacto não altera o shader.
+  // ------------------------------------------------------------
+
+  const vertexShader = `
+    uniform float uTime;
+    uniform float uDisplacement;
+    uniform float uPhase;
+
+    varying vec3 vNormalW;
+    varying vec3 vWorldPos;
+    varying float vWave;
+
+    float trigNoise(vec3 p) {
+      return
+        sin(p.x) * cos(p.y) * 0.58 +
+        sin(p.y * 1.41) * cos(p.z * 1.17) * 0.42;
+    }
+
+    float fbm2(vec3 p) {
+      float v = 0.0;
+      v += trigNoise(p * 1.0) * 0.64;
+      p = p.yzx + vec3(1.8, 2.2, 1.1);
+      v += trigNoise(p * 1.95) * 0.36;
+      return v;
+    }
+
+    void main() {
+      vec3 n = normalize(normal);
+      vec3 p = position;
+
+      float t = uTime * 0.28;
+      vec3 q = n * 2.15 + vec3(
+        t + uPhase,
+        -t * 0.55 + uPhase * 0.25,
+        t * 0.40 - uPhase * 0.20
+      );
+
+      float wave = fbm2(q);
+      float disp = wave * uDisplacement;
+      vec3 displaced = p + n * disp;
+
+      vec3 approxNormal = normalize(n + vec3(
+        sin(q.y * 1.2 + t) * 0.08,
+        cos(q.x * 1.1 - t * 0.7) * 0.08,
+        sin(q.z * 1.3 + t * 0.5) * 0.08
+      ));
+
+      vec4 world = modelMatrix * vec4(displaced, 1.0);
+      vWorldPos = world.xyz;
+      vNormalW = normalize(mat3(modelMatrix) * approxNormal);
+      vWave = wave;
+
+      gl_Position = projectionMatrix * viewMatrix * world;
+    }
+  `;
+
+  const fragmentShader = `
+    precision highp float;
+
+    uniform float uTime;
+    uniform float uFilmStrength;
+    uniform float uReflectionBoost;
+    uniform float uOpacity;
+    uniform float uPhase;
+
+    varying vec3 vNormalW;
+    varying vec3 vWorldPos;
+    varying float vWave;
+
+    float hash21(vec2 p) {
+      p = fract(p * vec2(123.34, 345.45));
+      p += dot(p, p + 34.345);
+      return fract(p.x * p.y);
+    }
+
+    vec3 spectrum(float x) {
+      return clamp(vec3(
+        1.22 - abs(4.0 * x - 1.0),
+        1.22 - abs(4.0 * x - 2.0),
+        1.22 - abs(4.0 * x - 3.0)
+      ), 0.0, 1.0);
+    }
+
+    vec3 envColor(vec3 d) {
+      float h = clamp(d.y * 0.5 + 0.5, 0.0, 1.0);
+
+      vec3 skyTop = vec3(0.014, 0.028, 0.050);
+      vec3 skyMid = vec3(0.028, 0.055, 0.100);
+      vec3 horizon = vec3(0.14, 0.19, 0.28);
+      vec3 ground = vec3(0.010, 0.016, 0.028);
+
+      vec3 col = mix(ground, skyMid, smoothstep(0.0, 0.56, h));
+      col = mix(col, skyTop, smoothstep(0.62, 1.0, h));
+
+      float horizonBand = exp(-pow(abs(d.y) * 11.0, 1.2));
+      col += horizon * horizonBand * 0.75;
+
+      float n = hash21(floor(d.xz * 24.0 + 40.0));
+      col += vec3(n) * 0.010;
+
+      vec3 sunDir = normalize(vec3(-0.25, 0.08, 0.96));
+      float sun = pow(max(dot(d, sunDir), 0.0), 180.0);
+      col += vec3(0.95, 0.96, 1.0) * sun * 0.38;
+
+      vec3 stripDir = normalize(vec3(0.82, 0.02, 0.57));
+      float strip = pow(max(dot(d, stripDir), 0.0), 52.0);
+      col += vec3(0.30, 0.36, 0.46) * strip * 0.12;
+
+      return col;
+    }
+
+    void main() {
+      vec3 n = normalize(vNormalW);
+      vec3 viewDir = normalize(cameraPosition - vWorldPos);
+
+      float ndv = clamp(dot(n, viewDir), 0.0, 1.0);
+      float fresnel = pow(1.0 - ndv, 1.78);
+
+      vec3 reflDir = reflect(-viewDir, n);
+      vec3 refrDir = refract(-viewDir, n, 1.0 / 1.08);
+
+      vec3 reflection = envColor(normalize(reflDir));
+      vec3 refraction = envColor(normalize(refrDir + n * vWave * 0.08));
+
+      float filmCoord = fract(
+        vWave * 0.56 +
+        fresnel * 0.72 +
+        dot(n, normalize(vec3(0.0, 1.0, -0.08))) * 0.10 +
+        uTime * 0.018 +
+        uPhase * 0.09
+      );
+
+      vec3 film = spectrum(filmCoord) * vec3(0.86, 0.93, 1.0);
+
+      float thickness = 0.44 + fresnel * 0.62 + abs(vWave) * 0.32;
+      vec3 absorb = exp(-vec3(1.7, 1.20, 1.0) * thickness * 0.68);
+
+      vec3 l1 = normalize(vec3(0.18, 0.96, 0.20));
+      vec3 l2 = normalize(vec3(-0.82, 0.18, 0.54));
+
+      float s1 = pow(max(dot(reflect(-l1, n), viewDir), 0.0), 240.0) * 1.80 * uReflectionBoost;
+      float s2 = pow(max(dot(reflect(-l2, n), viewDir), 0.0), 110.0) * 0.42 * uReflectionBoost;
+
+      vec3 spec = vec3(0.95, 0.97, 1.0) * s1;
+      spec += vec3(0.70, 0.80, 0.95) * s2;
+
+      vec3 color = refraction * 0.38;
+      color = mix(color, color * absorb, 0.50 + fresnel * 0.16);
+      color += reflection * (0.18 + fresnel * 0.56 * uReflectionBoost);
+      color += film * (uFilmStrength * (0.035 + fresnel * 0.52));
+      color += film * reflection * (0.018 * uFilmStrength);
+      color += spec;
+
+      color *= vec3(0.82, 0.87, 0.95);
+      color = clamp(color, 0.0, 1.0);
+
+      float alpha = clamp(uOpacity * (0.54 + fresnel * 0.34) + s1 * 0.015, 0.38, 0.82);
+      gl_FragColor = vec4(color, alpha);
+    }
+  `;
+
+  // ------------------------------------------------------------
+  // Geometria compartilhada
+  // ------------------------------------------------------------
+
+  let bubbleGeometry = new THREE.SphereGeometry(1, 56, 42);
+  let bubbles = [];
+
+  const tmpVec2A = new THREE.Vector2();
+  const tmpVec2B = new THREE.Vector2();
+  const tmpVec3  = new THREE.Vector3();
+  const Z_AXIS   = new THREE.Vector3(0, 0, 1);
+
+  // ------------------------------------------------------------
+  // Utilitários
+  // ------------------------------------------------------------
+
+  function rand(min, max) {
+    return min + Math.random() * (max - min);
+  }
+
+  function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+  }
+
+  function getViewBounds() {
+    const distance = camera.position.z;
+    const vFov = THREE.MathUtils.degToRad(camera.fov);
+    const height = 2 * Math.tan(vFov / 2) * distance;
+    const width = height * camera.aspect;
+
+    return {
+      halfW: width * 0.47,
+      halfH: height * 0.45
+    };
+  }
+
+  function updateGeometryForCount(count) {
+    bubbleGeometry.dispose();
+
+    if (count <= 6) {
+      bubbleGeometry = new THREE.SphereGeometry(1, 64, 48);
+    } else if (count <= 10) {
+      bubbleGeometry = new THREE.SphereGeometry(1, 56, 42);
+    } else {
+      bubbleGeometry = new THREE.SphereGeometry(1, 48, 36);
+    }
+  }
+
+  function createBubbleMaterial(phase) {
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: { value: 0 },
+        uDisplacement: { value: SETTINGS.displacement },
+        uFilmStrength: { value: SETTINGS.filmStrength },
+        uReflectionBoost: { value: SETTINGS.reflectionBoost },
+        uOpacity: { value: 0.78 },
+        uPhase: { value: phase }
+      },
+      vertexShader,
+      fragmentShader,
+      transparent: true,
+      depthWrite: false
+    });
+  }
+
+  // ------------------------------------------------------------
+  // Construção das bolhas
+  // ------------------------------------------------------------
+
+  function clearBubbles() {
+    for (const b of bubbles) {
+      scene.remove(b.root);
+      b.mesh.material.dispose();
+      b.core.material.dispose();
+    }
+    bubbles = [];
+  }
+
+  function tryPlaceBubble(radius, existing, bounds) {
+    for (let tries = 0; tries < 120; tries++) {
+      const x = rand(-bounds.halfW + radius, bounds.halfW - radius);
+      const y = rand(-bounds.halfH + radius, bounds.halfH - radius);
+
+      let ok = true;
+      for (const other of existing) {
+        const dx = x - other.pos.x;
+        const dy = y - other.pos.y;
+        const minDist = radius + other.radius + 0.05;
+        if (dx * dx + dy * dy < minDist * minDist) {
+          ok = false;
+          break;
+        }
+      }
+
+      if (ok) return new THREE.Vector2(x, y);
+    }
+
+    return new THREE.Vector2(
+      rand(-bounds.halfW + radius, bounds.halfW - radius),
+      rand(-bounds.halfH + radius, bounds.halfH - radius)
+    );
+  }
+
+  function rebuildBubbles() {
+    clearBubbles();
+    updateGeometryForCount(SETTINGS.count);
+
+    const bounds = getViewBounds();
+
+    for (let i = 0; i < SETTINGS.count; i++) {
+      const radius = rand(SETTINGS.minRadius, SETTINGS.maxRadius);
+      const phase = rand(0, Math.PI * 2);
+
+      const root = new THREE.Group();
+      const orient = new THREE.Group();
+
+      const material = createBubbleMaterial(phase);
+      const mesh = new THREE.Mesh(bubbleGeometry, material);
+
+      const core = new THREE.Mesh(
+        bubbleGeometry,
+        new THREE.MeshBasicMaterial({
+          color: 0xbfcfe8,
+          transparent: true,
+          opacity: 0.035,
+          side: THREE.BackSide,
+          depthWrite: false
+        })
+      );
+
+      orient.add(mesh);
+      orient.add(core);
+      root.add(orient);
+      scene.add(root);
+
+      const pos = tryPlaceBubble(radius, bubbles, bounds);
+
+      const angle = rand(0, Math.PI * 2);
+      const speed = SETTINGS.speed * rand(0.80, 1.20);
+      const vel = new THREE.Vector2(Math.cos(angle), Math.sin(angle)).multiplyScalar(speed);
+
+      const bubble = {
+        root,
+        orient,
+        mesh,
+        core,
+
+        radius,
+        phase,
+        pos,
+        vel,
+        mass: Math.max(0.08, radius * radius),
+
+        spinX: rand(-0.25, 0.25),
+        spinY: rand(-0.45, 0.45),
+
+        impactAxis: new THREE.Vector3(0, 0, 1),
+        targetQuat: new THREE.Quaternion(),
+
+        // Modos de ressonância
+        mode1: 0,
+        mode1Vel: 0,
+        mode2: 0,
+        mode2Vel: 0,
+
+        sx: radius,
+        sy: radius,
+        sz: radius
+      };
+
+      root.position.set(pos.x, pos.y, 0);
+      bubbles.push(bubble);
+    }
+  }
+
+  // ------------------------------------------------------------
+  // Impacto
+  //
+  // Não reseta fase de wobble simples.
+  // Injeta energia em dois modos de ressonância.
+  // ------------------------------------------------------------
+
+  function applyImpact(bubble, axis2D, strength) {
+    if (axis2D.lengthSq() < 0.000001) return;
+
+    const axis3D = tmpVec3.set(axis2D.x, axis2D.y, 0).normalize();
+    bubble.impactAxis.copy(axis3D);
+
+    // Inclinação limitada para manter o efeito bonito e lento.
+    const limitedAxis = new THREE.Vector3(
+      axis3D.x * 0.22,
+      axis3D.y * 0.22,
+      1.0
+    ).normalize();
+
+    bubble.targetQuat.setFromUnitVectors(Z_AXIS, limitedAxis);
+
+    // Injeta energia nos dois modos.
+    // Isso cria a reverberação longa, sem "reiniciar seco".
+    bubble.mode1Vel += strength * SETTINGS.gelAmount * 10.0;
+    bubble.mode2Vel += strength * SETTINGS.gelAmount * 5.5;
+
+    bubble.mode1Vel = clamp(bubble.mode1Vel, -4.5, 4.5);
+    bubble.mode2Vel = clamp(bubble.mode2Vel, -3.0, 3.0);
+  }
+
+  // ------------------------------------------------------------
+  // Atualização visual
+  //
+  // Aqui mora a reverberação:
+  // - modo 1 = vibração principal
+  // - modo 2 = cauda mais lenta
+  // ------------------------------------------------------------
+
+  function updateBubbleVisual(bubble, dt, elapsedTime) {
+    bubble.mesh.material.uniforms.uTime.value = elapsedTime;
+    bubble.mesh.material.uniforms.uDisplacement.value = SETTINGS.displacement;
+    bubble.mesh.material.uniforms.uFilmStrength.value = SETTINGS.filmStrength;
+    bubble.mesh.material.uniforms.uReflectionBoost.value = SETTINGS.reflectionBoost;
+
+    // Inclinação lenta
+    bubble.orient.quaternion.slerp(bubble.targetQuat, 0.010);
+
+    const w1 = SETTINGS.gelFreq * Math.PI * 2.0;
+    const w2 = SETTINGS.gelFreq * 0.48 * Math.PI * 2.0;
+
+    const d1 = SETTINGS.gelDamping * 0.55;
+    const d2 = SETTINGS.gelDamping * 0.22;
+
+    // Integração do modo 1
+    bubble.mode1Vel += (-w1 * w1 * bubble.mode1 - 2.0 * d1 * w1 * bubble.mode1Vel) * dt;
+    bubble.mode1 += bubble.mode1Vel * dt;
+
+    // Integração do modo 2
+    bubble.mode2Vel += (-w2 * w2 * bubble.mode2 - 2.0 * d2 * w2 * bubble.mode2Vel) * dt;
+    bubble.mode2 += bubble.mode2Vel * dt;
+
+    // Mistura dos dois modos
+    const wobble = bubble.mode1 * 0.72 + bubble.mode2 * 0.28;
+
+    const compress = Math.max(0.0, wobble);
+    const rebound  = Math.max(0.0, -wobble);
+
+    const targetZ = bubble.radius * clamp(
+      1.0 - compress * 0.42 + rebound * 1.05,
+      0.72,
+      1.52
+    );
+
+    const targetXY = bubble.radius * clamp(
+      1.0 + compress * 0.20 - rebound * 0.34,
+      0.78,
+      1.20
+    );
+
+    bubble.sx = THREE.MathUtils.lerp(bubble.sx, targetXY, 0.18);
+    bubble.sy = THREE.MathUtils.lerp(bubble.sy, targetXY, 0.18);
+    bubble.sz = THREE.MathUtils.lerp(bubble.sz, targetZ, 0.18);
+
+    bubble.mesh.scale.set(bubble.sx, bubble.sy, bubble.sz);
+    bubble.core.scale.set(
+      bubble.sx * 0.965,
+      bubble.sy * 0.965,
+      bubble.sz * 0.965
+    );
+
+    // Arrasto visual na direção da pancada
+    const offset = wobble * bubble.radius * 0.12;
+    bubble.orient.position.set(
+      bubble.impactAxis.x * offset,
+      bubble.impactAxis.y * offset,
+      0
+    );
+
+    bubble.mesh.rotation.x += dt * bubble.spinX;
+    bubble.mesh.rotation.y += dt * bubble.spinY;
+    bubble.core.rotation.copy(bubble.mesh.rotation);
+  }
+
+  // ------------------------------------------------------------
+  // Parede
+  // ------------------------------------------------------------
+
+  function solveWalls(bubble, bounds) {
+    let hitX = 0;
+    let hitY = 0;
+
+    if (bubble.pos.x < -bounds.halfW + bubble.radius) {
+      bubble.pos.x = -bounds.halfW + bubble.radius;
+      bubble.vel.x = Math.abs(bubble.vel.x);
+      hitX = 1;
+    } else if (bubble.pos.x > bounds.halfW - bubble.radius) {
+      bubble.pos.x = bounds.halfW - bubble.radius;
+      bubble.vel.x = -Math.abs(bubble.vel.x);
+      hitX = -1;
+    }
+
+    if (bubble.pos.y < -bounds.halfH + bubble.radius) {
+      bubble.pos.y = -bounds.halfH + bubble.radius;
+      bubble.vel.y = Math.abs(bubble.vel.y);
+      hitY = 1;
+    } else if (bubble.pos.y > bounds.halfH - bubble.radius) {
+      bubble.pos.y = bounds.halfH - bubble.radius;
+      bubble.vel.y = -Math.abs(bubble.vel.y);
+      hitY = -1;
+    }
+
+    if (hitX !== 0 || hitY !== 0) {
+      const axis = new THREE.Vector2(hitX, hitY);
+      if (axis.lengthSq() > 0.00001) {
+        axis.normalize();
+        const hitStrength = clamp(bubble.vel.length() * 0.12, 0.02, 0.12);
+        applyImpact(bubble, axis, hitStrength);
+      }
+    }
+  }
+
+  // ------------------------------------------------------------
+  // Colisão bolha x bolha
+  // ------------------------------------------------------------
+
+  function solveBubbleCollisions() {
+    for (let i = 0; i < bubbles.length; i++) {
+      const a = bubbles[i];
+
+      for (let j = i + 1; j < bubbles.length; j++) {
+        const b = bubbles[j];
+
+        tmpVec2A.copy(b.pos).sub(a.pos);
+        let dist = tmpVec2A.length();
+        const minDist = a.radius + b.radius;
+
+        if (dist <= 0.0001) {
+          tmpVec2A.set(rand(-1, 1), rand(-1, 1)).normalize();
+          dist = 0.0001;
+        }
+
+        if (dist < minDist) {
+          const normal = tmpVec2A.clone().divideScalar(dist);
+          const overlap = minDist - dist;
+
+          const totalMass = a.mass + b.mass;
+          const moveA = overlap * (b.mass / totalMass);
+          const moveB = overlap * (a.mass / totalMass);
+
+          a.pos.addScaledVector(normal, -moveA);
+          b.pos.addScaledVector(normal, moveB);
+
+          tmpVec2B.copy(b.vel).sub(a.vel);
+          const relVelAlongNormal = tmpVec2B.dot(normal);
+
+          if (relVelAlongNormal < 0) {
+            const restitution = SETTINGS.bounce;
+
+            const impulseScalar =
+              -(1 + restitution) * relVelAlongNormal /
+              (1 / a.mass + 1 / b.mass);
+
+            const impulse = normal.clone().multiplyScalar(impulseScalar);
+
+            a.vel.addScaledVector(impulse, -1 / a.mass);
+            b.vel.addScaledVector(impulse,  1 / b.mass);
+
+            a.vel.multiplyScalar(0.9985);
+            b.vel.multiplyScalar(0.9985);
+
+            const strength = clamp(
+              Math.abs(relVelAlongNormal) * 0.10 + overlap * 0.22,
+              0.025,
+              0.18
+            );
+
+            applyImpact(a, normal.clone().multiplyScalar(-1), strength);
+            applyImpact(b, normal, strength);
+          }
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------------------------
+  // Painel
+  // ------------------------------------------------------------
+
+  function bindLiveRange(id, object, key, formatter) {
+    const input = document.getElementById(id);
+    const out = document.getElementById(id + "Val");
+
+    function sync() {
+      object[key] = parseFloat(input.value);
+      out.textContent = formatter(object[key]);
+    }
+
+    input.addEventListener("input", sync);
+    sync();
+  }
+
+  function bindRebuildRange(id, object, key, formatter) {
+    const input = document.getElementById(id);
+    const out = document.getElementById(id + "Val");
+
+    function syncLabel() {
+      object[key] = parseFloat(input.value);
+      out.textContent = formatter(object[key]);
+    }
+
+    function applyAndRebuild() {
+      object[key] = parseFloat(input.value);
+
+      if (SETTINGS.minRadius > SETTINGS.maxRadius) {
+        const temp = SETTINGS.minRadius;
+        SETTINGS.minRadius = SETTINGS.maxRadius;
+        SETTINGS.maxRadius = temp;
+
+        document.getElementById("minRadius").value = SETTINGS.minRadius;
+        document.getElementById("maxRadius").value = SETTINGS.maxRadius;
+        document.getElementById("minRadiusVal").textContent = SETTINGS.minRadius.toFixed(2);
+        document.getElementById("maxRadiusVal").textContent = SETTINGS.maxRadius.toFixed(2);
+      }
+
+      rebuildBubbles();
+      syncLabel();
+    }
+
+    input.addEventListener("input", syncLabel);
+    input.addEventListener("change", applyAndRebuild);
+    syncLabel();
+  }
+
+  bindRebuildRange("count", SETTINGS, "count", (v) => String(v));
+  bindRebuildRange("minRadius", SETTINGS, "minRadius", (v) => v.toFixed(2));
+  bindRebuildRange("maxRadius", SETTINGS, "maxRadius", (v) => v.toFixed(2));
+
+  bindLiveRange("speed", SETTINGS, "speed", (v) => v.toFixed(2));
+  bindLiveRange("bounce", SETTINGS, "bounce", (v) => v.toFixed(2));
+  bindLiveRange("gelAmount", SETTINGS, "gelAmount", (v) => v.toFixed(2));
+  bindLiveRange("gelFreq", SETTINGS, "gelFreq", (v) => v.toFixed(1));
+  bindLiveRange("gelDamping", SETTINGS, "gelDamping", (v) => v.toFixed(2));
+  bindLiveRange("displacement", SETTINGS, "displacement", (v) => v.toFixed(3));
+  bindLiveRange("filmStrength", SETTINGS, "filmStrength", (v) => v.toFixed(2));
+  bindLiveRange("reflectionBoost", SETTINGS, "reflectionBoost", (v) => v.toFixed(2));
+
+  document.getElementById("randomizeBtn").addEventListener("click", () => {
+    rebuildBubbles();
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    Object.assign(SETTINGS, DEFAULTS);
+
+    document.getElementById("count").value = SETTINGS.count;
+    document.getElementById("minRadius").value = SETTINGS.minRadius;
+    document.getElementById("maxRadius").value = SETTINGS.maxRadius;
+    document.getElementById("speed").value = SETTINGS.speed;
+    document.getElementById("bounce").value = SETTINGS.bounce;
+    document.getElementById("gelAmount").value = SETTINGS.gelAmount;
+    document.getElementById("gelFreq").value = SETTINGS.gelFreq;
+    document.getElementById("gelDamping").value = SETTINGS.gelDamping;
+    document.getElementById("filmStrength").value = SETTINGS.filmStrength;
+    document.getElementById("reflectionBoost").value = SETTINGS.reflectionBoost;
+    document.getElementById("displacement").value = SETTINGS.displacement;
+
+    document.getElementById("countVal").textContent = String(SETTINGS.count);
+    document.getElementById("minRadiusVal").textContent = SETTINGS.minRadius.toFixed(2);
+    document.getElementById("maxRadiusVal").textContent = SETTINGS.maxRadius.toFixed(2);
+    document.getElementById("speedVal").textContent = SETTINGS.speed.toFixed(2);
+    document.getElementById("bounceVal").textContent = SETTINGS.bounce.toFixed(2);
+    document.getElementById("gelAmountVal").textContent = SETTINGS.gelAmount.toFixed(2);
+    document.getElementById("gelFreqVal").textContent = SETTINGS.gelFreq.toFixed(1);
+    document.getElementById("gelDampingVal").textContent = SETTINGS.gelDamping.toFixed(2);
+    document.getElementById("filmStrengthVal").textContent = SETTINGS.filmStrength.toFixed(2);
+    document.getElementById("reflectionBoostVal").textContent = SETTINGS.reflectionBoost.toFixed(2);
+    document.getElementById("displacementVal").textContent = SETTINGS.displacement.toFixed(3);
+
+    rebuildBubbles();
+  });
+
+  // ------------------------------------------------------------
+  // Resize
+  // ------------------------------------------------------------
+
+  function resize() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+
+    rebuildBubbles();
+  }
+
+  window.addEventListener("resize", resize);
+
+  // ------------------------------------------------------------
+  // Medidor de FPS
+  // ------------------------------------------------------------
+
+  const fpsMeter = document.getElementById("fpsMeter");
+  let fpsFrames = 0;
+  let fpsLastTime = performance.now();
+
+  // ------------------------------------------------------------
+  // Inicialização
+  // ------------------------------------------------------------
+
+  resize();
+
+  // ------------------------------------------------------------
+  // Loop principal
+  // ------------------------------------------------------------
+
+  const clock = new THREE.Clock();
+
+  renderer.setAnimationLoop(() => {
+    const dt = Math.min(clock.getDelta(), 0.033);
+    const elapsedTime = clock.elapsedTime;
+    const bounds = getViewBounds();
+
+    for (const bubble of bubbles) {
+      bubble.pos.addScaledVector(bubble.vel, dt);
+
+      // Mantém a velocidade perto do valor do controle
+      const currentSpeed = bubble.vel.length();
+      const desired = SETTINGS.speed;
+
+      if (currentSpeed > 0.0001) {
+        bubble.vel.multiplyScalar(THREE.MathUtils.lerp(1.0, desired / currentSpeed, 0.025));
+      }
+
+      solveWalls(bubble, bounds);
+    }
+
+    solveBubbleCollisions();
+
+    for (const bubble of bubbles) {
+      bubble.root.position.set(bubble.pos.x, bubble.pos.y, 0);
+      updateBubbleVisual(bubble, dt, elapsedTime);
+    }
+
+    renderer.render(scene, camera);
+
+    fpsFrames++;
+    const fpsNow = performance.now();
+
+    if (fpsNow - fpsLastTime >= 250) {
+      const fps = (fpsFrames * 1000) / (fpsNow - fpsLastTime);
+      fpsMeter.textContent = "FPS: " + fps.toFixed(1);
+      fpsFrames = 0;
+      fpsLastTime = fpsNow;
+    }
+  });
+</script>
