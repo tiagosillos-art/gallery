@@ -7,8 +7,8 @@ if (!window.THREE) console.error('Three.js não carregado');
 const ARTES_INDEX_URL = './artes/index.json';
 const ARTES_BASE_PATH = './artes/';
 const DEPTH_LAYERS = 4;
-const MAX_WIDTH = 760;
-const MAX_HEIGHT = 760;
+const MAX_WIDTH = 1760;
+const MAX_HEIGHT = 1760;
 const GLOBAL_SPEED_MULTIPLIER = 1.0; // 30% mais lento
 
 let layers = [];
