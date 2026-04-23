@@ -1,0 +1,36 @@
+name: Build artes index
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'site_links/artes/**'
+      - 'tools/build-artes-index.mjs'
+      - '.github/workflows/build-artes-index.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate index.json
+        run: node tools/build-artes-index.mjs
+
+      - name: Commit index.json
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Atualiza manifesto das artes
+          file_pattern: site_links/artes/index.json

@@ -1,10 +1,28 @@
 if (!window.THREE) console.error('Three.js não carregado');
 
-// Pasta onde o site vai procurar automaticamente todos os arquivos .jpg.
-// Importante: isso só funciona se o servidor permitir listar o conteúdo da pasta via HTTP.
-const IMAGE_DIRECTORY_URL = 'https://tiagosillos.art.br/site_links/artes/';
+// O site agora lê SOMENTE um manifesto JSON gerado a partir da pasta de artes.
+// Não há lista fixa de URLs de imagem no código.
+// Estrutura esperada no deploy:
+// /site_links/artes/
+//   ├─ 01.jpg
+//   ├─ 02.jpg
+//   ├─ ...quantos quiser
+//   └─ index.json   <- gerado automaticamente pelo workflow do GitHub
 
-// Configurações gerais.
+const MANIFEST_CANDIDATES = [
+  './site_links/artes/index.json',
+  '/site_links/artes/index.json',
+  './artes/index.json',
+  '/artes/index.json'
+];
+
+const BASE_PATH_CANDIDATES = [
+  './site_links/artes/',
+  '/site_links/artes/',
+  './artes/',
+  '/artes/'
+];
+
 const DEPTH_LAYERS = 4;
 const MAX_WIDTH = 260;
 const MAX_HEIGHT = 260;
@@ -15,34 +33,16 @@ let layerTextures = [];
 let textures = [];
 let loaded = 0;
 let lastTime = 0;
-let speedFactor = 1;
 let camera;
+let animationStarted = false;
+let activeManifestUrl = '';
+let activeBasePath = '';
 
 const LAYER_CONFIG = [
-  {
-    scale: 1.0,
-    speed: 80,
-    opacity: 0.97,
-    direction: 'rightToLeft'
-  },
-  {
-    scale: 1.0,
-    speed: 40,
-    opacity: 0.97,
-    direction: 'leftToRight'
-  },
-  {
-    scale: 1.0,
-    speed: 60,
-    opacity: 0.97,
-    direction: 'topToBottom'
-  },
-  {
-    scale: 1.0,
-    speed: 70,
-    opacity: 0.97,
-    direction: 'bottomToTop'
-  }
+  { scale: 1.0, speed: 56, opacity: 0.97, direction: 'rightToLeft' },
+  { scale: 1.0, speed: 28, opacity: 0.97, direction: 'leftToRight' },
+  { scale: 1.0, speed: 42, opacity: 0.97, direction: 'topToBottom' },
+  { scale: 1.0, speed: 49, opacity: 0.97, direction: 'bottomToTop' }
 ];
 
 let currentOrder = [0, 1, 2, 3];
@@ -83,50 +83,72 @@ function getSizeMultiplierForPosition(position) {
 
 function splitTexturesAcrossLayers(textureList) {
   const distributed = Array.from({ length: DEPTH_LAYERS }, () => []);
-
   textureList.forEach((texture, index) => {
     distributed[index % DEPTH_LAYERS].push(texture);
   });
-
   return distributed;
 }
 
-async function fetchJpgList(directoryUrl) {
-  const response = await fetch(directoryUrl, { cache: 'no-store' });
+async function fetchFirstAvailableJson(urls) {
+  let lastError = null;
 
-  if (!response.ok) {
-    throw new Error(`Falha ao acessar a pasta (${response.status})`);
-  }
-
-  const html = await response.text();
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const anchorElements = Array.from(doc.querySelectorAll('a[href]'));
-  const uniqueUrls = new Set();
-
-  for (const anchor of anchorElements) {
-    const href = anchor.getAttribute('href');
-    if (!href) continue;
-
-    let absoluteUrl;
+  for (const url of urls) {
     try {
-      absoluteUrl = new URL(href, directoryUrl);
-    } catch {
-      continue;
+      const response = await fetch(url, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`${url} -> ${response.status}`);
+      const json = await response.json();
+      activeManifestUrl = url;
+      return json;
+    } catch (error) {
+      lastError = error;
     }
-
-    if (!absoluteUrl.pathname.toLowerCase().endsWith('.jpg')) continue;
-    uniqueUrls.add(absoluteUrl.href);
   }
 
-  const urls = Array.from(uniqueUrls).sort((a, b) =>
-    a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
-  );
+  throw lastError || new Error('Nenhum manifesto JSON foi encontrado');
+}
 
-  if (!urls.length) {
-    throw new Error('Nenhum arquivo .jpg foi encontrado na listagem da pasta');
+function normalizeManifestEntries(manifest) {
+  const files = Array.isArray(manifest)
+    ? manifest
+    : Array.isArray(manifest.files)
+      ? manifest.files
+      : [];
+
+  const normalized = files
+    .filter((item) => typeof item === 'string')
+    .map((item) => item.trim())
+    .filter((item) => item.toLowerCase().endsWith('.jpg'))
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+
+  if (!normalized.length) {
+    throw new Error('O manifesto existe, mas não contém arquivos .jpg');
   }
 
-  return urls;
+  return normalized;
+}
+
+function resolveImageUrls(fileNames) {
+  const fromManifest = activeManifestUrl
+    ? new URL('.', new URL(activeManifestUrl, window.location.href)).href
+    : '';
+
+  const baseCandidates = [
+    fromManifest,
+    ...BASE_PATH_CANDIDATES.map((base) => new URL(base, window.location.href).href)
+  ].filter(Boolean);
+
+  for (const base of baseCandidates) {
+    if (base.includes('/site_links/artes/') || base.endsWith('/artes/')) {
+      activeBasePath = base;
+      break;
+    }
+  }
+
+  if (!activeBasePath) {
+    activeBasePath = baseCandidates[0];
+  }
+
+  return fileNames.map((name) => new URL(name, activeBasePath).href);
 }
 
 function updateLoadingText(current, total) {
@@ -138,14 +160,12 @@ function updateLoadingText(current, total) {
 function clearSprites() {
   for (const layer of layers) {
     if (!layer) continue;
-
     for (const sprite of layer) {
       scene.remove(sprite);
       sprite.material.dispose();
       sprite.geometry.dispose();
     }
   }
-
   layers = Array.from({ length: DEPTH_LAYERS }, () => []);
 }
 
@@ -164,16 +184,13 @@ function resize() {
     camera.updateProjectionMatrix();
   }
 
-  if (textures.length > 0) {
-    fillViewport();
-  }
+  if (textures.length > 0) fillViewport();
 }
 
 window.addEventListener('resize', resize);
 resize();
 
 const loader = new THREE.TextureLoader();
-loader.crossOrigin = 'anonymous';
 
 function addSprite(layerIndex, texture, indexInLayer) {
   const cfg = LAYER_CONFIG[currentOrder[layerIndex]];
@@ -262,7 +279,6 @@ function fillViewport() {
 
   for (let layerIndex = 0; layerIndex < DEPTH_LAYERS; layerIndex++) {
     const texturesForLayer = layerTextures[layerIndex] || [];
-
     for (let indexInLayer = 0; indexInLayer < texturesForLayer.length; indexInLayer++) {
       addSprite(layerIndex, texturesForLayer[indexInLayer], indexInLayer);
     }
@@ -283,41 +299,26 @@ function cleanupSprites() {
 
       switch (data.direction) {
         case 'rightToLeft':
-          if (speedFactor >= 0 && sprite.position.x + data.width / 2 < -bufferZone) {
+          if (sprite.position.x + data.width / 2 < -bufferZone) {
             sprite.position.x = w + data.width / 2 + data.spacingX;
-            sprite.userData.baseX = sprite.position.x;
-          } else if (speedFactor < 0 && sprite.position.x - data.width / 2 > w + bufferZone) {
-            sprite.position.x = -data.width / 2 - data.spacingX;
             sprite.userData.baseX = sprite.position.x;
           }
           break;
-
         case 'leftToRight':
-          if (speedFactor >= 0 && sprite.position.x - data.width / 2 > w + bufferZone) {
+          if (sprite.position.x - data.width / 2 > w + bufferZone) {
             sprite.position.x = -data.width / 2 - data.spacingX;
-            sprite.userData.baseX = sprite.position.x;
-          } else if (speedFactor < 0 && sprite.position.x + data.width / 2 < -bufferZone) {
-            sprite.position.x = w + data.width / 2 + data.spacingX;
             sprite.userData.baseX = sprite.position.x;
           }
           break;
-
         case 'topToBottom':
           if (sprite.position.y + data.height / 2 < -bufferZone) {
             sprite.position.y = h + data.height / 2 + data.spacingY;
             sprite.userData.baseY = sprite.position.y;
-          } else if (sprite.position.y - data.height / 2 > h + bufferZone) {
-            sprite.position.y = -data.height / 2 - data.spacingY;
-            sprite.userData.baseY = sprite.position.y;
           }
           break;
-
         case 'bottomToTop':
           if (sprite.position.y - data.height / 2 > h + bufferZone) {
             sprite.position.y = -data.height / 2 - data.spacingY;
-            sprite.userData.baseY = sprite.position.y;
-          } else if (sprite.position.y + data.height / 2 < -bufferZone) {
-            sprite.position.y = h + data.height / 2 + data.spacingY;
             sprite.userData.baseY = sprite.position.y;
           }
           break;
@@ -331,7 +332,6 @@ function reorderLayers() {
     const j = Math.floor(Math.random() * (i + 1));
     [currentOrder[i], currentOrder[j]] = [currentOrder[j], currentOrder[i]];
   }
-
   fillViewport();
 }
 
@@ -347,7 +347,7 @@ function animate() {
 
     for (const sprite of sprites) {
       const data = sprite.userData;
-      const movement = data.speed * speedFactor * dt * GLOBAL_SPEED_MULTIPLIER;
+      const movement = data.speed * dt * GLOBAL_SPEED_MULTIPLIER;
 
       switch (data.direction) {
         case 'rightToLeft':
@@ -382,26 +382,19 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-let totalImagesToLoad = 0;
-let animationStarted = false;
-
-function handleTextureLoaded(currentLoaded, total) {
-  updateLoadingText(currentLoaded, total);
-}
-
-function loadTexturePromise(url, fallbackLayerIndex, currentIndex, total) {
+function loadTexturePromise(url, fallbackLayerIndex, total) {
   return new Promise((resolve) => {
     loader.load(
       url,
       (texture) => {
         loaded += 1;
-        handleTextureLoaded(loaded, total);
+        updateLoadingText(loaded, total);
         resolve(texture);
       },
       undefined,
       () => {
         loaded += 1;
-        handleTextureLoaded(loaded, total);
+        updateLoadingText(loaded, total);
         resolve(fallbackTexture(fallbackLayerIndex));
       }
     );
@@ -409,12 +402,11 @@ function loadTexturePromise(url, fallbackLayerIndex, currentIndex, total) {
 }
 
 async function loadTextures(imageUrls) {
-  totalImagesToLoad = imageUrls.length;
   loaded = 0;
-  updateLoadingText(0, totalImagesToLoad);
+  updateLoadingText(0, imageUrls.length);
 
   const texturePromises = imageUrls.map((url, index) =>
-    loadTexturePromise(url, index % DEPTH_LAYERS, index, totalImagesToLoad)
+    loadTexturePromise(url, index % DEPTH_LAYERS, imageUrls.length)
   );
 
   textures = await Promise.all(texturePromises);
@@ -425,7 +417,7 @@ async function loadTextures(imageUrls) {
   if (loadingEl) loadingEl.style.display = 'none';
   if (uiEl) {
     uiEl.style.display = 'block';
-    uiEl.textContent = `${textures.length} imagem(ns) .jpg carregada(s) de ${IMAGE_DIRECTORY_URL}`;
+    uiEl.textContent = `${textures.length} JPG(s) carregado(s) de ${activeBasePath}`;
   }
 
   if (!animationStarted) {
@@ -438,33 +430,24 @@ async function loadTextures(imageUrls) {
 async function initGallery() {
   try {
     updateLoadingText(0, 0);
-    const imageUrls = await fetchJpgList(IMAGE_DIRECTORY_URL);
+    const manifest = await fetchFirstAvailableJson(MANIFEST_CANDIDATES);
+    const fileNames = normalizeManifestEntries(manifest);
+    const imageUrls = resolveImageUrls(fileNames);
     await loadTextures(imageUrls);
   } catch (error) {
     console.error(error);
     if (loadingEl) {
-      loadingEl.innerHTML = 'Não foi possível listar os JPGs da pasta.<br>Verifique se a URL retorna a listagem dos arquivos.';
+      loadingEl.innerHTML = [
+        'Não foi possível carregar as artes.',
+        'O site agora depende de /site_links/artes/index.json.',
+        'Se estiver no GitHub Pages, faça push com o workflow incluso para gerar esse arquivo automaticamente.'
+      ].join('<br>');
     }
   }
 }
 
-// Mantém o controle por mouse wheel, mas remove qualquer ajuste por rollover/arrasto.
-container.addEventListener(
-  'wheel',
-  (event) => {
-    event.preventDefault();
-    const wheelDelta = Math.sign(event.deltaY);
-    const direction = wheelDelta > 0 ? 1 : -1;
-    const acceleration = 0.8;
-    speedFactor = direction * (Math.abs(speedFactor) + acceleration);
-    const maxSpeed = 5;
-    const sign = Math.sign(speedFactor) || 1;
-    const absSpeed = Math.min(maxSpeed, Math.abs(speedFactor));
-    speedFactor = sign * absSpeed;
-  },
-  { passive: false }
-);
-
+// Mantive apenas o duplo clique para reembaralhar as camadas.
+// O controle de velocidade por rollover/arrasto foi removido.
 container.addEventListener('dblclick', () => {
   reorderLayers();
 });

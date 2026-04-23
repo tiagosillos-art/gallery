@@ -1,214 +1,39 @@
 html,
 body {
-	height: 100%;
-	margin: 0;
-	background: #111;
-	color: #fff;
-	font-family: system-ui, Segoe UI, Roboto;
+  height: 100%;
+  margin: 0;
+  background: #111;
+  color: #fff;
+  font-family: system-ui, Segoe UI, Roboto, sans-serif;
 }
 
 #container {
-	position: fixed;
-	inset: 0;
-	overflow: hidden;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
 }
 
 #ui {
-	position: fixed;
-	left: 12px;
-	bottom: 12px;
-	z-index: 10;
-	background: rgba(0, 0, 0, 0.35);
-	padding: 8px;
-	border-radius: 8px;
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 8px 10px;
+  border-radius: 8px;
 }
 
 #loading {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	z-index: 20;
-}
-
-a {
-	color: #9cf;
-	text-decoration: none;
-}
-
-a:hover {
-	color: white;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  text-align: center;
+  line-height: 1.5;
 }
 
 .hint {
-	opacity: 0.85;
-	font-size: 13px;
-}
-
-.copy {
-	position: fixed;
-	top: 20px;
-	right: 20px;
-	color: #000;
-	background: rgb(255 255 255 / 0.9);
-	padding: 10px;
-	border-radius: 5px;
-	font-size: 12px;
-}
-
-/* Styles pour la notice d'aide */
-.help-button {
-	position: fixed;
-	bottom: 20px;
-	right: 20px;
-	z-index: 100;
-	background: rgba(255, 255, 255, 0.9);
-	color: #000;
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	font-size: 20px;
-	font-weight: bold;
-	transition: transform 0.2s;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.help-button:hover {
-	transform: scale(1.1);
-	background: white;
-}
-
-.modal {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.8);
-	z-index: 1000;
-	align-items: center;
-	justify-content: center;
-	font-family: system-ui, Segoe UI, Roboto;
-}
-
-.modal-content {
-	background: #1a1a1a;
-	border-radius: 12px;
-	max-width: 450px;
-	width: 90%;
-	padding: 24px;
-	color: #fff;
-	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-	border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.modal-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-	padding-bottom: 12px;
-}
-
-.modal-header h2 {
-	margin: 0;
-	font-size: 20px;
-}
-
-.modal-close {
-	cursor: pointer;
-	font-size: 24px;
-	line-height: 1;
-	color: #999;
-	transition: color 0.2s;
-}
-
-.modal-close:hover {
-	color: #fff;
-}
-
-.modal-body {
-	margin-bottom: 20px;
-}
-
-.instruction {
-	margin: 16px 0;
-	padding: 8px 0;
-}
-
-.instruction-item {
-	display: flex;
-	align-items: center;
-	margin: 12px 0;
-	gap: 12px;
-}
-
-.instruction-icon {
-	font-size: 24px;
-	min-width: 40px;
-	text-align: center;
-}
-
-.instruction-text {
-	font-size: 14px;
-	flex: 1;
-}
-
-.instruction-text strong {
-	display: block;
-	margin-bottom: 4px;
-}
-
-.modal-footer {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding-top: 12px;
-	border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.close-btn {
-	background: #4a9eff;
-	color: white;
-	border: none;
-	padding: 8px 20px;
-	border-radius: 6px;
-	cursor: pointer;
-	font-size: 14px;
-	transition: background 0.2s;
-}
-
-.close-btn:hover {
-	background: #2c7be5;
-}
-
-.lang-buttons {
-	display: flex;
-	gap: 8px;
-}
-
-.lang-btn {
-	background: rgba(255, 255, 255, 0.1);
-	border: 1px solid rgba(255, 255, 255, 0.2);
-	color: #fff;
-	padding: 6px 12px;
-	border-radius: 6px;
-	cursor: pointer;
-	font-size: 12px;
-	transition: all 0.2s;
-}
-
-.lang-btn:hover {
-	background: rgba(255, 255, 255, 0.2);
-}
-
-.lang-btn.active {
-	background: #4a9eff;
-	border-color: #4a9eff;
+  opacity: 0.85;
+  font-size: 13px;
 }
