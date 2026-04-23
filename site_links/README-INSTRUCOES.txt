@@ -1,26 +1,16 @@
-VERSÃO PREPARADA PARA LER DIRETO DO GITHUB
+VERSÃO MAIS ESTÁVEL PARA ONLINE
 
-O site agora usa somente os arquivos .jpg da pasta:
-site_links/artes
+Essa versão não depende de api.github.com nem de raw.githubusercontent.com.
+Ela lê apenas o arquivo local:
+./artes/index.json
 
-do repositório:
-tiagosillos-art/gallery
+Fluxo:
+1) coloque seus .jpg dentro da pasta artes
+2) gere/atualize o artes/index.json
+3) suba tudo para o site
 
-Não existe mais lista fixa de imagens no código.
-Não existe mais dependência de index.json.
-Não existem mais aquelas fotos de URL fixas dentro da página.
+Gerar index.json no Windows PowerShell:
+./tools/build-artes-index.ps1
 
-COMO FUNCIONA
-1. O script consulta a API pública do GitHub.
-2. Lê tudo que for .jpg dentro de site_links/artes.
-3. Carrega essas imagens automaticamente na galeria.
-
-O QUE FOI AJUSTADO
-- leitura apenas da pasta site_links/artes
-- apenas arquivos .jpg
-- sem limite de quantidade
-- sem controle de velocidade por rollover/arrasto
-- velocidade geral reduzida em 30%
-
-SE QUISER TROCAR DE REPOSITÓRIO/PASTA
-Edite o bloco GITHUB_CONFIG no início do arquivo script.js.
+Gerar index.json com Node:
+node ./tools/build-artes-index.mjs

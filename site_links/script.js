@@ -1,24 +1,17 @@
 if (!window.THREE) console.error('Three.js não carregado');
 
-// Fonte única das imagens:
-// pasta do repositório GitHub -> site_links/artes
-// O script lê todos os .jpg via API do GitHub e usa somente essas artes.
+// Nesta versão o site usa apenas arquivos do próprio domínio.
+// A lista das artes vem de ./artes/index.json
+// Isso evita dependência de api.github.com e raw.githubusercontent.com.
 
-const GITHUB_CONFIG = {
-  owner: 'tiagosillos-art',
-  repo: 'gallery',
-  branch: 'main',
-  path: 'site_links/artes'
-};
-
-const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?ref=${GITHUB_CONFIG.branch}`;
+const ARTES_INDEX_URL = './artes/index.json';
+const ARTES_BASE_PATH = './artes/';
 const DEPTH_LAYERS = 4;
 const MAX_WIDTH = 260;
 const MAX_HEIGHT = 260;
 const GLOBAL_SPEED_MULTIPLIER = 0.7; // 30% mais lento
 
 let layers = [];
-let layerTextures = [];
 let textures = [];
 let loaded = 0;
 let lastTime = 0;
@@ -36,8 +29,6 @@ let currentOrder = [0, 1, 2, 3];
 
 const container = document.getElementById('container');
 const loadingEl = document.getElementById('loading');
-const uiEl = document.getElementById('ui');
-
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
@@ -53,16 +44,6 @@ function rand(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-function fallbackTexture(layerIndex) {
-  const c = document.createElement('canvas');
-  c.width = MAX_WIDTH;
-  c.height = MAX_HEIGHT;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = ['#4a6572', '#344955', '#232f34', '#1c2529'][layerIndex % 4];
-  ctx.fillRect(0, 0, c.width, c.height);
-  return new THREE.CanvasTexture(c);
-}
-
 function getSizeMultiplierForPosition(position) {
   const multipliers = [1.0, 0.8, 0.65, 0.5];
   return multipliers[position] || 1.0;
@@ -76,31 +57,31 @@ function splitTexturesAcrossLayers(textureList) {
   return distributed;
 }
 
-async function fetchGithubJpgList() {
-  const response = await fetch(GITHUB_API_URL, { cache: 'no-store' });
+async function fetchLocalJpgList() {
+  const response = await fetch(ARTES_INDEX_URL, { cache: 'no-store' });
 
   if (!response.ok) {
-    throw new Error(`GitHub API retornou ${response.status} em ${GITHUB_API_URL}`);
+    throw new Error(`Não foi possível ler ${ARTES_INDEX_URL} (${response.status})`);
   }
 
   const items = await response.json();
 
   if (!Array.isArray(items)) {
-    throw new Error('A resposta da API do GitHub não veio no formato esperado');
+    throw new Error('O arquivo artes/index.json não está em formato de lista');
   }
 
   const jpgFiles = items
-    .filter((item) => item && item.type === 'file')
-    .filter((item) => typeof item.name === 'string' && item.name.toLowerCase().endsWith('.jpg'))
-    .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+    .filter((item) => typeof item === 'string')
+    .filter((name) => name.toLowerCase().endsWith('.jpg'))
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
 
   if (!jpgFiles.length) {
-    throw new Error('Nenhum arquivo .jpg encontrado em site_links/artes');
+    throw new Error('Nenhum .jpg encontrado em artes/index.json');
   }
 
-  return jpgFiles.map((item) => ({
-    name: item.name,
-    url: item.download_url
+  return jpgFiles.map((name) => ({
+    name,
+    url: `${ARTES_BASE_PATH}${encodeURIComponent(name)}`
   }));
 }
 
@@ -218,189 +199,165 @@ function addSprite(layerIndex, texture, indexInLayer) {
     baseX: posX,
     baseY: posY,
     opacity: cfg.opacity,
-    direction: cfg.direction,
-    spacingX,
-    spacingY
+    direction: cfg.direction
   };
 
-  layers[layerIndex].push(sprite);
   scene.add(sprite);
-  return sprite;
+  layers[layerIndex].push(sprite);
 }
 
 function fillViewport() {
   clearSprites();
+  const distributed = splitTexturesAcrossLayers(textures);
 
-  for (let layerIndex = 0; layerIndex < DEPTH_LAYERS; layerIndex++) {
-    const texturesForLayer = layerTextures[layerIndex] || [];
-    for (let indexInLayer = 0; indexInLayer < texturesForLayer.length; indexInLayer++) {
-      addSprite(layerIndex, texturesForLayer[indexInLayer], indexInLayer);
+  distributed.forEach((layerTextures, layerIndex) => {
+    if (!layerTextures.length) return;
+    const cfg = LAYER_CONFIG[currentOrder[layerIndex]];
+    const screenW = container.clientWidth;
+    const screenH = container.clientHeight;
+    const sampleImage = layerTextures[0].image;
+    const sampleRatio = sampleImage && sampleImage.width && sampleImage.height
+      ? sampleImage.width / sampleImage.height
+      : 1;
+
+    const estimatedW = sampleRatio > 1 ? MAX_WIDTH : MAX_HEIGHT * sampleRatio;
+    const estimatedH = sampleRatio > 1 ? MAX_WIDTH / sampleRatio : MAX_HEIGHT;
+    const spacingX = estimatedW * 1.3;
+    const spacingY = estimatedH * 1.3;
+
+    let count;
+    if (cfg.direction === 'rightToLeft' || cfg.direction === 'leftToRight') {
+      count = Math.max(layerTextures.length, Math.ceil(screenW / Math.max(1, spacingX)) + 4);
+    } else {
+      count = Math.max(layerTextures.length, Math.ceil(screenH / Math.max(1, spacingY)) + 4);
     }
-  }
+
+    for (let i = 0; i < count; i += 1) {
+      const texture = layerTextures[i % layerTextures.length];
+      addSprite(layerIndex, texture, i);
+    }
+  });
 }
 
-function cleanupSprites() {
-  const w = container.clientWidth;
-  const h = container.clientHeight;
-  const bufferZone = Math.max(w, h) * 0.5;
+function animate(time) {
+  requestAnimationFrame(animate);
+  if (!animationStarted) return;
 
-  for (let layerIndex = 0; layerIndex < DEPTH_LAYERS; layerIndex++) {
+  if (!lastTime) lastTime = time;
+  const delta = Math.min((time - lastTime) / 1000, 0.05);
+  lastTime = time;
+
+  const screenW = container.clientWidth;
+  const screenH = container.clientHeight;
+
+  for (let layerIndex = 0; layerIndex < layers.length; layerIndex += 1) {
     const sprites = layers[layerIndex];
-    if (!sprites) continue;
-
-    for (const sprite of sprites) {
+    for (let i = 0; i < sprites.length; i += 1) {
+      const sprite = sprites[i];
       const data = sprite.userData;
+      const move = data.speed * GLOBAL_SPEED_MULTIPLIER * delta;
 
       switch (data.direction) {
         case 'rightToLeft':
-          if (sprite.position.x + data.width / 2 < -bufferZone) {
-            sprite.position.x = w + data.width / 2 + data.spacingX;
-            sprite.userData.baseX = sprite.position.x;
+          sprite.position.x -= move;
+          if (sprite.position.x < -data.width) {
+            sprite.position.x = screenW + data.width;
+            sprite.position.y = rand(data.height / 2, Math.max(data.height / 2, screenH - data.height / 2));
           }
           break;
         case 'leftToRight':
-          if (sprite.position.x - data.width / 2 > w + bufferZone) {
-            sprite.position.x = -data.width / 2 - data.spacingX;
-            sprite.userData.baseX = sprite.position.x;
+          sprite.position.x += move;
+          if (sprite.position.x > screenW + data.width) {
+            sprite.position.x = -data.width;
+            sprite.position.y = rand(data.height / 2, Math.max(data.height / 2, screenH - data.height / 2));
           }
           break;
         case 'topToBottom':
-          if (sprite.position.y + data.height / 2 < -bufferZone) {
-            sprite.position.y = h + data.height / 2 + data.spacingY;
-            sprite.userData.baseY = sprite.position.y;
+          sprite.position.y += move;
+          if (sprite.position.y > screenH + data.height) {
+            sprite.position.y = -data.height;
+            sprite.position.x = rand(data.width / 2, Math.max(data.width / 2, screenW - data.width / 2));
           }
           break;
         case 'bottomToTop':
-          if (sprite.position.y - data.height / 2 > h + bufferZone) {
-            sprite.position.y = -data.height / 2 - data.spacingY;
-            sprite.userData.baseY = sprite.position.y;
+          sprite.position.y -= move;
+          if (sprite.position.y < -data.height) {
+            sprite.position.y = screenH + data.height;
+            sprite.position.x = rand(data.width / 2, Math.max(data.width / 2, screenW - data.width / 2));
           }
           break;
       }
-    }
-  }
-}
-
-function reorderLayers() {
-  for (let i = currentOrder.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [currentOrder[i], currentOrder[j]] = [currentOrder[j], currentOrder[i]];
-  }
-  fillViewport();
-}
-
-function animate() {
-  const now = performance.now();
-  const dt = Math.min(40, now - lastTime) / 1000;
-  lastTime = now;
-
-  cleanupSprites();
-
-  for (const sprites of layers) {
-    if (!sprites || !sprites.length) continue;
-
-    for (const sprite of sprites) {
-      const data = sprite.userData;
-      const movement = data.speed * dt * GLOBAL_SPEED_MULTIPLIER;
-
-      switch (data.direction) {
-        case 'rightToLeft':
-          sprite.position.x -= movement;
-          break;
-        case 'leftToRight':
-          sprite.position.x += movement;
-          break;
-        case 'topToBottom':
-          sprite.position.y += movement;
-          break;
-        case 'bottomToTop':
-          sprite.position.y -= movement;
-          break;
-      }
-
-      const pulse = 1 + Math.sin(now * 0.001 + data.seed) * 0.015;
-      sprite.scale.x = data.width * pulse;
-      sprite.scale.y = data.height * pulse;
-
-      if (data.direction !== 'topToBottom' && data.direction !== 'bottomToTop') {
-        sprite.position.y = data.baseY + Math.sin(now * 0.001 + data.seed) * 3;
-      } else {
-        sprite.position.x = data.baseX + Math.sin(now * 0.001 + data.seed) * 3;
-      }
-
-      sprite.material.opacity = data.opacity;
     }
   }
 
   renderer.render(scene, camera);
-  requestAnimationFrame(animate);
 }
 
-function loadTexturePromise(item, fallbackLayerIndex, total) {
-  return new Promise((resolve) => {
-    loader.load(
-      item.url,
-      (texture) => {
-        loaded += 1;
-        updateLoadingText(loaded, total);
-        resolve(texture);
-      },
-      undefined,
-      () => {
-        loaded += 1;
-        updateLoadingText(loaded, total);
-        resolve(fallbackTexture(fallbackLayerIndex));
-      }
-    );
+function showError(message) {
+  if (loadingEl) {
+    loadingEl.innerHTML = message;
+  }
+  console.error(message.replace(/<br>/g, '\n'));
+}
+
+function loadTextures(imageList) {
+  return new Promise((resolve, reject) => {
+    if (!imageList.length) {
+      reject(new Error('Nenhuma imagem para carregar'));
+      return;
+    }
+
+    textures = [];
+    loaded = 0;
+    updateLoadingText(0, imageList.length);
+
+    imageList.forEach((item) => {
+      loader.load(
+        item.url,
+        (texture) => {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          textures.push(texture);
+          loaded += 1;
+          updateLoadingText(loaded, imageList.length);
+
+          if (loaded === imageList.length) {
+            textures.sort((a, b) => {
+              const an = a.image?.currentSrc || a.image?.src || '';
+              const bn = b.image?.currentSrc || b.image?.src || '';
+              return an.localeCompare(bn, undefined, { numeric: true, sensitivity: 'base' });
+            });
+            resolve();
+          }
+        },
+        undefined,
+        (error) => {
+          console.error('Falha ao carregar', item.url, error);
+          loaded += 1;
+          updateLoadingText(loaded, imageList.length);
+          if (loaded === imageList.length) {
+            if (textures.length) resolve();
+            else reject(new Error('Nenhuma imagem pôde ser carregada'));
+          }
+        }
+      );
+    });
   });
 }
 
-async function loadTextures(imageItems) {
-  loaded = 0;
-  updateLoadingText(0, imageItems.length);
-
-  const texturePromises = imageItems.map((item, index) =>
-    loadTexturePromise(item, index % DEPTH_LAYERS, imageItems.length)
-  );
-
-  textures = await Promise.all(texturePromises);
-  layerTextures = splitTexturesAcrossLayers(textures);
-
-  fillViewport();
-
-  if (loadingEl) loadingEl.style.display = 'none';
-  if (uiEl) {
-    uiEl.style.display = 'block';
-    uiEl.textContent = `${textures.length} JPG(s) carregado(s) de site_links/artes no GitHub`;
-  }
-
-  if (!animationStarted) {
-    lastTime = performance.now();
-    animationStarted = true;
-    animate();
-  }
-}
-
-async function initGallery() {
+(async function init() {
   try {
-    updateLoadingText(0, 0);
-    const imageItems = await fetchGithubJpgList();
-    await loadTextures(imageItems);
+    const imageList = await fetchLocalJpgList();
+    await loadTextures(imageList);
+    fillViewport();
+    animationStarted = true;
+    if (loadingEl) loadingEl.style.display = 'none';
   } catch (error) {
-    console.error(error);
-    if (loadingEl) {
-      loadingEl.innerHTML = [
-        'Não foi possível carregar as artes.',
-        'Agora o site lê somente os .jpg da pasta site_links/artes no repositório GitHub.',
-        'Verifique se o repositório é público, se a pasta existe e se há arquivos .jpg nela.'
-      ].join('<br>');
-    }
+    showError([
+      'Não foi possível carregar as artes.',
+      `Motivo: ${error.message}`,
+      'Gere ou atualize o arquivo ./artes/index.json com os nomes dos JPGs da pasta.'
+    ].join('<br>'));
   }
-}
+})();
 
-// O controle de velocidade por rollover/arrasto foi removido.
-container.addEventListener('dblclick', () => {
-  reorderLayers();
-});
-
-initGallery();
+requestAnimationFrame(animate);

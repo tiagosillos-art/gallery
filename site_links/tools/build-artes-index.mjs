@@ -1,25 +1,18 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const targetDir = path.resolve(process.cwd(), 'site_links/artes');
-const outputFile = path.join(targetDir, 'index.json');
+const projectRoot = process.cwd();
+const artesDir = path.join(projectRoot, 'artes');
+const indexFile = path.join(artesDir, 'index.json');
 
-if (!fs.existsSync(targetDir)) {
-  console.error(`Pasta não encontrada: ${targetDir}`);
+if (!fs.existsSync(artesDir)) {
+  console.error('Pasta não encontrada:', artesDir);
   process.exit(1);
 }
 
-const files = fs
-  .readdirSync(targetDir, { withFileTypes: true })
-  .filter((entry) => entry.isFile())
-  .map((entry) => entry.name)
+const files = fs.readdirSync(artesDir)
   .filter((name) => /\.jpg$/i.test(name))
   .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
 
-const payload = {
-  generatedAt: new Date().toISOString(),
-  files
-};
-
-fs.writeFileSync(outputFile, JSON.stringify(payload, null, 2) + '\n', 'utf8');
-console.log(`Manifesto gerado com ${files.length} arquivo(s): ${outputFile}`);
+fs.writeFileSync(indexFile, JSON.stringify(files, null, 2) + '\n', 'utf8');
+console.log(`index.json gerado com ${files.length} arquivo(s).`);
