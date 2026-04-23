@@ -1,28 +1,17 @@
 if (!window.THREE) console.error('Three.js não carregado');
 
-// O site agora lê SOMENTE um manifesto JSON gerado a partir da pasta de artes.
-// Não há lista fixa de URLs de imagem no código.
-// Estrutura esperada no deploy:
-// /site_links/artes/
-//   ├─ 01.jpg
-//   ├─ 02.jpg
-//   ├─ ...quantos quiser
-//   └─ index.json   <- gerado automaticamente pelo workflow do GitHub
+// Fonte única das imagens:
+// pasta do repositório GitHub -> site_links/artes
+// O script lê todos os .jpg via API do GitHub e usa somente essas artes.
 
-const MANIFEST_CANDIDATES = [
-  './site_links/artes/index.json',
-  '/site_links/artes/index.json',
-  './artes/index.json',
-  '/artes/index.json'
-];
+const GITHUB_CONFIG = {
+  owner: 'tiagosillos-art',
+  repo: 'gallery',
+  branch: 'main',
+  path: 'site_links/artes'
+};
 
-const BASE_PATH_CANDIDATES = [
-  './site_links/artes/',
-  '/site_links/artes/',
-  './artes/',
-  '/artes/'
-];
-
+const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?ref=${GITHUB_CONFIG.branch}`;
 const DEPTH_LAYERS = 4;
 const MAX_WIDTH = 260;
 const MAX_HEIGHT = 260;
@@ -35,8 +24,6 @@ let loaded = 0;
 let lastTime = 0;
 let camera;
 let animationStarted = false;
-let activeManifestUrl = '';
-let activeBasePath = '';
 
 const LAYER_CONFIG = [
   { scale: 1.0, speed: 56, opacity: 0.97, direction: 'rightToLeft' },
@@ -89,66 +76,32 @@ function splitTexturesAcrossLayers(textureList) {
   return distributed;
 }
 
-async function fetchFirstAvailableJson(urls) {
-  let lastError = null;
+async function fetchGithubJpgList() {
+  const response = await fetch(GITHUB_API_URL, { cache: 'no-store' });
 
-  for (const url of urls) {
-    try {
-      const response = await fetch(url, { cache: 'no-store' });
-      if (!response.ok) throw new Error(`${url} -> ${response.status}`);
-      const json = await response.json();
-      activeManifestUrl = url;
-      return json;
-    } catch (error) {
-      lastError = error;
-    }
+  if (!response.ok) {
+    throw new Error(`GitHub API retornou ${response.status} em ${GITHUB_API_URL}`);
   }
 
-  throw lastError || new Error('Nenhum manifesto JSON foi encontrado');
-}
+  const items = await response.json();
 
-function normalizeManifestEntries(manifest) {
-  const files = Array.isArray(manifest)
-    ? manifest
-    : Array.isArray(manifest.files)
-      ? manifest.files
-      : [];
-
-  const normalized = files
-    .filter((item) => typeof item === 'string')
-    .map((item) => item.trim())
-    .filter((item) => item.toLowerCase().endsWith('.jpg'))
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
-
-  if (!normalized.length) {
-    throw new Error('O manifesto existe, mas não contém arquivos .jpg');
+  if (!Array.isArray(items)) {
+    throw new Error('A resposta da API do GitHub não veio no formato esperado');
   }
 
-  return normalized;
-}
+  const jpgFiles = items
+    .filter((item) => item && item.type === 'file')
+    .filter((item) => typeof item.name === 'string' && item.name.toLowerCase().endsWith('.jpg'))
+    .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
 
-function resolveImageUrls(fileNames) {
-  const fromManifest = activeManifestUrl
-    ? new URL('.', new URL(activeManifestUrl, window.location.href)).href
-    : '';
-
-  const baseCandidates = [
-    fromManifest,
-    ...BASE_PATH_CANDIDATES.map((base) => new URL(base, window.location.href).href)
-  ].filter(Boolean);
-
-  for (const base of baseCandidates) {
-    if (base.includes('/site_links/artes/') || base.endsWith('/artes/')) {
-      activeBasePath = base;
-      break;
-    }
+  if (!jpgFiles.length) {
+    throw new Error('Nenhum arquivo .jpg encontrado em site_links/artes');
   }
 
-  if (!activeBasePath) {
-    activeBasePath = baseCandidates[0];
-  }
-
-  return fileNames.map((name) => new URL(name, activeBasePath).href);
+  return jpgFiles.map((item) => ({
+    name: item.name,
+    url: item.download_url
+  }));
 }
 
 function updateLoadingText(current, total) {
@@ -191,6 +144,7 @@ window.addEventListener('resize', resize);
 resize();
 
 const loader = new THREE.TextureLoader();
+loader.setCrossOrigin('anonymous');
 
 function addSprite(layerIndex, texture, indexInLayer) {
   const cfg = LAYER_CONFIG[currentOrder[layerIndex]];
@@ -382,10 +336,10 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-function loadTexturePromise(url, fallbackLayerIndex, total) {
+function loadTexturePromise(item, fallbackLayerIndex, total) {
   return new Promise((resolve) => {
     loader.load(
-      url,
+      item.url,
       (texture) => {
         loaded += 1;
         updateLoadingText(loaded, total);
@@ -401,12 +355,12 @@ function loadTexturePromise(url, fallbackLayerIndex, total) {
   });
 }
 
-async function loadTextures(imageUrls) {
+async function loadTextures(imageItems) {
   loaded = 0;
-  updateLoadingText(0, imageUrls.length);
+  updateLoadingText(0, imageItems.length);
 
-  const texturePromises = imageUrls.map((url, index) =>
-    loadTexturePromise(url, index % DEPTH_LAYERS, imageUrls.length)
+  const texturePromises = imageItems.map((item, index) =>
+    loadTexturePromise(item, index % DEPTH_LAYERS, imageItems.length)
   );
 
   textures = await Promise.all(texturePromises);
@@ -417,7 +371,7 @@ async function loadTextures(imageUrls) {
   if (loadingEl) loadingEl.style.display = 'none';
   if (uiEl) {
     uiEl.style.display = 'block';
-    uiEl.textContent = `${textures.length} JPG(s) carregado(s) de ${activeBasePath}`;
+    uiEl.textContent = `${textures.length} JPG(s) carregado(s) de site_links/artes no GitHub`;
   }
 
   if (!animationStarted) {
@@ -430,23 +384,20 @@ async function loadTextures(imageUrls) {
 async function initGallery() {
   try {
     updateLoadingText(0, 0);
-    const manifest = await fetchFirstAvailableJson(MANIFEST_CANDIDATES);
-    const fileNames = normalizeManifestEntries(manifest);
-    const imageUrls = resolveImageUrls(fileNames);
-    await loadTextures(imageUrls);
+    const imageItems = await fetchGithubJpgList();
+    await loadTextures(imageItems);
   } catch (error) {
     console.error(error);
     if (loadingEl) {
       loadingEl.innerHTML = [
         'Não foi possível carregar as artes.',
-        'O site agora depende de /site_links/artes/index.json.',
-        'Se estiver no GitHub Pages, faça push com o workflow incluso para gerar esse arquivo automaticamente.'
+        'Agora o site lê somente os .jpg da pasta site_links/artes no repositório GitHub.',
+        'Verifique se o repositório é público, se a pasta existe e se há arquivos .jpg nela.'
       ].join('<br>');
     }
   }
 }
 
-// Mantive apenas o duplo clique para reembaralhar as camadas.
 // O controle de velocidade por rollover/arrasto foi removido.
 container.addEventListener('dblclick', () => {
   reorderLayers();
