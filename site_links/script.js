@@ -153,7 +153,7 @@ function addSprite(layerIndex, texture, indexInLayer) {
     }
   }
 
-  const sizeVariation = rand(0.85, 3.15);
+  const sizeVariation = rand(0.85, 24.15);
   const w = width * sizeVariation * sizeMultiplier;
   const h = height * sizeVariation * sizeMultiplier;
   const spacingX = w * 1.3;
