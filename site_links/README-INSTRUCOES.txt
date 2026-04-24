@@ -20,3 +20,6 @@ Correção aplicada: removido o fundo da página/parallax. As bolhas foram manti
 
 
 Ajuste aplicado: correção de color management apenas nos renderizadores das telas.
+
+
+Ajuste aplicado: restaurado o fundo original azul-escuro das bolhas no layout, sem alterar o shader das bolhas.
