@@ -14,3 +14,6 @@ As imagens continuam sendo carregadas por links diretos públicos definidos em s
 
 
 Atualizado: carregamento com timeout por imagem para evitar travar em 'Carregando imagens...'.
+
+
+Correção aplicada: removido o fundo da página/parallax. As bolhas foram mantidas sem alteração no shader.
