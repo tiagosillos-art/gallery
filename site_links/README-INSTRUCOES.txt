@@ -11,3 +11,6 @@ Arquivos principais:
 - script.js
 
 As imagens continuam sendo carregadas por links diretos públicos definidos em script.js.
+
+
+Atualizado: carregamento com timeout por imagem para evitar travar em 'Carregando imagens...'.

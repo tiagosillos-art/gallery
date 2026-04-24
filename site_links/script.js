@@ -125,50 +125,72 @@ function getSortedTextures() {
   });
 }
 
-function loadTextures(imageList) {
-  return new Promise((resolve, reject) => {
-    if (!imageList.length) {
-      reject(new Error('Nenhuma imagem para carregar'));
-      return;
-    }
+function setTextureColorSpace(texture) {
+  if (!texture) return;
+  if ('colorSpace' in texture && THREE.SRGBColorSpace) {
+    texture.colorSpace = THREE.SRGBColorSpace;
+  } else if ('encoding' in texture && THREE.sRGBEncoding) {
+    texture.encoding = THREE.sRGBEncoding;
+  }
+}
 
-    textures = [];
-    loaded = 0;
-    updateLoadingText(0, imageList.length);
+function loadTextureWithTimeout(loader, item, timeoutMs = 12000) {
+  return new Promise((resolve) => {
+    let finished = false;
 
-    const loader = new THREE.TextureLoader();
+    const timeoutId = setTimeout(() => {
+      if (finished) return;
+      finished = true;
+      console.warn('Timeout ao carregar', item.url);
+      resolve(null);
+    }, timeoutMs);
 
-    imageList.forEach((item) => {
-      loader.load(
-        item.url,
-        (texture) => {
-          texture.colorSpace = THREE.SRGBColorSpace;
-          textures.push(texture);
-          loaded += 1;
-          updateLoadingText(loaded, imageList.length);
-
-          if (loaded === imageList.length) {
-            textures = getSortedTextures();
-            resolve();
-          }
-        },
-        undefined,
-        (error) => {
-          console.error('Falha ao carregar', item.url, error);
-          loaded += 1;
-          updateLoadingText(loaded, imageList.length);
-          if (loaded === imageList.length) {
-            if (textures.length) {
-              textures = getSortedTextures();
-              resolve();
-            } else {
-              reject(new Error('Nenhuma imagem pôde ser carregada'));
-            }
-          }
-        }
-      );
-    });
+    loader.load(
+      item.url,
+      (texture) => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeoutId);
+        setTextureColorSpace(texture);
+        resolve(texture);
+      },
+      undefined,
+      (error) => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeoutId);
+        console.error('Falha ao carregar', item.url, error);
+        resolve(null);
+      }
+    );
   });
+}
+
+async function loadTextures(imageList) {
+  if (!imageList.length) {
+    throw new Error('Nenhuma imagem para carregar');
+  }
+
+  textures = [];
+  loaded = 0;
+  updateLoadingText(0, imageList.length);
+
+  const loader = new THREE.TextureLoader();
+
+  for (const item of imageList) {
+    const texture = await loadTextureWithTimeout(loader, item, 12000);
+    if (texture) {
+      textures.push(texture);
+    }
+    loaded += 1;
+    updateLoadingText(loaded, imageList.length);
+  }
+
+  if (!textures.length) {
+    throw new Error('Nenhuma imagem pôde ser carregada');
+  }
+
+  textures = getSortedTextures();
 }
 
 function showError(message) {
