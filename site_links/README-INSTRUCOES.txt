@@ -26,3 +26,16 @@ Ajuste aplicado: restaurado o fundo original azul-escuro das bolhas no layout, s
 
 
 Ajuste aplicado: renderer das bolhas adaptado para Three.js r128 usando outputEncoding e NoToneMapping.
+
+
+Ajuste aplicado: escala individual por arquivo.
+Arquivo para editar:
+- script.js
+
+Bloco para ajustar:
+- const ARTES_SIZE_OVERRIDES = { ... }
+
+Exemplos:
+- 1.0 = tamanho base
+- 1.2 = 20% maior
+- 0.8 = 20% menor
