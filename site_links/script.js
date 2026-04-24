@@ -190,7 +190,7 @@ function addSprite(layerIndex, texture, indexInLayer) {
   sprite.scale.set(w, h, 1);
   sprite.position.set(posX, posY, -layerIndex * 50);
 
-  const speedVariation = rand(0.7, 1.3);
+  const speedVariation = rand(0.7, 3.3);
   sprite.userData = {
     speed: cfg.speed * speedVariation,
     width: w,
