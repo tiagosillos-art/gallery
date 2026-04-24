@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Galeria Parallax</title>
+  <title>Galeria com Bolhas</title>
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <div id="container"></div>
+  <div id="screens-back" class="stage stage-back"></div>
+  <canvas id="bubbles-canvas" class="stage stage-bubbles"></canvas>
+  <div id="screens-front" class="stage stage-front"></div>
+
   <div id="loading">Carregando imagens...</div>
-  <div id="ui" class="hint" style="display:none;"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="./script.js"></script>
