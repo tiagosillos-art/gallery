@@ -17,3 +17,6 @@ Atualizado: carregamento com timeout por imagem para evitar travar em 'Carregand
 
 
 Correção aplicada: removido o fundo da página/parallax. As bolhas foram mantidas sem alteração no shader.
+
+
+Ajuste aplicado: correção de color management apenas nos renderizadores das telas.
