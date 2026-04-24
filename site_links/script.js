@@ -1,15 +1,32 @@
 if (!window.THREE) console.error('Three.js não carregado');
 
-// Nesta versão o site usa apenas arquivos do próprio domínio.
-// A lista das artes vem de ./artes/index.json
-// Isso evita dependência de api.github.com e raw.githubusercontent.com.
+// Versão final com links diretos públicos das artes.
+// Não depende de index.json, API do GitHub nem leitura automática de pasta.
+// Para trocar ou adicionar imagens depois, basta editar a lista ARTES_URLS.
 
-const ARTES_INDEX_URL = './artes/index.json';
-const ARTES_BASE_PATH = './artes/';
+const ARTES_URLS = [
+  'https://tiagosillos.art.br/site_links/artes/tela_01.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_04.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_06.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_09.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_10.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_11.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_12.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_15.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_16.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_18.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_19.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_26.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_28.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_30.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_31.jpg',
+  'https://tiagosillos.art.br/site_links/artes/tela_32.jpg'
+];
+
 const DEPTH_LAYERS = 4;
-const MAX_WIDTH = 3760;
-const MAX_HEIGHT = 3760;
-const GLOBAL_SPEED_MULTIPLIER = 1.0; // 30% mais lento
+const MAX_WIDTH = 260;
+const MAX_HEIGHT = 260;
+const GLOBAL_SPEED_MULTIPLIER = 0.7; // 30% mais lento
 
 let layers = [];
 let textures = [];
@@ -44,6 +61,8 @@ function rand(min, max) {
   return Math.random() * (max - min) + min;
 }
 
+// Mantém as 4 camadas com tamanhos diferentes.
+// Se quiser tudo igual, troque por: return 1.0;
 function getSizeMultiplierForPosition(position) {
   const multipliers = [1.0, 0.8, 0.65, 0.5];
   return multipliers[position] || 1.0;
@@ -57,31 +76,18 @@ function splitTexturesAcrossLayers(textureList) {
   return distributed;
 }
 
-async function fetchLocalJpgList() {
-  const response = await fetch(ARTES_INDEX_URL, { cache: 'no-store' });
-
-  if (!response.ok) {
-    throw new Error(`Não foi possível ler ${ARTES_INDEX_URL} (${response.status})`);
-  }
-
-  const items = await response.json();
-
-  if (!Array.isArray(items)) {
-    throw new Error('O arquivo artes/index.json não está em formato de lista');
-  }
-
-  const jpgFiles = items
-    .filter((item) => typeof item === 'string')
-    .filter((name) => name.toLowerCase().endsWith('.jpg'))
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+function getDirectImageList() {
+  const jpgFiles = ARTES_URLS
+    .filter((url) => typeof url === 'string')
+    .filter((url) => url.toLowerCase().endsWith('.jpg'));
 
   if (!jpgFiles.length) {
-    throw new Error('Nenhum .jpg encontrado em artes/index.json');
+    throw new Error('Nenhum link .jpg foi definido em ARTES_URLS');
   }
 
-  return jpgFiles.map((name) => ({
-    name,
-    url: `${ARTES_BASE_PATH}${encodeURIComponent(name)}`
+  return jpgFiles.map((url) => ({
+    name: url.split('/').pop(),
+    url
   }));
 }
 
@@ -125,7 +131,6 @@ window.addEventListener('resize', resize);
 resize();
 
 const loader = new THREE.TextureLoader();
-loader.setCrossOrigin('anonymous');
 
 function addSprite(layerIndex, texture, indexInLayer) {
   const cfg = LAYER_CONFIG[currentOrder[layerIndex]];
@@ -153,7 +158,7 @@ function addSprite(layerIndex, texture, indexInLayer) {
     }
   }
 
-  const sizeVariation = rand(0.85, 24.15);
+  const sizeVariation = rand(0.85, 1.15);
   const w = width * sizeVariation * sizeMultiplier;
   const h = height * sizeVariation * sizeMultiplier;
   const spacingX = w * 1.3;
@@ -190,7 +195,7 @@ function addSprite(layerIndex, texture, indexInLayer) {
   sprite.scale.set(w, h, 1);
   sprite.position.set(posX, posY, -layerIndex * 50);
 
-  const speedVariation = rand(0.7, 3.3);
+  const speedVariation = rand(0.7, 1.3);
   sprite.userData = {
     speed: cfg.speed * speedVariation,
     width: w,
@@ -344,18 +349,26 @@ function loadTextures(imageList) {
   });
 }
 
-(async function init() {
+(function init() {
   try {
-    const imageList = await fetchLocalJpgList();
-    await loadTextures(imageList);
-    fillViewport();
-    animationStarted = true;
-    if (loadingEl) loadingEl.style.display = 'none';
+    const imageList = getDirectImageList();
+    loadTextures(imageList)
+      .then(() => {
+        fillViewport();
+        animationStarted = true;
+        if (loadingEl) loadingEl.style.display = 'none';
+      })
+      .catch((error) => {
+        showError([
+          'Não foi possível carregar as artes.',
+          `Motivo: ${error.message}`,
+          'Verifique se os links em ARTES_URLS estão públicos e corretos.'
+        ].join('<br>'));
+      });
   } catch (error) {
     showError([
-      'Não foi possível carregar as artes.',
-      `Motivo: ${error.message}`,
-      'Gere ou atualize o arquivo ./artes/index.json com os nomes dos JPGs da pasta.'
+      'Não foi possível iniciar a galeria.',
+      `Motivo: ${error.message}`
     ].join('<br>'));
   }
 })();
