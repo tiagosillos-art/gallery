@@ -23,3 +23,6 @@ Ajuste aplicado: correção de color management apenas nos renderizadores das te
 
 
 Ajuste aplicado: restaurado o fundo original azul-escuro das bolhas no layout, sem alterar o shader das bolhas.
+
+
+Ajuste aplicado: renderer das bolhas adaptado para Three.js r128 usando outputEncoding e NoToneMapping.

@@ -441,7 +441,8 @@ const bubbleRenderer = new THREE.WebGLRenderer({
 });
 
 bubbleRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.0));
-bubbleRenderer.outputColorSpace = THREE.SRGBColorSpace;
+bubbleRenderer.outputEncoding = THREE.sRGBEncoding;
+bubbleRenderer.toneMapping = THREE.NoToneMapping;
 
 const bubbleScene = new THREE.Scene();
 const bubbleCamera = new THREE.PerspectiveCamera(32, 1, 0.1, 20);
