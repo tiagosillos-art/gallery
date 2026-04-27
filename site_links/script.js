@@ -76,7 +76,7 @@ const SCREEN_LAYER_CONFIG = [
 // ------------------------------------------------------------
 const BUBBLE_CONFIG = {
   count: 8,
-  minRadius: 0.10,
+  minRadius: 0.05,
   maxRadius: 0.30,
   speed: 0.16,
   bounce: 0.84,
