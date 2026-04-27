@@ -31,7 +31,7 @@ const ARTES_URLS = [
 // 0.8 = 20% menor
 // ------------------------------------------------------------
 const ARTES_SIZE_OVERRIDES = {
-  'tela_01.jpg': { scale: 1.0 },
+  'tela_01.jpg': { scale: 0.5 },
   'tela_04.jpg': { scale: 1.0 },
   'tela_06.jpg': { scale: 1.0 },
   'tela_09.jpg': { scale: 1.0 },
@@ -41,7 +41,7 @@ const ARTES_SIZE_OVERRIDES = {
   'tela_15.jpg': { scale: 1.0 },
   'tela_16.jpg': { scale: 1.0 },
   'tela_18.jpg': { scale: 1.0 },
-  'tela_19.jpg': { scale: 1.0 },
+  'tela_19.jpg': { scale: 3.0 },
   'tela_26.jpg': { scale: 1.0 },
   'tela_28.jpg': { scale: 1.0 },
   'tela_30.jpg': { scale: 1.0 },
